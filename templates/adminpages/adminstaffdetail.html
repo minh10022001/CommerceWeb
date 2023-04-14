@@ -8,6 +8,7 @@
         color: red;
     }
 </style>
+ {% if request.user.account.users.staffs.position == "Manager" %}
 <div class="container">
     <div class="row">
         <div class="col-md-6 mx-auto">
@@ -21,4 +22,9 @@
         </div>
     </div>
 </div>
+{% else %}
+        
+            <P> Không có quyền truy cập </p>
+        
+{% endif%} 
 {% endblock %}

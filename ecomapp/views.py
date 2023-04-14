@@ -867,26 +867,7 @@ class AdminRequiredMixin(object):
 #             status="Order Received").order_by("-id")
 #         return context
 class AdminHomeView(AdminRequiredMixin, TemplateView):
-    # if Staffs.objects.filter(position = 'Manager'):
-    #     template_name =  "adminpages/manager/managehome.html"
-   
-    # else:
     template_name = "adminpages/adminhome.html"
-    # def get_abc(request):
-    #     # position = ""
-    #     # if Staffs.objects.filter(userid__accountid__user = request.user):
-    #     #     staff = Staffs.objects.get(userid__accountid__user = request.user)
-    #     #     position = staff.position
-    #     # else:
-    #     #     position = "Null"
-    #     staff = Staffs.objects.get(userid__accountid__user = request.user)
-    #     position = staff.position
-    #     return position
-
-    # print(get_abc(request))
-
-   
-   
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["pendingorders"] = Order.objects.filter(
@@ -900,10 +881,10 @@ class AdminHomeView(AdminRequiredMixin, TemplateView):
         # context['position'] = self.get_abc()
         return context
 class AdminStaffListView(AdminRequiredMixin, TemplateView):
-#     if Staffs.objects.filter(position = "Manager"):
+    # if Staffs.objects.filter(position = "Manager"):
     template_name = "adminpages/stafflist.html"
     # else:
-    #     template_name = "adminpages/manager/adminerror404.html"
+    #     template_name = "adminpages/404.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         kw = self.request.GET.get("keyword")
@@ -916,6 +897,10 @@ class AdminStaffListView(AdminRequiredMixin, TemplateView):
         context["allstaffs"] = queryset
         return context
 class AdminStaffCreateView(AdminRequiredMixin, CreateView):
+    # if Staffs.objects.filter(position = "Manager"):
+    #     template_name = "adminpages/stafflist.html"
+    # else:
+    #     template_name = "adminpages/404.html"
     template_name = "adminpages/adminstaffcreate.html"
     form_class = StaffForm
     success_url = reverse_lazy("ecomapp:adminstafflist")
