@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}{{item.productid.name}}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3>Sản phẩm: {{item.productid.name}}</h3>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{{item.image.url}}" alt="" class="img-fluid">
+            <div class="row">
+                {% for pi in item.productimage_set.all %}
+                <div class="col-md-4 p-3">
+                    <a href="{{pi.image.url}}" target="_blank">
+                        <img src="{{pi.image.url}}" class="img-fluid" style="height: 100px; object-fit: contain;"
+                            alt="">
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h4>{{item.productid.name}}</h4>
+            <h5>Danh mục: {{item.productid.category}}</h5>
+            <h5>Giá: {{item.price}}</h5>
+                    <h5> <script>
+                var num1 = 10;
+                document.write("Price: " + num1);
+                var num2 = {{item.price}} ;
+                var sum = num1+num2;
+                
+                document.write("Price: " + sum);
+      </script></h5>
+            <a href="{% url 'ecomapp:addtocart' item.id %}" class="btn btn-info">Add To Cart</a>
+            <hr>
+            <p>Mô tả: {{item.description}}</p>
+           
+        </div>
+    </div>
+    <hr>
+    <h3>Thông tin chi tiết</h3>
+    <div>
+        {% if product.productid.type == "Clothes" %}
+            <table class="table table-striped">
+                <tr>
+                    <td>Clothe Type</td>
+                    <td>{{product.clothtype}}</td>
+                </tr>
+                <tr>
+                    <td>Color</td>
+                    <td>{{product.color}}</td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>{{product.gender}}</td>
+                </tr>  
+                <tr>
+                    <td>Brand</td>
+                    <td>{{product.brand}}</td>
+                </tr>  
+                <tr>
+                    <td>Material</td>
+                    <td>{{product.material}}</td>
+                </tr>    
+            </table>
+                        
+        {% endif %}
+        {% if product.productid.type == "Electronic" %}
+            <table class="table table-striped">
+                <tr>
+                    <td>Device Type</td>
+                    <td>{{product.devicetype}}</td>
+                </tr>
+                <tr>
+                    <td>Brand</td>
+                    <td>{{product.brand}}</td>
+                </tr>
+                 <tr>
+                    <td>Color</td>
+                    <td>{{product.color}}</td>
+                </tr> 
+                <tr>
+                    <td>Weight</td>
+                    <td>{{product.weight}}</td>
+                </tr>
+                <tr>
+                    <td>Size</td>
+                    <td>{{product.size}}</td>
+                </tr>
+                <tr>
+                    <td>Power</td>
+                    <td>{{product.power}}</td>
+                </tr>
+            </table>
+                        
+        {% endif %}
+        {% if product.productid.type == "Book" %}
+            <table class="table table-striped">
+                <tr>
+                    <td>Number of pages</td>
+                    <td>{{product.numpage}}</td>
+                </tr>
+                <tr>
+                    <td>Author</td>
+                    <td>{{product.author}}</td>
+                </tr>
+                <tr>
+                    <td>Genre</td>
+                    <td>{{product.genre}}</td>
+                </tr>  
+               
+            </table>
+                        
+        {% endif %}
+    </div>
+    <h3>Bình Luận</h3>
+    <div class="col-md-4">
+        <div class="col-12">
+            {% for feedback in feedbacks %}
+            <h4><b>{{feedback.customerid.userid.fullnameid.fullname}}:</b></h4>
+            <textarea readonly = True style = "resize: none;" rows="2" cols="50">{{feedback.content}}</textarea>
+            <p><b>Rating: </b>{{feedback.rate}} Star</p>
+            <p><b>Liên Quan/Không Liên Quan: </b>{{feedback.relevant}}</p>
+            {% endfor %}
+        </div>
+        <form class="row g-3" action="{% url 'ecomapp:productdetail' item.slug %}" method="POST">
+            {% csrf_token %}
+            <div class="col-12" style = "display: table; clear: both;">
+                <div style = "float: left; left: 30px">
+                    <label> {{ form.content.label }}:</label>
+                    {{ form.content }}
+                </div>
+                <div style = "float: left; left: 30px">
+                    <label> {{ form.rating.label }}:</label>
+                    {{ form.rating }}
+                </div>
+            </div>
+            
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

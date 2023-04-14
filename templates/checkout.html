@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout {% endblock %}
+
+{% block content %}
+<div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Checkout</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Checkout</p>
+            </div>
+        </div>
+    </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Danh sách sản phẩm trong giỏ hàng</h3>
+            <a href="{% url 'ecomapp:mycart' %}">Cập nhật sản phẩm</a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Sản phẩm</th>
+                        <th>Rate</th>
+                        <th>Số lượng</th>
+                        <th>Tổng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cp in cart.cartline_set.all %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{cp.itemid.name}}</td>
+                        <td>{{cp.itemid.price}}</td>
+                        <td>{{cp.num}}</td>
+                        <td>{{cp.sumPrice}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <th colspan="4" class="text-right">Tổng tiền mặt hàng</th>
+                        <th>{{cart.total}} Đ</th>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="text-right">Phí vận chuyển</th>
+                        
+                        <th> <span id = "result" >0</span> Đ</th>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="text-right">Tổng tiền</th>
+                        
+                        {% comment %} <th> <span id = "result">0</span> Đ</th> {% endcomment %}
+                        <th><h5> <script>
+                            var cost_item = {{cart.total}}
+                            var cost_shipping = 0;
+                            if (cost_item > 500){
+                                cost_shipping = 0;
+                            }
+                            else
+                            {
+                                var spanresult = document.getElementById("result");
+                                spanresult.value = "";
+                                var x= document.getElementById('id_shippingmethod');
+                                for (var i = 0; i<x.options.length;i++)
+                                {
+                                    if(x.options[i].selected == true)
+                                    {
+                                        spanresult.value += x.options[i].value+"" ;
+                                        
+                                    }
+                                }
+                                if(spanresult.value =="1"){
+                                    cost_shipping = 5
+                                
+                                }
+                                else{
+                                     cost_shipping = 10
+                                }
+                            }
+                                   
+                            document.write(cost_item + cost_shipping);
+                        </script></h5> </th>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </div>
+        <div class="col-md-6">
+            <h3>Thanh toán</h3>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {% comment %} {{form.as_p}} {% endcomment %}
+                <label>Địa chỉ nhận hàng</label>
+                <p>{{form.customershippingaddress}}</p>
+                <label>Phương thức thanh toán</label>
+                <p>{{form.paymentMethod}}</p>
+                <label>Hình thức vận chuyển</label>
+               
+                <input type="Button" id = "but1" value = "Áp dụng" onclick = "listbox();"/> 
+                <p>{{form.shippingmethod}}</p>
+                <button class="btn btn-info">Xác nhận</button>
+            </form>
+           
+            {% comment %} <h5> <script>
+                           
+                            
+                document.write("Price: " + document.getElementById('id_shippingmethod'));
+            </script></h5> {% endcomment %}
+        </div>
+        
+    </div>
+</div>
+ <script>
+                function listbox()
+                {   
+                    var cost_item = {{cart.total}}
+                    if (cost_item > 500){
+                        document.getElementById('result').innerHTML = 0  ;
+                    }
+                    else
+                    {
+                        var spanresult = document.getElementById("result");
+                        spanresult.value = "";
+                        var x= document.getElementById('id_shippingmethod');
+                        for (var i = 0; i<x.options.length;i++)
+                        {
+                            if(x.options[i].selected == true)
+                            {
+                                spanresult.value += x.options[i].value+"" ;
+                                
+                            }
+                        }
+                        if(spanresult.value =="1"){
+                            document.getElementById('result').innerHTML = 5  ;
+                            document.getElementById('result').style.color = "Gray";
+                        
+                        }
+                        else{
+                            document.getElementById('result').innerHTML = 10  ;
+                            document.getElementById('result').style.color = "Gray";
+                        }
+                        if(document.getElementById("result").value == "")
+                        {
+                            document.getElementById('result').innerHTML = "hihi";
+                        }
+                    }
+                        
+                }
+            </script> 
+{% endblock %}

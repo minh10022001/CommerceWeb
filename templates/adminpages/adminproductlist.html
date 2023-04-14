@@ -1,0 +1,50 @@
+{% extends 'adminpages/adminbase.html' %}
+{% block title %}All Products{% endblock %}
+
+
+{% block content %}
+<div class="container"> 
+    <div class="row">
+        <div class="col-md-12">
+            <h3>All Product list</h3><hr>
+            <form class="form-inline my-2 my-lg-0" action="{% url 'ecomapp:adminproductlist' %}" method="GET">
+                <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Tìm kiếm</button>
+                <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search"
+                    aria-label="Search" required>
+            </form>
+            <hr>
+            <a href="{% url 'ecomapp:adminproductcreate' %}">Add New Product</a>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Product ID</th>
+                        <th>Product Title</th>
+                        <th>Producer</th>
+                        <th>Manufacturing YearDFDFD</th>
+                    
+                        <th>Type</th>
+                        <th>Inventory</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in allproducts %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{p.id}}</td>
+                        <td><a href="{% url 'ecomapp:adminproductdetail' p.id %}">{{p.name}}</a></td>
+                        <td>{{p.producerid}}</td>
+                        <td>{{p.manufacturingyear}}</td>
+                        <td>{{p.type}}</td>
+                        <td>{{p.num}}</td>
+                        <td><a class="btn btn-info" href="{% url 'ecomapp:adminproductdelete' p.id %}">Delete</a></td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

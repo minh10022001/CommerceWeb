@@ -1,0 +1,43 @@
+{% extends "adminpages/adminbase.html" %}
+{% block title %}All Staff{% endblock %}
+
+
+{% block content %}
+<div class="container"> 
+    <div class="row">
+        <div class="col-md-12">
+            <h3>All Staff list</h3><hr>
+            <form class="form-inline my-2 my-lg-0" action="{% url 'ecomapp:adminstafflist' %}" method="GET">
+                <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Tìm kiếm</button>
+                <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search"
+                    aria-label="Search" required>
+            </form>
+            <hr>
+            <a href="{% url 'ecomapp:adminstaffcreate' %}">Add New Staff hihi </a>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Code Staff</th>
+                        <th>Position</th>
+                        <th>Fullname</th>
+                        <th>Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in allstaffs %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td><a href="{% url 'ecomapp:adminstaffdetail' p.userid.id %}">{{p.codeStaff}}</td>
+                        <td>{{p.position}}</td>
+                        <td>{{p.userid.fullnameid.fullname}}</td>
+                        <td>{{p.userid.is_active}}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %} Giỏ hàng{% endblock %}
+
+{% block content %}
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Shopping Cart</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Shopping Cart</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Cart Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+                <table class="table table-bordered text-center mb-0">
+                    <thead class="bg-secondary text-dark">
+                        <tr>
+                            <th>Stt</th>
+                            <th>Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle">
+                        {% for cp in cartline %}
+                            <tr>
+                                <td class="align-middle">{{forloop.counter}}</td>
+                                <td class="align-middle">{{cp.itemid.productid.name}}</td>
+                                <td>{{cp.itemid.price}}</td>
+                                <td>{{cp.num}}</td>
+                                <td>{{cp.sumPrice}}</td>
+                                <td>
+                                    <a href="{% url 'ecomapp:managecart' cp.id %}?action=inc" class="btn btn-primary"> + </a>
+                                    <a href="{% url 'ecomapp:managecart' cp.id %}?action=dcr" class="btn btn-warning"> - </a>
+                                    <a href="{% url 'ecomapp:managecart' cp.id %}?action=rmv" class="btn btn-danger"> x </a>
+                                </td>
+                            </tr>
+                                           
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                <form class="mb-5" action="">
+                </form>
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                    </div>
+                    <div class="card-body">
+
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Total</h5>
+                            <h5 class="font-weight-bold">{{cart.total}}</h5>
+                        </div>
+                        {% if cart.cartline_set.all %}
+                            <a class="btn btn-block btn-primary my-3 py-3" href="{% url 'ecomapp:checkout' %}"> Thanh toán </a>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        {% if cart.cartline_set.all %}
+                            <th><a href="{% url 'ecomapp:emptycart' %}">Xoá hết sản phẩm trong giỏ</a></th>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
