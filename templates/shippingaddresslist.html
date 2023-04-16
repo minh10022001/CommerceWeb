@@ -1,21 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %}Thông tin tài khoản{% endblock %}
+{% block title %}Sổ địa chỉ{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style = "font-size: 25px"></h1>
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style = "font-size: 25px">Sổ Địa Chỉ Của Tôi</h1>
+        </div>
+</div>
+<div class="container" >
     <div class="row">
         <div class="col-md-8">
-            <h3>Sổ Địa Chỉ Của Tôi</h3>
+            {% comment %} <h3>Sổ Địa Chỉ Của Tôi</h3> {% endcomment %}
             <hr>
-            <a href="{% url 'ecomapp:shippingaddresscreate' customer.id %}">Add New Address</a>
+            <a href="{% url 'ecomapp:shippingaddresscreate' customer.id %}">Thêm địa chỉ mới</a>
             <table class="table">
                 <thead>
                     <tr>
                         <th>STT</th>
                         <th>ID</th>
                         <th>Địa Chỉ</th>
-                        <th> SDT </th>
+                        <th>Số điện thoại</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -26,7 +32,7 @@
                         <td><a href="{% url 'ecomapp:shippingaddressedit' customer.id shippingaddress.id %}">#ADDRESS_{{shippingaddress.id}}</a></td>
                         <td>{{shippingaddress.addressid.address}}</td>
                         <td>{{shippingaddress.phonenumberreceive}}</td>
-                        <td><a class="btn btn-info" href="{% url 'ecomapp:shippingaddressdelete' customer.id shippingaddress.id %}">Delete</a></td>
+                        <td><a class="btn btn-info" href="{% url 'ecomapp:shippingaddressdelete' customer.id shippingaddress.id %}">X</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

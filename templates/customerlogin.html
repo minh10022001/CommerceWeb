@@ -8,23 +8,33 @@
         color: red;
     }
 </style>
-<div class="container">
+<div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 50px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3"></h1>
+              <h1 class="font-weight-semi-bold text-uppercase mb-3" style = "font-size: 25px">Đăng nhập</h1>
+        </div>
+</div>
+<div class="container"  >
     <div class="row">
-        <div class="col-md-6 mx-auto">
-            <h3>Đăng nhập</h3>
+        <div class="col-md-6 mx-auto" style = "background-color: #F5F5F5; padding: 20px; border-radius: 25px;">
+           {% comment %} <div style = "text-align:center;">
+            <h3>Đăng nhập</h3> 
+            </div> {% endcomment %}
             <hr>
             <form action="" method="POST">
                 {% csrf_token %}
                 {{form.as_p}}
-                <button class="btn btn-primary">Đăng nhập</button>
+                <div style = "text-align:center;">
+                    <button class="btn btn-primary">Đăng nhập</button>
+                <div>
                 {% if error %}
                 <li style="color: red;">{{error}}</li>
                 {% endif %}
             </form>
-            <p>Quên mật khẩu?<a href="{% url 'ecomapp:passworforgot' %}">Lấy lại mật khẩu.</a></p>
-            <p> Bạn không có tài khoản? <a
-                    href="{% url 'ecomapp:customerregistration' %}{% if request.GET.next %}?next={{request.GET.next}}{% endif %}">Đăng
-                    kí</a></p>
+            {% comment %} <p>Quên mật khẩu?<a href="{% url 'ecomapp:passworforgot' %}">Lấy lại mật khẩu.</a></p> {% endcomment %}
+            <div style = "text-align:center;">
+                <p> Bạn không có tài khoản? <a href="{% url 'ecomapp:customerregistration' %}{% if request.GET.next %}?next={{request.GET.next}}{% endif %}">Đăngkí</a></p>
+            </div>       
         </div>
     </div>
 </div>

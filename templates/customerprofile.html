@@ -3,6 +3,11 @@
 {% block title %}Thông tin tài khoản{% endblock %}
 
 {% block content %}
+<div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px">
+             <h1 class="font-weight-semi-bold text-uppercase mb-3" style = "font-size: 25px">Thông tin tài khoản</h1>
+        </div>
+</div>
 <div class="container">
     <div class="row">
         <div class="col-md-4">
@@ -25,7 +30,9 @@
             <a href = "{% url 'ecomapp:editprofile' customer.userid.id %}">Chỉnh Sửa Thông Tin Cá Nhân</a> 
         </div>
         <div class="col-md-8">
-            <h3>Những đơn hàng trước</h3>
+            <div style = "text-align:center;">
+            <h3>Lịch sử đơn hàng</h3>
+            </div>
             <form class="form-inline my-2 my-lg-0" action="" method="GET">
                 <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Tìm kiếm</button>
                 <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search"

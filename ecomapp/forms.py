@@ -19,11 +19,6 @@ METHOD_SHIPPING =(
 
 )
 class CheckoutForm(forms.ModelForm):
-    # if request.user.is_authenticated:
-    #     customer = Customer.objects.get(userid__accountid__user = request.user)
-
-    
-    # shippingaddressid = forms.ModelChoiceField(queryset=Shippingaddress.objects.all(), empty_label="-"*20)
     customershippingaddress = forms.ModelChoiceField(queryset= CustomerShippingaddress.objects.all())
     paymentMethod = forms.CharField(label = "Payment Method", widget=forms.Select(choices=METHOD))
     shippingmethod = forms.CharField(label = "Shipping Method", widget=forms.Select(choices=METHOD_SHIPPING))
@@ -60,41 +55,124 @@ class ReplyReviewForm(forms.ModelForm):
         fields = ["content"]
 
 class EditProfileForm(forms.ModelForm):
-    username = forms.CharField(widget=forms.TextInput())
-    phonenumber = forms.CharField(widget=forms.TextInput())
-    email = forms.CharField(widget=forms.EmailInput())
-    full_name = forms.CharField(widget=forms.TextInput())
-    city = forms.CharField(widget=forms.TextInput())
-    district = forms.CharField(widget=forms.TextInput())
-    subdistrict = forms.CharField(widget=forms.TextInput())
-    street = forms.CharField(widget=forms.TextInput())
-    description = forms.CharField(widget=forms.TextInput())
+    username = forms.CharField(label = "Tài Khoản",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    phonenumber = forms.CharField(label = "Số điện thoại",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    email = forms.CharField(label = "Email",widget=forms.EmailInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    full_name = forms.CharField(label = "Họ tên",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    city = forms.CharField(label = "Thành phố/Tỉnh",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    district = forms.CharField(label = "Quận huyện",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    subdistrict = forms.CharField(label = "Phường xã",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    street = forms.CharField(label = "Phố/Làng",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }), required=False)
+    description = forms.CharField(label = "Địa chỉ",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }), required= False)
     class Meta:
         model = Customer
         fields = ["username", "phonenumber", "email", "full_name", "city", "district","subdistrict", "street", "description"]
 
 class ShippingAddressCreateForm(forms.ModelForm):
-    city = forms.CharField(widget=forms.TextInput())
-    district = forms.CharField(widget=forms.TextInput())
-    subdistrict = forms.CharField(widget=forms.TextInput())
-    street = forms.CharField(widget=forms.TextInput())
-    description = forms.CharField(widget=forms.TextInput())
-    phonenumberreceive = forms.CharField(label = "Phonenumber Receiver",widget=forms.TextInput())
+    city = forms.CharField(label = "Thành phố/Tỉnh",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    district = forms.CharField(label = "Quận huyện",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    subdistrict = forms.CharField(label = "Phường xã",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    street = forms.CharField(label = "Phố/Làng",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }), required=False)
+    description = forms.CharField(label = "Địa chỉ",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }), required= False)
+    phonenumberreceive = forms.CharField(label = "SĐT nhận hàng",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
     class Meta:
         model = CustomerShippingaddress
         fields = ["city", "district","subdistrict", "street", "description","phonenumberreceive"] 
 
 class CustomerRegistrationForm(forms.ModelForm):
-    username = forms.CharField(widget=forms.TextInput())
-    password = forms.CharField(widget=forms.PasswordInput())
-    phonenumber = forms.CharField(widget=forms.TextInput())
-    email = forms.CharField(widget=forms.EmailInput())
-    full_name = forms.CharField(widget=forms.TextInput())
-    city = forms.CharField(widget=forms.TextInput())
-    district = forms.CharField(widget=forms.TextInput())
-    subdistrict = forms.CharField(widget=forms.TextInput())
-    street = forms.CharField(widget=forms.TextInput())
-    description = forms.CharField(widget=forms.TextInput())
+    username = forms.CharField(label = "Tài Khoản",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    password = forms.CharField(label = "Mật Khẩu",widget=forms.PasswordInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    phonenumber = forms.CharField(label = "Số điện thoại",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    email = forms.CharField(label = "Email",widget=forms.EmailInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    full_name = forms.CharField(label = "Họ tên",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    city = forms.CharField(label = "Thành phố/Tỉnh",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    district = forms.CharField(label = "Quận huyện",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    subdistrict = forms.CharField(label = "Phường xã",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }))
+    street = forms.CharField(label = "Phố/Làng",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }), required=False)
+    description = forms.CharField(label = "Địa chỉ",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto;border-color: #000000;',
+                }), required= False)
 
     class Meta:
         model = Customer
@@ -114,21 +192,21 @@ TYPE_STAFF =  (
     ("Business Staff", "Business Staff")
 )
 class StaffForm(forms.ModelForm):
-    username = forms.CharField(widget=forms.TextInput())
-    password = forms.CharField(widget=forms.PasswordInput())
-    phonenumber = forms.CharField(widget=forms.TextInput())
-    email = forms.CharField(widget=forms.EmailInput())
-    full_name = forms.CharField(widget=forms.TextInput())
-    city = forms.CharField(widget=forms.TextInput())
-    district = forms.CharField(widget=forms.TextInput())
-    subdistrict = forms.CharField(widget=forms.TextInput())
-    street = forms.CharField(widget=forms.TextInput())
-    description = forms.CharField(widget=forms.TextInput())
-    codeStaff = forms.CharField(widget=forms.TextInput())
-    position =forms.CharField(label = "Staff Type", widget=forms.Select(choices=TYPE_STAFF))  # Field name made lowercase.
-    salary =forms.FloatField(widget=forms.NumberInput())  # Field name made lowercase.
-    startdate =forms.DateField(widget=forms.DateInput())  # Field name made lowercase.
-    workingtime =forms.IntegerField(widget=forms.NumberInput())  # Field name made lowercase.
+    username = forms.CharField(label = "Tài Khoản",widget=forms.TextInput())
+    password = forms.CharField(label = "Mật Khẩu",widget=forms.PasswordInput())
+    phonenumber = forms.CharField(label = "Số điện thoại",widget=forms.TextInput())
+    email = forms.CharField(label = "Email",widget=forms.EmailInput())
+    full_name = forms.CharField(label = "Họ tên",widget=forms.TextInput())
+    city = forms.CharField(label = "Thành phố/Tỉnh",widget=forms.TextInput())
+    district = forms.CharField(label = "Quận huyện",widget=forms.TextInput())
+    subdistrict = forms.CharField(label = "Phường xã",widget=forms.TextInput())
+    street = forms.CharField(label = "Phố/Làng",widget=forms.TextInput(), required=False)
+    description = forms.CharField(label = "Địa chỉ",widget=forms.TextInput(), required= False)
+    codeStaff = forms.CharField(label = "Mã nhân viên", widget=forms.TextInput())
+    position =forms.CharField(label = "Chức vụ", widget=forms.Select(choices=TYPE_STAFF))  # Field name made lowercase.
+    salary =forms.FloatField(label = "Lương", widget=forms.NumberInput())  # Field name made lowercase.
+    startdate =forms.DateField(label = "Ngày bắt đầu",widget=forms.DateInput())  # Field name made lowercase.
+    workingtime =forms.IntegerField(label = "Thời gian làm việc trong tuần",widget=forms.NumberInput())  # Field name made lowercase.
     
     class Meta:
         model = Staffs
@@ -152,7 +230,7 @@ class EditStaffForm(forms.ModelForm):
     street = forms.CharField(widget=forms.TextInput())
     description = forms.CharField(widget=forms.TextInput())
     codeStaff = forms.CharField(widget=forms.TextInput())
-    position =forms.CharField(label = "Staff Type", widget=forms.Select(choices=TYPE_STAFF))  # Field name made lowercase.
+    position =forms.CharField(label = "Staff Type", widget=forms.Select(choices=TYPE_STAFF),disabled= True)  # Field name made lowercase.
     salary =forms.FloatField(widget=forms.NumberInput())  # Field name made lowercase.
     startdate =forms.DateField(widget=forms.DateInput())  # Field name made lowercase.
     workingtime =forms.IntegerField(widget=forms.NumberInput())  # Field name made lowercase.
@@ -169,8 +247,16 @@ TYPE =(
 )
 
 class CustomerLoginForm(forms.Form):
-    username = forms.CharField(widget=forms.TextInput())
-    password = forms.CharField(widget=forms.PasswordInput())
+    username = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
 
 class ProductForm(forms.ModelForm):
     # codeproduct = forms.CharField(label = "Product Code")
@@ -329,38 +415,38 @@ class ImportProductForm(forms.ModelForm):
         model = Importingrecord
         fields = ["supplier", "product", "number", "price"]
 
-class PasswordForgotForm(forms.Form):
-    email = forms.CharField(widget=forms.EmailInput(attrs={
-        "class": "form-control",
-        "placeholder": "Enter the email used in customer account..."
-    }))
+# class PasswordForgotForm(forms.Form):
+#     email = forms.CharField(widget=forms.EmailInput(attrs={
+#         "class": "form-control",
+#         "placeholder": "Enter the email used in customer account..."
+#     }))
 
-    def clean_email(self):
-        e = self.cleaned_data.get("email")
-        if Customer.objects.filter(userid__accountid__user__email=e).exists():
-            pass
-        else:
-            raise forms.ValidationError(
-                "Customer with this account does not exists..")
-        return e
+#     def clean_email(self):
+#         e = self.cleaned_data.get("email")
+#         if Customer.objects.filter(userid__accountid__user__email=e).exists():
+#             pass
+#         else:
+#             raise forms.ValidationError(
+#                 "Customer with this account does not exists..")
+#         return e
 
 
-class PasswordResetForm(forms.Form):
-    new_password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control',
-        'autocomplete': 'new-password',
-        'placeholder': 'Enter New Password',
-    }), label="New Password")
-    confirm_new_password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control',
-        'autocomplete': 'new-password',
-        'placeholder': 'Confirm New Password',
-    }), label="Confirm New Password")
+# class PasswordResetForm(forms.Form):
+#     new_password = forms.CharField(widget=forms.PasswordInput(attrs={
+#         'class': 'form-control',
+#         'autocomplete': 'new-password',
+#         'placeholder': 'Enter New Password',
+#     }), label="New Password")
+#     confirm_new_password = forms.CharField(widget=forms.PasswordInput(attrs={
+#         'class': 'form-control',
+#         'autocomplete': 'new-password',
+#         'placeholder': 'Confirm New Password',
+#     }), label="Confirm New Password")
 
-    def clean_confirm_new_password(self):
-        new_password = self.cleaned_data.get("new_password")
-        confirm_new_password = self.cleaned_data.get("confirm_new_password")
-        if new_password != confirm_new_password:
-            raise forms.ValidationError(
-                "New Passwords did not match!")
-        return confirm_new_password
+#     def clean_confirm_new_password(self):
+#         new_password = self.cleaned_data.get("new_password")
+#         confirm_new_password = self.cleaned_data.get("confirm_new_password")
+#         if new_password != confirm_new_password:
+#             raise forms.ValidationError(
+#                 "New Passwords did not match!")
+#         return confirm_new_password
