@@ -3,24 +3,24 @@
 {% block title %}Admin Home{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container" style="padding-top: 3rem">
     <div class="row">
         <div class="col-md-12">
             <h3>Pending Orders</h3>
-            <table class="table">
-                <thead>
+            <table class="table table-hover">
+                <thead style="background-color: #D19C97">
                     <tr>
-                        <th>STT</th>
-                        <th>Order ID </th>
-                        <th>Customer</th>
-                        <th>Ordered On</th>
-                        <th>Amount</th>
+                        <th scope="col">STT</th>
+                        <th scope="col">Order ID </th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Ordered On</th>
+                        <th scope="col">Amount</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for order in pendingorders %}
                     <tr>
-                        <td>{{forloop.counter}}</td>
+                        <td scope="row">{{forloop.counter}}</td>
                         <td><a href="{% url 'ecomapp:adminorderdetail' order.id %}">#ORDER_{{order.id}}</a></td>
                         <td>{{order.customerid.userid.fullnameid.fullname}}</td>
                         <td>{{order.time}}</td>

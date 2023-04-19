@@ -3,7 +3,7 @@
 
 
 {% block content %}
-<div class="container"> 
+<div class="container" style="padding-top: 3rem"> 
     <div class="row">
         <div class="col-md-12">
             <h3>All Item list</h3><hr>
@@ -12,22 +12,22 @@
                 <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search"
                     aria-label="Search" required>
             </form>
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-hover">
+                <thead style="background-color: #D19C97">
                     <tr>
-                        <th>STT</th>
-                        <th>Product Title</th>
-                        <th>Image</th>
-                        <th>Price</th>
-                        <th>Inventory</th>
-                        <th>Description</th>
-                        <th>Upload?</th>
+                        <th scope="col">STT</th>
+                        <th scope="col">Product Title</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Inventory</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Upload?</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for p in allproducts %}
                     <tr>
-                        <td>{{forloop.counter}}</td>
+                        <td scope="row">{{forloop.counter}}</td>
                         <td><a href="{% url 'ecomapp:adminitemdetail' p.slug %}">{{p.productid.name}}</a></td>
                         <td><img src="{{p.image.url}}" style="height: 60px;" alt=""></td>
                         <td>{{p.price}}</td>

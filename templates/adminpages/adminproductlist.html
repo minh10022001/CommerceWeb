@@ -3,7 +3,7 @@
 
 
 {% block content %}
-<div class="container"> 
+<div class="container" style="padding-top: 3rem"> 
     <div class="row">
         <div class="col-md-12">
             <h3>All Product list</h3><hr>
@@ -14,24 +14,23 @@
             </form>
             <hr>
             <a href="{% url 'ecomapp:adminproductcreate' %}">Add New Product</a>
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-hover">
+                <thead style="background-color: #D19C97">
                     <tr>
-                        <th>STT</th>
-                        <th>Product ID</th>
-                        <th>Product Title</th>
-                        <th>Producer</th>
-                        <th>Manufacturing YearDFDFD</th>
-                    
-                        <th>Type</th>
-                        <th>Inventory</th>
-                        <th></th>
+                        <th scope="col">STT</th>
+                        <th scope="col">Product ID</th>
+                        <th scope="col">Product Title</th>
+                        <th scope="col">Producer</th>
+                        <th scope="col">Manufacturing YearDFDFD</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Inventory</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for p in allproducts %}
                     <tr>
-                        <td>{{forloop.counter}}</td>
+                        <td scope="row">{{forloop.counter}}</td>
                         <td>{{p.id}}</td>
                         <td><a href="{% url 'ecomapp:adminproductdetail' p.id %}">{{p.name}}</a></td>
                         <td>{{p.producerid}}</td>
