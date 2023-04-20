@@ -23,7 +23,7 @@
                     <tr>
                         <th>STT</th>
                         <th>Sản phẩm</th>
-                        <th>Rate</th>
+                        <th>Giá</th>
                         <th>Số lượng</th>
                         <th>Tổng</th>
                     </tr>
@@ -32,7 +32,7 @@
                     {% for cp in cart.cartline_set.all %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{cp.itemid.name}}</td>
+                        <td>{{cp.itemid.productid.name}}</td>
                         <td>{{cp.itemid.price}}</td>
                         <td>{{cp.num}}</td>
                         <td>{{cp.sumPrice}}</td>
@@ -50,8 +50,8 @@
                     <tr>
                         <th colspan="4" class="text-right">Tổng tiền</th>
                         
-                        {% comment %} <th> <span id = "result">0</span> Đ</th> {% endcomment %}
-                        <th><h5> <script>
+                        <th> <span id = "total"> {{cart.total}}</span> Đ</th>
+                        {% comment %} <th><h5> <script>
                             var cost_item = {{cart.total}}
                             var cost_shipping = 0;
                             if (cost_item > 500){
@@ -80,7 +80,7 @@
                             }
                                    
                             document.write(cost_item + cost_shipping);
-                        </script></h5> </th>
+                        </script></h5> </th> {% endcomment %}
                     </tr>
                 </tbody>
             </table>
@@ -89,7 +89,7 @@
         <div class="col-md-6">
             <h3>Thanh toán</h3>
             <form action="" method="POST">
-                {% csrf_token %}
+                 {% csrf_token %} 
                 {% comment %} {{form.as_p}} {% endcomment %}
                 <label>Địa chỉ nhận hàng</label>
                 <p>{{form.customershippingaddress}}</p>
@@ -117,6 +117,9 @@
                     var cost_item = {{cart.total}}
                     if (cost_item > 500){
                         document.getElementById('result').innerHTML = 0  ;
+                        document.getElementById('result').style.color = "Gray";
+                        document.getElementById('total').innerHTML = cost_item ;
+                        document.getElementById('total').style.color = "Gray";
                     }
                     else
                     {
@@ -134,11 +137,15 @@
                         if(spanresult.value =="1"){
                             document.getElementById('result').innerHTML = 5  ;
                             document.getElementById('result').style.color = "Gray";
+                            document.getElementById('total').innerHTML = cost_item + 5  ;
+                            document.getElementById('total').style.color = "Gray";
                         
                         }
                         else{
                             document.getElementById('result').innerHTML = 10  ;
                             document.getElementById('result').style.color = "Gray";
+                            document.getElementById('total').innerHTML = cost_item + 10  ;
+                            document.getElementById('total').style.color = "Gray";
                         }
                         if(document.getElementById("result").value == "")
                         {

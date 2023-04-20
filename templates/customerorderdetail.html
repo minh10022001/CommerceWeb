@@ -22,10 +22,10 @@
                 <thead>
                     <tr>
                         <th>STT</th>
-                        <th>Item</th>
-                        <th>Rate</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
+                        <th>Mặt hàng</th>
+                        <th>Giá tiền</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,8 +41,16 @@
                     </tr>
                     {% endfor %}
                     <tr>
-                        <th colspan="4" class="text-right">Total: </th>
-                        <th>{{ord_obj.total|intcomma}} Đ</th>
+                        <th colspan="4" class="text-right">Tạm tính: </th>
+                        <th>{{ord_obj.cost_all_items|intcomma}} VNĐ</th>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="text-right">Tiền vận chuyển: </th>
+                        <th>{{ord_obj.cost_shipping|intcomma}} VNĐ</th>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="text-right">Tổng tiền: </th>
+                        <th>{{ord_obj.total|intcomma}} VNĐ</th>
                     </tr>
                 </tbody>
             </table>

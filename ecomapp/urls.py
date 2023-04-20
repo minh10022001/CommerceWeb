@@ -11,6 +11,9 @@ urlpatterns = [
     path("review/", SendReview.as_view(), name="review"),
     path("contact-us/", ContactView.as_view(), name="contact"),
     path("all-products/", AllProductsView.as_view(), name="allproducts"),
+     path("all-book/", BookProductsView.as_view(), name="allbook"),
+     path("all-electronic/", ElectronicProductsView.as_view(), name="allelectronic"),
+     path("all-clothes/", ClothesProductsView.as_view(), name="allclothes"),
     path("update-wishlist-<int:pro_id>/", UpdateToWishList.as_view(), name="updateWishList"),
     path("product/<slug:slug>/", ProductDetailView.as_view(), name="productdetail"),
 
@@ -42,11 +45,11 @@ urlpatterns = [
     path("shipping-address/delete/<int:cus_id>/<int:addr_id>/", ShippingAddressDeleteView.as_view(), name="shippingaddressdelete"),
     
 
-    path("forgot-password/", PasswordForgotView.as_view(), name="passworforgot"),
-    path("password-reset/<email>/<token>/",
-         PasswordResetView.as_view(), name="passwordreset"),
+#     path("forgot-password/", PasswordForgotView.as_view(), name="passworforgot"),
+#     path("password-reset/<email>/<token>/",
+#          PasswordResetView.as_view(), name="passwordreset"),
 #     # Admin Side pages
-
+    path("admin-logout/", AdminLogoutView.as_view(), name="adminlogout"),
     path("admin-login/", AdminLoginView.as_view(), name="adminlogin"),
     path("admin-review/", AdminReviewListView.as_view(), name="adminreviewlist"),
     path("admin-review/<int:pk>/", AdminReviewDetailView.as_view(),

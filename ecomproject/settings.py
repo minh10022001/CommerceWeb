@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "ecomapp",
     'corsheaders',
     'livereload',
+   
+   
 ]
 
 MIDDLEWARE = [
