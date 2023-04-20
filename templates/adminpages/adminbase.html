@@ -46,7 +46,7 @@
                             <a class="nav-link" href="{% url 'ecomapp:adminstafflist' %}">All Staff</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'ecomapp:staticabc' %}">Static</a>
+                            <a class="nav-link" href="{% url 'ecomapp:staticabc' %}">View Stats</a>
                         </li>
                     {% endif%}
                     {% if request.user.account.users.staffs.position == "Warehouse Staff" %}

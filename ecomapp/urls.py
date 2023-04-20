@@ -14,6 +14,9 @@ urlpatterns = [
      path("all-book/", BookProductsView.as_view(), name="allbook"),
      path("all-electronic/", ElectronicProductsView.as_view(), name="allelectronic"),
      path("all-clothes/", ClothesProductsView.as_view(), name="allclothes"),
+     path("all-book/", BookProductsView.as_view(), name="allbook"),
+     path("all-electronic/", ElectronicProductsView.as_view(), name="allelectronic"),
+     path("all-clothes/", ClothesProductsView.as_view(), name="allclothes"),
     path("update-wishlist-<int:pro_id>/", UpdateToWishList.as_view(), name="updateWishList"),
     path("product/<slug:slug>/", ProductDetailView.as_view(), name="productdetail"),
 
@@ -85,5 +88,5 @@ urlpatterns = [
 
     path("admin-product/import/", AdminImportProductView.as_view(),
          name="adminimportproduct"),
-    path("static/", StaticABC.as_view(), name="staticabc"),
+
 ]

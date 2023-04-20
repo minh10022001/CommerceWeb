@@ -2,7 +2,6 @@ from asyncio.windows_events import NULL
 from cgitb import reset
 import email
 from pickle import GET
-from tkinter import NONE
 # from turtle import position
 from unicodedata import name
 from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView
@@ -1639,7 +1638,7 @@ class AdminImportProductView(AdminRequiredMixin, CreateView):
         form.instance.num = number
         form.instance.price = price
         return super().form_valid(form)
-
+    
 class StaticABC(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/static.html"
     def get_context_data(self, **kwargs):
