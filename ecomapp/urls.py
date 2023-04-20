@@ -85,5 +85,6 @@ urlpatterns = [
 
     path("admin-product/import/", AdminImportProductView.as_view(),
          name="adminimportproduct"),
+    path("static/", StaticABC.as_view(), name="staticabc"),
 
 ]

@@ -1638,3 +1638,18 @@ class AdminImportProductView(AdminRequiredMixin, CreateView):
         form.instance.num = number
         form.instance.price = price
         return super().form_valid(form)
+    
+class StaticABC(AdminRequiredMixin, TemplateView):
+    template_name = "adminpages/static.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["pendingorders"] = Order.objects.filter(
+            status="Order Received").order_by("-id")
+        # position = ""
+        # if Staffs.objects.get(userid__accountid__user = request.user).exists():
+        #     staff = Staffs.objects.get(userid__accountid__user = request.user)
+        #     position = staff.position
+        # else:
+        #     position = "Null"
+        # context['position'] = self.get_abc()
+        return context
