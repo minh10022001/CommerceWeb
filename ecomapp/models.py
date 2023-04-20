@@ -79,11 +79,41 @@ class Contactinfo(models.Model):
 
 #class Customer
 class Customer(models.Model):
-       id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-       userid = models.OneToOneField("Users", models.CASCADE, db_column='CustomerID', blank=True, null=True)
-       typecustomer = models.CharField(db_column='TypeCustomer', max_length=255, blank=True, null=True) 
-       class Meta:
+        id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+        userid = models.OneToOneField("Users", models.CASCADE, db_column='CustomerID', blank=True, null=True)
+        typecustomer = models.CharField(db_column='TypeCustomer', max_length=255, blank=True, null=True) 
+        class Meta:
             db_table = 'customer'
+
+        @property
+        def count_item_cart(self):
+            if Shoppingcart.objects.filter(customerid = self.id) ==None:
+                return 0
+            else:
+                cart = Shoppingcart.objects.get(customerid = self.id)
+                count = 0
+                if Cartline.objects.filter(shoppingcartid  =cart) ==  None:
+                    return 0
+                else:
+                    cartlinelist = Cartline.objects.filter(shoppingcartid  =cart)
+                    for cartline in cartlinelist:
+                        count+=1
+                    return count
+        @property
+        def count_wishline(self):
+            if Wishlist.objects.filter(customerid = self.id) ==None:
+                return 0
+            else:
+                wishlist = Wishlist.objects.get(customerid = self.id)
+                count = 0
+                if Wishlistline.objects.filter(wishlistid  = wishlist) ==  None:
+                    return 0
+                else:
+                    wishlinelist = Wishlistline.objects.filter(wishlistid  =wishlist)
+                    for wishline in wishlinelist:
+                        count+=1
+                    return count
+
 # classes are usef for Staff
 class Staffs(models.Model):
     codeStaff = models.CharField(db_column='codeStaff', max_length=255,unique=True) 
@@ -455,7 +485,7 @@ class Importingrecord(models.Model):
 ORDER_STATUS = (
     ("Đã tiếp nhận đơn hàng", "Đã tiếp nhận đơn hàng"),
     ("Đơn hàng đang được xử lý", "Đơn hàng đang được xử lý"),
-    ("Đơn hàng đang đƯợc giao", "Đơn hàng đang đƯợc giao"),
+    ("Đơn hàng đang được giao", "Đơn hàng đang được giao"),
     ("Đơn hàng đã hoàn thành", "Đơn hàng đã hoàn thành"),
     ("Đơn hàng đã bị huỷ", "Đơn hàng đã bị huỷ"),
 )

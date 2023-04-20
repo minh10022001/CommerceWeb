@@ -3,6 +3,12 @@
 {% block title %}{{item.productid.name}}{% endblock %}
 
 {% block content %}
+<div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 50px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style = "font-size: 25px"></h1>
+          
+        </div>
+</div>
 <div class="container">
     <h3>Sản phẩm: {{item.productid.name}}</h3>
     <hr>
@@ -24,14 +30,6 @@
             <h4>{{item.productid.name}}</h4>
             <h5>Danh mục: {{item.productid.category}}</h5>
             <h5>Giá: {{item.price}}</h5>
-                    <h5> <script>
-                var num1 = 10;
-                document.write("Price: " + num1);
-                var num2 = {{item.price}} ;
-                var sum = num1+num2;
-                
-                document.write("Price: " + sum);
-      </script></h5>
             <a href="{% url 'ecomapp:addtocart' item.id %}" class="btn btn-info">Add To Cart</a>
             <hr>
             <p>Mô tả: {{item.description}}</p>

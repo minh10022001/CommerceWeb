@@ -22,71 +22,75 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 {% if request.user.account %}
-                {% if request.user.account.users.staffs.position == "Manager" %}
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminorderlist' %}">All Orders</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminproductlist' %}">All Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminitemlist' %}">All Items</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminimportproduct' %}">Import Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminreviewlist' %}">All Reviews</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:home' %}" target="_blank">Visit site</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminstafflist' %}">All Staff</a>
-                </li>
-                {% endif%}
-                {% if request.user.account.users.staffs.position == "Warehouse Staff" %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminproductlist' %}">All Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminitemlist' %}">All Items</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminimportproduct' %}">Import Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:home' %}" target="_blank">Visit site</a>
-                </li>
-                {% endif%}
-                {% if request.user.account.users.staffs.position == "Sale Staff" %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminreviewlist' %}">All Reviews</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminorderlist' %}">All Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:home' %}" target="_blank">Visit site</a>
-                </li>
-                {% endif%}
-
-                {% if request.user.account.users.staffs.position == "Business Staff" %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:adminitemlist' %}">All Items</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'ecomapp:home' %}" target="_blank">Visit site</a>
-                </li>
-                {% endif%}
-
+                    {% if request.user.account.users.staffs.position == "Manager" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminorderlist' %}">All Orders</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminproductlist' %}">All Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminitemlist' %}">All Items</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminimportproduct' %}">Import Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminreviewlist' %}">All Reviews</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:home' %}" target="_blank">Visit site</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminstafflist' %}">All Staff</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:staticabc' %}">Static</a>
+                        </li>
+                    {% endif%}
+                    {% if request.user.account.users.staffs.position == "Warehouse Staff" %}
+                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminproductlist' %}">All Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminitemlist' %}">All Items</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminimportproduct' %}">Import Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:home' %}" target="_blank">Visit site</a>
+                        </li>
+                    {% endif%}
+                    {% if request.user.account.users.staffs.position == "Sale Staff" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminreviewlist' %}">All Reviews</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminorderlist' %}">All Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:home' %}" target="_blank">Visit site</a>
+                        </li>
+                    {% endif%}
+                
+                    {% if request.user.account.users.staffs.position == "Business Staff" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:adminitemlist' %}">All Items</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'ecomapp:home' %}" target="_blank">Visit site</a>
+                        </li>
+                    {% endif%}
+                         <li class="nav-item">
+                            <a class="nav-item nav-link" href="{% url 'ecomapp:adminlogout' %}">Đăng xuất</a>
+                         </li>
                 {% else %}
-                <li class="nav-item">
-                    <P> Chưa đăng nhập </p>
-                </li>
-                {% endif%}
+                  <li class="nav-item">
+                       <P>  </p>
+                  </li>
+                {% endif%} 
                 {% comment %} <li class="nav-item">
                     <a class="nav-link" href="{% url 'ecomapp:adminorderlist' %}">All Orders</a>
                 </li>

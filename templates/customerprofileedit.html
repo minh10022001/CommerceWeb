@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Chỉnh Sửa Thông Tin Cá Nhân{% endblock %}
+{% block title %}Chỉnh sửa thông tin{% endblock %}
 
 {% block content %}
 <style>
@@ -8,17 +8,85 @@
         color: red;
     }
 </style>
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 mx-auto">
-            <h3>Chỉnh Sửa</h3>
-            <hr>
-            <form action="" method="POST">
-                {% csrf_token %}
-                {{form.as_p}}
-                <button class="btn btn-primary">Cập Nhật</button>
-            </form>
+
+<div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style = "font-size: 25px">Chỉnh sửa thông tin</h1>
+          
         </div>
     </div>
+<div class="container"  style = "background-color: #F5F5F5; padding: 20px; border-radius: 25px;" >
+   
+    <div>
+        <form action="" method="POST">
+            {% csrf_token %}
+        
+            <div class="mb-4" >
+                
+                <div class="row">
+                
+                    <div class="col-md-6 form-group">
+                        <label>Tài khoản</label>
+                    {{form.username}}
+                    
+                    </div>
+                   
+                    <div class="col-md-6 form-group">
+                        <label>Số điện thoại</label>
+                    
+                        {{form.phonenumber}}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Email</label>
+                        
+                        {{form.email}}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Họ tên</label>
+                    
+                        {{form.full_name}}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Thành phố/Tỉnh</label>
+                    
+                        {{form.city}}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Quận huyện</label>
+                    
+                        {{form.district}}
+                        
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Phường xã</label>
+                    
+                        {{form.subdistrict}}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Phố/Làng</label>
+                    
+                        {{form.street}}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Địa chỉ</label>
+                        
+                        {{form.description}}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        
+                    </div>
+                </div>
+                <br>
+                
+                <div style = "text-align:center;">
+                     <button class="btn btn-block btn-primary my-3 py-3" style  ="font-size: 20px;">Lưu</button>
+                </div>
+            </div>
+        
+        </form>
+    </div>
+  
 </div>
+    {% comment %} </div>
+</div> {% endcomment %}
 {% endblock %}

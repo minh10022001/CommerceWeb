@@ -1,6 +1,8 @@
 from asyncio.windows_events import NULL
 from cgitb import reset
 import email
+from pickle import GET
+from tkinter import NONE
 # from turtle import position
 from unicodedata import name
 from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView
@@ -30,7 +32,13 @@ class EcomMixin(object):
                 cart_obj.save()
         return super().dispatch(request, *args, **kwargs)
 
-
+class LoginRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = request.user).exists() and Users.objects.filter(accountid__user = request.user, is_active = True).exists():
+            pass
+        else:
+            return redirect("/login")
+        return super().dispatch(request, *args, **kwargs)
 class HomeView(EcomMixin, TemplateView):
     template_name = "home.html"
 
@@ -88,7 +96,84 @@ class AllProductsView(EcomMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['allcategories'] = Category.objects.all()
         return context
+class BookProductsView(EcomMixin, TemplateView):
+    template_name = "bookproducts.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if Book.objects.count()>0:
+            productbook = Product.objects.get(type ="Book")
+            allbook = Item.objects.filter(productid = productbook ).order_by("-id")
+        else:
+            allbook = []
+        paginator = Paginator(allbook, 8)
+        page_number = self.request.GET.get('page')
+        product_list = paginator.get_page(page_number)
+        print(product_list)
+        if self.request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = self.request.user).exists():
+            customer = Customer.objects.get(userid__accountid__user = self.request.user)
+            if Wishlist.objects.filter(customerid = customer).exists():
+                wishlist = Wishlist.objects.get(customerid = customer)
+                wishListItem = [wishlistline.itemid for wishlistline in Wishlistline.objects.filter(wishlistid = wishlist)]
+                context['wishListItem'] = wishListItem
+            else:
+                wishList = Wishlist.objects.create(customerid = customer)
+                wishList.save()
+                context['wishListItem'] = []
+        context['product_list'] =  product_list
+        return context
+class ElectronicProductsView(EcomMixin, TemplateView):
+    template_name = "electronicproducts.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if Electronic.objects.count()>0:
+            productelectronic = Product.objects.get(type ="Electronic")
+            allelectronic = Item.objects.filter(productid =  productelectronic ).order_by("-id")
+        else:
+            allelectronic = []
+        paginator = Paginator(allelectronic, 8)
+        page_number = self.request.GET.get('page')
+        product_list = paginator.get_page(page_number)
+        if self.request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = self.request.user).exists():
+            customer = Customer.objects.get(userid__accountid__user = self.request.user)
+            if Wishlist.objects.filter(customerid = customer).exists():
+                wishlist = Wishlist.objects.get(customerid = customer)
+                wishListItem = [wishlistline.itemid for wishlistline in Wishlistline.objects.filter(wishlistid = wishlist)]
+                context['wishListItem'] = wishListItem
+            else:
+                wishList = Wishlist.objects.create(customerid = customer)
+                wishList.save()
+                context['wishListItem'] = []
+        context['product_list'] =  product_list
+        return context
 
+class ClothesProductsView(EcomMixin, TemplateView):
+    template_name = "clothesproducts.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if Clothes.objects.count()>0:
+            productclothes = Product.objects.get(type ="Clothes")
+            allclothes = Item.objects.filter(productid =  productclothes ).order_by("-id")
+        else: 
+            allclothes = []
+        paginator = Paginator(allclothes, 8)
+        # all_products = Item.objects.all().order_by("-id")
+        # paginator = Paginator(all_products, 8)
+        page_number = self.request.GET.get('page')
+        product_list = paginator.get_page(page_number)
+        if self.request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = self.request.user).exists():
+            customer = Customer.objects.get(userid__accountid__user = self.request.user)
+            if Wishlist.objects.filter(customerid = customer).exists():
+                wishlist = Wishlist.objects.get(customerid = customer)
+                wishListItem = [wishlistline.itemid for wishlistline in Wishlistline.objects.filter(wishlistid = wishlist)]
+                context['wishListItem'] = wishListItem
+            else:
+                wishList = Wishlist.objects.create(customerid = customer)
+                wishList.save()
+                context['wishListItem'] = []
+        context['product_list'] =  product_list
+        return context
 class EditProfileView(View):
     template_name = "customerprofileedit.html"
     def get(self, request, *args, **kwargs):
@@ -260,8 +345,17 @@ class ProductDetailView(View):
       
         feedbacks = Feedback.objects.filter(itemid =item)
         context = {'form': form, "item":item, "product":product, "feedbacks": feedbacks}
-        return render(request, 'productdetail.html', context)
-
+        return render(request, 'productdetailTEST.html', context)
+    def dispatch(self, request, *args, **kwargs):
+        print(request.method)
+        if request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = request.user).exists() and Users.objects.filter(accountid__user = request.user, is_active = True).exists():
+            pass
+        else:
+            if(request.method == 'POST'):
+                return redirect("/login")
+            else:
+                pass
+        return super().dispatch(request, *args, **kwargs)
     def post(self, request, *args, **kwargs):
         form = FeedBackForm(data=request.POST)
         if form.is_valid():
@@ -274,7 +368,7 @@ class ProductDetailView(View):
             feedback.save()
             feedbacks = Feedback.objects.filter(itemid = item)
             context = {'form': FeedBackForm(), "item": item, "feedbacks": feedbacks}
-        return render(request, 'productdetail.html', context)
+        return render(request, 'productdetailTEST.html', context)
 
 # class AddToCartView(EcomMixin, TemplateView):
 #     template_name = "addtocart.html"
@@ -421,7 +515,7 @@ class EmptyCartView(EcomMixin, View):
         cart.save()
         return redirect("ecomapp:mycart")
 
-class MyCartView(EcomMixin, TemplateView):
+class MyCartView(EcomMixin, LoginRequiredMixin,TemplateView):
     template_name = "mycartTEST.html"
 
     def get_context_data(self, **kwargs):
@@ -522,22 +616,11 @@ class MyCartView(EcomMixin, TemplateView):
 
 class CheckoutView(EcomMixin, CreateView ):
     template_name = "checkout.html"
-    # def sample_view(request):
-    #     current_user = request.user
-    #     return current_user.id
-    # print(sample_view(request))
     form_class = CheckoutForm
-
     success_url = reverse_lazy("ecomapp:home")
-    # def get_form(self, request):
-    #         # if form_class is None:
-    #         #     form_class = self.get_form_class()
-    #         #     return form_class(**self.get_form_kwargs(),current_user_profile=get_profile(self.request.user))
-    #         return self.request.user
-    # user = get_form()
+
     def get_form_kwargs(self):
         kwargs = super(CheckoutView, self).get_form_kwargs()
-        # kwargs['user'] = self.request.user # pass the 'user' in kwargs
         kwargs.update({'user': self.request.user})
         return kwargs
     def dispatch(self, request, *args, **kwargs):
@@ -624,7 +707,10 @@ class CustomerRegistrationView(CreateView):
         user_ = User.objects.create_user(username = username, password = password)
         account = Account.objects.create(user = user_)
         addressid = Address.objects.create(description = description, city = city, district= district, subdistrict = subdistrict, street=street)
+        # shippingaddressid = Shippingaddress.objects.create(addressid = addressid, phonenumberreceive = phonenumber)
         user = Users.objects.create(accountid = account, contactinfoid = contact, fullnameid = fullname, addressid = addressid)
+        # customer = Customer.objects.create(userid = user,type_customer = "Normal" )
+        # CustomerShippingaddress.objects.create(shippingaddressid =shippingaddressid, customerid = customer)
         form.instance.type_customer = 'Normal'
         form.instance.userid = user
         login(self.request, user.accountid.user)
@@ -703,7 +789,21 @@ class ContactView(EcomMixin, TemplateView):
 
 class CustomerProfileView(TemplateView):
     template_name = "customerprofile.html"
-
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     kw = self.request.GET.get("keyword")
+    #     results = Item.objects.filter(
+    #         Q(productid__name__icontains=kw) | Q(description__icontains=kw))
+    #     context["results"] = results
+    #     return context
+         
+    #     kw = self.request.GET.get("keyword")
+    #     if kw is not None:
+    #         queryset = Product.objects.filter(
+    #             Q(id__icontains=kw) | Q(name__icontains=kw))
+    #     else:
+    #         queryset = Product.objects.all().order_by("-id")
+    #    context["allproducts"] = queryset
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = request.user).exists():
             pass
@@ -713,21 +813,30 @@ class CustomerProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        kw = self.request.GET.get("keyword")
         customer = Customer.objects.get(userid__accountid = self.request.user.account)
         context['customer'] = customer
-        orders = Order.objects.filter(customerid=customer).order_by("-id")
+        if kw is not None:
+            orders = Order.objects.filter (Q(id__icontains=kw))
+        # context["results"] = results
+        else:
+            orders = Order.objects.filter(customerid=customer).order_by("-id")
         context["orders"] = orders
         return context
 
-class WishListView(TemplateView):
+class WishListView(LoginRequiredMixin,EcomMixin,TemplateView):
     template_name = "wishlist.html"
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        customer = Customer.objects.get(userid__accountid = self.request.user.account)
-        wishlist = Wishlist.objects.get(customerid = customer)
-        wishListItem = [wishlistline.itemid for wishlistline in Wishlistline.objects.filter(wishlistid = wishlist)]
-        context['wishListItem'] = wishListItem
-        return context
+        if self.request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = self.request.user).exists():
+            context = super().get_context_data(**kwargs)
+            customer = Customer.objects.get(userid__accountid = self.request.user.account)
+            wishlist = Wishlist.objects.get(customerid = customer)
+            wishListItem = [wishlistline.itemid for wishlistline in Wishlistline.objects.filter(wishlistid = wishlist)]
+            context['wishListItem'] = wishListItem
+            return context
+        else:
+            return redirect("ecomapp:home")
+         
 
 class ReviewListView(TemplateView):
     template_name = "reviewlist.html"
@@ -766,69 +875,72 @@ class SearchView(TemplateView):
         return context
 
 
-class PasswordForgotView(FormView):
-    template_name = "forgotpassword.html"
-    form_class = PasswordForgotForm
-    success_url = "/forgot-password/?m=s"
-    # contactinfo = Contactinfo.objects.get(email =  "minh0353845565@gmail.com")
+# class PasswordForgotView(FormView):
+#     template_name = "forgotpassword.html"
+#     form_class = PasswordForgotForm
+#     success_url = "/forgot-password/?m=s"
+#     # contactinfo = Contactinfo.objects.get(email =  "minh0353845565@gmail.com")
 
-    # users = Users.objects.get(contactinfoid =contactinfo)
-    # # customer = Customer.objects.get(userid = users)
-    # print(customer.id)
-    def form_valid(self, form):
-        # get email from user
-        email = form.cleaned_data.get("email")
-        print(email)
-        # get current host ip/domain
-        url = self.request.META['HTTP_HOST']
-        # get customer and then user
-        # print("--------------------")
-        # customer = Customer.objects.get(userid_contactinfoid_email=email)
-        contactinfo = Contactinfo.objects.get(email = email)
-        users = Users.objects.get(contactinfoid =contactinfo)
-        customer = Customer.objects.get(userid = users)
-        print(customer.id)
-        user = customer.userid
-        # send mail to the user with email
-        text_content = 'Please Click the link below to reset your password. '
-        html_content = url + "/password-reset/" + email + \
-            "/" + password_reset_token.make_token(user) + "/"
-        send_mail(
-            'Password Reset Link | Django Ecommerce',
-            text_content + html_content,
-            settings.EMAIL_HOST_USER,
-            [email],
-            fail_silently=False,
-        )
-        return super().form_valid(form)
+#     # users = Users.objects.get(contactinfoid =contactinfo)
+#     # # customer = Customer.objects.get(userid = users)
+#     # print(customer.id)
+#     def form_valid(self, form):
+#         # get email from user
+#         email = form.cleaned_data.get("email")
+#         print(email)
+#         # get current host ip/domain
+#         url = self.request.META['HTTP_HOST']
+#         # get customer and then user
+#         # print("--------------------")
+#         # customer = Customer.objects.get(userid_contactinfoid_email=email)
+#         contactinfo = Contactinfo.objects.get(email = email)
+#         users = Users.objects.get(contactinfoid =contactinfo)
+#         customer = Customer.objects.get(userid = users)
+#         print(customer.id)
+#         user = customer.userid
+#         # send mail to the user with email
+#         text_content = 'Please Click the link below to reset your password. '
+#         html_content = url + "/password-reset/" + email + \
+#             "/" + password_reset_token.make_token(user) + "/"
+#         send_mail(
+#             'Password Reset Link | Django Ecommerce',
+#             text_content + html_content,
+#             settings.EMAIL_HOST_USER,
+#             [email],
+#             fail_silently=False,
+#         )
+#         return super().form_valid(form)
 
 
-class PasswordResetView(FormView):
-    template_name = "passwordreset.html"
-    form_class = PasswordResetForm
-    success_url = "/login/"
+# class PasswordResetView(FormView):
+#     template_name = "passwordreset.html"
+#     form_class = PasswordResetForm
+#     success_url = "/login/"
 
-    def dispatch(self, request, *args, **kwargs):
-        email = self.kwargs.get("email")
-        user = User.objects.get(email=email)
-        token = self.kwargs.get("token")
-        if user is not None and password_reset_token.check_token(user, token):
-            pass
-        else:
-            return redirect(reverse("ecomapp:passworforgot") + "?m=e")
+#     def dispatch(self, request, *args, **kwargs):
+#         email = self.kwargs.get("email")
+#         user = User.objects.get(email=email)
+#         token = self.kwargs.get("token")
+#         if user is not None and password_reset_token.check_token(user, token):
+#             pass
+#         else:
+#             return redirect(reverse("ecomapp:passworforgot") + "?m=e")
 
-        return super().dispatch(request, *args, **kwargs)
+#         return super().dispatch(request, *args, **kwargs)
 
-    def form_valid(self, form):
-        password = form.cleaned_data['new_password']
-        email = self.kwargs.get("email")
-        user = User.objects.get(email=email)
-        user.set_password(password)
-        user.save()
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         password = form.cleaned_data['new_password']
+#         email = self.kwargs.get("email")
+#         user = User.objects.get(email=email)
+#         user.set_password(password)
+#         user.save()
+#         return super().form_valid(form)
 
 # # admin pages
-
+class AdminLogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect("ecomapp:adminhome")
 
 class AdminLoginView(FormView):
     template_name = "adminpages/adminlogin.html"
@@ -1347,13 +1459,13 @@ class AdminProductListView(AdminRequiredMixin, TemplateView):
         kw = self.request.GET.get("keyword")
         if kw is not None:
             queryset = Product.objects.filter(
-                Q(productid__name__icontains=kw) | Q(description__icontains=kw))
+                Q(id__icontains=kw) | Q(name__icontains=kw))
         else:
             queryset = Product.objects.all().order_by("-id")
         context["allproducts"] = queryset
         context["allcategory"] =  allcategory
         return context
-
+   
 class AdminItemListView(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/adminitemlist.html"
 
@@ -1527,3 +1639,18 @@ class AdminImportProductView(AdminRequiredMixin, CreateView):
         form.instance.num = number
         form.instance.price = price
         return super().form_valid(form)
+
+class StaticABC(AdminRequiredMixin, TemplateView):
+    template_name = "adminpages/static.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["pendingorders"] = Order.objects.filter(
+            status="Order Received").order_by("-id")
+        # position = ""
+        # if Staffs.objects.get(userid__accountid__user = request.user).exists():
+        #     staff = Staffs.objects.get(userid__accountid__user = request.user)
+        #     position = staff.position
+        # else:
+        #     position = "Null"
+        # context['position'] = self.get_abc()
+        return context
