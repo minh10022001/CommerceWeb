@@ -3,19 +3,23 @@
 {% block title %}{{product.productid.name}}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h3>Product: {{product.name}}</h3>
-    <h4>Category: {{product.type}}</h4>
-    <hr>
-    <div class="row">
-        <div class="col-md-8">
-            <form action="{% url 'ecomapp:adminproductdetail' product.id %}" method="POST">
-                {% csrf_token %}
-                {{form.as_p}}
-                <hr>
-                <button class="btn btn-info"  type="submit" name = "upload" value = "true">Cập Nhật</button>
-            </form>
+    {% if request.user.account.users.staffs.position == "Manager" or  request.user.account.users.staffs.position == "Warehouse Staff" %}
+    <div class="container">
+        <h3>Product: {{product.name}}</h3>
+        <h4>Category: {{product.type}}</h4>
+        <hr>
+        <div class="row">
+            <div class="col-md-8">
+                <form action="{% url 'ecomapp:adminproductdetail' product.id %}" method="POST">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <hr>
+                    <button class="btn btn-info"  type="submit" name = "upload" value = "true">Cập Nhật</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+    {% else %} 
+        <p> Không có quyền truy cập </p> 
+    {% endif%}
 {% endblock %}

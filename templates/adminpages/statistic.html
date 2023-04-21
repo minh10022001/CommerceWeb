@@ -1,0 +1,12 @@
+{% extends "adminpages/adminbase.html" %}
+
+{% block title %}Statics{% endblock %}
+
+{% block content %}
+    {% if request.user.account.users.staffs.position == "Manager" %}
+        <h1>Thống kê</h1>
+        <iframe title="count time" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=25d2ee1f-9cf5-4276-9b55-aa818c33a166&autoAuth=true&ctid=e7572e92-7aee-4713-a3c4-ba64888ad45f" frameborder="0" allowFullScreen="true"></iframe>
+        {% else %} 
+            <p> Không có quyền truy cập </p> 
+    {% endif%}
+{% endblock %}

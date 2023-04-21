@@ -69,7 +69,7 @@ urlpatterns = [
     path("admin-product-detail/<int:pro_id>/", AdminProductDetailView.as_view(), name="adminproductdetail"),
     path("admin-item-detail/<slug:slug>/", AdminItemDetailView.as_view(), name="adminitemdetail"),
     path("admin-all-orders/", AdminOrderListView.as_view(), name="adminorderlist"),
-    
+     path("admin-pending-orders/", AdminPendingOrder.as_view(), name="adminpendingorders"),
     path("admin-order-<int:pk>-change/",
          AdminOrderStatusChangeView.as_view(), name="adminorderstatuschange"),
 
@@ -88,5 +88,6 @@ urlpatterns = [
 
     path("admin-product/import/", AdminImportProductView.as_view(),
          name="adminimportproduct"),
-
+    path("statistic", Statistic.as_view(),
+         name="statistic"),
 ]

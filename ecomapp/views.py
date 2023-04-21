@@ -60,7 +60,7 @@ class HomeView(EcomMixin, TemplateView):
                 context['wishListItem'] = []
         return context
 
-class UpdateToWishList(EcomMixin, TemplateView):
+class UpdateToWishList(LoginRequiredMixin,EcomMixin, TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -80,8 +80,10 @@ class UpdateToWishList(EcomMixin, TemplateView):
                 wishlistline = Wishlistline.objects.create(wishlistid = wishlist, itemid = item)
                 wishlistline.save()
             else:
-                wishlistline = Wishlistline.objects.get(wishlistid = wishlist, itemid = item)
-                wishlistline.delete()
+                wishlistline = Wishlistline.objects.filter(wishlistid = wishlist, itemid = item)
+                for line in wishlistline:
+                    line.delete()
+                # wishlistline.delete()
             wishListItem = [wishlistline.itemid for wishlistline in Wishlistline.objects.filter(wishlistid = wishlist)]
             context['wishListItem'] = wishListItem
 
@@ -101,8 +103,13 @@ class BookProductsView(EcomMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if Book.objects.count()>0:
-            productbook = Product.objects.get(type ="Book")
-            allbook = Item.objects.filter(productid = productbook ).order_by("-id")
+            # productbook = Product.objects.get(type ="Book")
+            # allbook = Item.objects.filter(productid = productbook  ).order_by("-id")
+            productbook = Product.objects.filter(type ="Book").order_by("-id")
+            allbook =[]
+            for book in productbook:
+                itembook = Item.objects.get(productid = book)
+                allbook.append(itembook)
         else:
             allbook = []
         paginator = Paginator(allbook, 8)
@@ -126,8 +133,11 @@ class ElectronicProductsView(EcomMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if Electronic.objects.count()>0:
-            productelectronic = Product.objects.get(type ="Electronic")
-            allelectronic = Item.objects.filter(productid =  productelectronic ).order_by("-id")
+            productelectronic = Product.objects.filter(type ="Electronic").order_by("-id")
+            allelectronic =[]
+            for electronic in productelectronic:
+                itemelectronic = Item.objects.get(productid = electronic)
+                allelectronic.append(itemelectronic)
         else:
             allelectronic = []
         paginator = Paginator(allelectronic, 8)
@@ -152,8 +162,13 @@ class ClothesProductsView(EcomMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if Clothes.objects.count()>0:
-            productclothes = Product.objects.get(type ="Clothes")
-            allclothes = Item.objects.filter(productid =  productclothes ).order_by("-id")
+            # productclothes = Product.objects.get(type ="Clothes")
+            # allclothes = Item.objects.filter(productid =  productclothes ).order_by("-id")
+            productclothes = Product.objects.filter(type ="Clothes").order_by("-id")
+            allclothes =[]
+            for clothes in productclothes:
+                itemclothes = Item.objects.get(productid = clothes)
+                allclothes.append(itemclothes)
         else: 
             allclothes = []
         paginator = Paginator(allclothes, 8)
@@ -979,6 +994,20 @@ class AdminRequiredMixin(object):
 #         return context
 class AdminHomeView(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/adminhome.html"
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["pendingorders"] = Order.objects.filter(
+    #         status="Order Received").order_by("-id")
+    #     # position = ""
+    #     # if Staffs.objects.get(userid__accountid__user = request.user).exists():
+    #     #     staff = Staffs.objects.get(userid__accountid__user = request.user)
+    #     #     position = staff.position
+    #     # else:
+    #     #     position = "Null"
+    #     # context['position'] = self.get_abc()
+    #     return context
+class AdminPendingOrder(AdminRequiredMixin, TemplateView):
+    template_name = "adminpages/adminpendingorders.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["pendingorders"] = Order.objects.filter(
@@ -1090,13 +1119,15 @@ class AdminStaffDetailView(View):
         form.fields['startdate'].initial = staff.startdate
         form.fields['workingtime'].initial = staff.workingtime
         form.fields['is_active'].initial = staff.userid.is_active
-       
+        print("--------------------------------")
         context = {'form': form}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        form = EditStaffForm(data=request.POST)
+        form = EditStaffForm(data=request.POST or None) 
+        print("------")
         if form.is_valid():
+            print('------------------------sahjÁGJha')
             staff_id = kwargs['staff_id']
             staff = Staffs.objects.get(userid = staff_id)
          
@@ -1115,7 +1146,7 @@ class AdminStaffDetailView(View):
             street = form.cleaned_data.get("street")
             description = form.cleaned_data.get("description")
             codeStaff = form.cleaned_data.get("codeStaff")
-            position = form.cleaned_data.get("position")
+            # position = form.cleaned_data.get("position")
             salary = form.cleaned_data.get("salary")
             startdate = form.cleaned_data.get("startdate")
             workingtime = form.cleaned_data.get("workingtime")
@@ -1138,8 +1169,9 @@ class AdminStaffDetailView(View):
             staff.userid.addressid.street = street
             staff.userid.addressid.description = description
             staff.codeStaff= codeStaff
-            staff.position = position
+            staff.position =  staff.position
             staff.salary = salary
+            staff.startdate  =  startdate 
             staff.workingtime = workingtime
             print("---------------------------",is_active)
             staff.userid.is_active = is_active
@@ -1149,9 +1181,11 @@ class AdminStaffDetailView(View):
             staff.userid.addressid.save()
             staff.userid.save()
             staff.save()
+           
+           
 
             # form.instance.userid  = staff.userid
-            # context = {"staff" : Staffs.objects.get(userid = staff.userid )}
+        #     context = {"staff" : Staffs.objects.get(userid = staff.userid )}
         # return render(request, self.template_name, context)
         return redirect("/admin-staff/list/")
 
@@ -1639,8 +1673,8 @@ class AdminImportProductView(AdminRequiredMixin, CreateView):
         form.instance.price = price
         return super().form_valid(form)
     
-class StaticABC(AdminRequiredMixin, TemplateView):
-    template_name = "adminpages/static.html"
+class Statistic(AdminRequiredMixin, TemplateView):
+    template_name = "adminpages/statistic.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["pendingorders"] = Order.objects.filter(

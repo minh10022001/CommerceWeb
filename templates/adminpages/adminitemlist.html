@@ -3,43 +3,47 @@
 
 
 {% block content %}
-<div class="container" style="padding-top: 3rem"> 
-    <div class="row">
-        <div class="col-md-12">
-            <h3>All Item list</h3><hr>
-            <form class="form-inline my-2 my-lg-0" action="{% url 'ecomapp:adminitemlist' %}" method="GET">
-                <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Tìm kiếm</button>
-                <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search"
-                    aria-label="Search" required>
-            </form>
-            <table class="table table-hover">
-                <thead style="background-color: #D19C97">
-                    <tr>
-                        <th scope="col">STT</th>
-                        <th scope="col">Product Title</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Inventory</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Upload?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in allproducts %}
-                    <tr>
-                        <td scope="row">{{forloop.counter}}</td>
-                        <td><a href="{% url 'ecomapp:adminitemdetail' p.slug %}">{{p.productid.name}}</a></td>
-                        <td><img src="{{p.image.url}}" style="height: 60px;" alt=""></td>
-                        <td>{{p.price}}</td>
-                        <td>{{p.productid.num}}</td>
-                        <td>{{p.description}}</td>
-                        <td>{{p.isUpload}}</td>
-                        
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+{% if request.user.account.users.staffs.position == "Manager" or  request.user.account.users.staffs.position == "Business Staff" or request.user.account.users.staffs.position == "Warehouse Staff" %}
+    <div class="container" style="padding-top: 3rem"> 
+        <div class="row">
+            <div class="col-md-12">
+                <h3>All Item list</h3><hr>
+                <form class="form-inline my-2 my-lg-0" action="{% url 'ecomapp:adminitemlist' %}" method="GET">
+                    <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Tìm kiếm</button>
+                    <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search"
+                        aria-label="Search" required>
+                </form>
+                <table class="table table-hover">
+                    <thead style="background-color: #D19C97">
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Product Title</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Inventory</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Upload?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in allproducts %}
+                        <tr>
+                            <td scope="row">{{forloop.counter}}</td>
+                            <td><a href="{% url 'ecomapp:adminitemdetail' p.slug %}">{{p.productid.name}}</a></td>
+                            <td><img src="{{p.image.url}}" style="height: 60px;" alt=""></td>
+                            <td>{{p.price}}</td>
+                            <td>{{p.productid.num}}</td>
+                            <td>{{p.description}}</td>
+                            <td>{{p.isUpload}}</td>
+                            
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+    {% else %} 
+        <p> Không có quyền truy cập </p> 
+    {% endif%}
 {% endblock %}

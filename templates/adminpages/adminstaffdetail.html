@@ -8,23 +8,21 @@
         color: red;
     }
 </style>
- {% if request.user.account.users.staffs.position == "Manager" %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 mx-auto">
-            <h3>Chỉnh Sửa</h3>
-            <hr>
-            <form action="" method="POST">
-                {% csrf_token %}
-                {{form.as_p}}
-                <button class="btn btn-primary">Cập Nhật</button>
-            </form>
+    {% if request.user.account.users.staffs.position == "Manager" %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <h3>Chỉnh Sửa</h3>
+                <hr>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button class="btn btn-primary">Cập Nhật</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-{% else %}
-        
-            <P> Không có quyền truy cập </p>
-        
-{% endif%} 
+    {% else %} 
+            <p> Không có quyền truy cập </p> 
+    {% endif%}  
 {% endblock %}

@@ -1,38 +1,42 @@
 {% extends 'adminpages/adminbase.html' %}
 
-{% block title %}All Orders {% endblock %}
+{% block title %}All Reviews {% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top: 3rem">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>All Reviews</h3><hr>
-            <table class="table table-hover">
-                <thead style="background-color: #D19C97">
-                    <tr>
-                        <th scope="col">STT</th>
-                        <th scope="col">Review ID </th>
-                        <th scope="col" >Customer</th>
-                        <th scope="col">Create at</th>
-                        <th scope="col">Sentiment</th>
-                        <th scope="col">Reply?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for review in allreviews %}
-                    <tr>
-                        <td scope="row">{{forloop.counter}}</td>
-                        <td><a href="{% url 'ecomapp:adminreviewdetail' review.id %}">#REVIEW_{{review.id}}</a></td>
-                        <td>{{review.customerid.userid.fullnameid.fullname}}</td>
-                        <td>{{review.reviewtime}}</td>
-                        <td>{{review.sentiment}}</td>
-                        <td>{{review.isReply}}</td>
-            
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    {% if request.user.account.users.staffs.position == "Manager" or  request.user.account.users.staffs.position == "Sale Staff" %}
+        <div class="container" style="padding-top: 3rem">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>All Reviews</h3><hr>
+                    <table class="table table-hover">
+                        <thead style="background-color: #D19C97">
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Review ID </th>
+                                <th scope="col" >Customer</th>
+                                <th scope="col">Create at</th>
+                                <th scope="col">Sentiment</th>
+                                <th scope="col">Reply?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for review in allreviews %}
+                            <tr>
+                                <td scope="row">{{forloop.counter}}</td>
+                                <td><a href="{% url 'ecomapp:adminreviewdetail' review.id %}">#REVIEW_{{review.id}}</a></td>
+                                <td>{{review.customerid.userid.fullnameid.fullname}}</td>
+                                <td>{{review.reviewtime}}</td>
+                                <td>{{review.sentiment}}</td>
+                                <td>{{review.isReply}}</td>
+                    
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    {% else %} 
+        <p> Không có quyền truy cập </p> 
+    {% endif%} 
 {% endblock %}

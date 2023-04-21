@@ -3,6 +3,7 @@
 {% block title %}Reply Review{% endblock %}
 
 {% block content %}
+{% if request.user.account.users.staffs.position == "Manager" or  request.user.account.users.staffs.position == "Sale Staff" %}
 <div class="container">
     <h1 class="text-left">Phản Hồi ý Kiến Khách Hàng.</h1>
     <h5 class="text-left"></h1>
@@ -20,4 +21,7 @@
           </form>
     </div>
 </div>
+{% else %} 
+      <p> Không có quyền truy cập </p> 
+{% endif%} 
 {% endblock %}

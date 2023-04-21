@@ -1,3 +1,4 @@
+from email.policy import default
 from pickle import FALSE, TRUE
 from turtle import position
 from urllib import request
@@ -230,7 +231,7 @@ class EditStaffForm(forms.ModelForm):
     street = forms.CharField(widget=forms.TextInput())
     description = forms.CharField(widget=forms.TextInput())
     codeStaff = forms.CharField(widget=forms.TextInput())
-    position =forms.CharField(label = "Staff Type", widget=forms.Select(choices=TYPE_STAFF),disabled= True)  # Field name made lowercase.
+    position =forms.CharField(label = "Staff Type", widget=forms.Select(choices=TYPE_STAFF), disabled= False)  # Field name made lowercase.
     salary =forms.FloatField(widget=forms.NumberInput())  # Field name made lowercase.
     startdate =forms.DateField(widget=forms.DateInput())  # Field name made lowercase.
     workingtime =forms.IntegerField(widget=forms.NumberInput())  # Field name made lowercase.
