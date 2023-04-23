@@ -63,6 +63,7 @@
                             </div>
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                 <h6 class="text-truncate mb-3" style = ""><a href="{% url 'ecomapp:productdetail' p.slug %}" style = "color:#2E2178;">{{p.productid.name}}</a></h6>
+                                  <h6 class="my-3"> <span class="avg-rating">{{p.avg_rating}}</span>/5 <i class="fa fa-star text-warning"></i><small class="pt-1"> ({{p.count_review}} đánh giá )</small></h6>
                                 <div class=" d-flex justify-content-center">
                                     <h6>Giá: {{p.price}} VND</h6>
                                 </div>

@@ -174,28 +174,21 @@
            
             <div class="col-lg-7 pb-5" >
                 <h3 class="font-weight-semi-bold">{{item.productid.name}}</h3>
-                <div class="d-flex mb-3">
-                    <div class="text-primary mr-2">
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star-half-alt"></small>
-                        <small class="far fa-star"></small>
-                    </div>
-                    <small class="pt-1">(50 Reviews)</small>
-                </div>
+                <br>
                 <h3 class="font-weight-semi-bold mb-4">Giá: {{item.price}}  VNĐ</h3>
+                <h5 class="my-3"> <span class="avg-rating">{{item.avg_rating}}</span>/5 <i class="fa fa-star text-warning"></i><small class="pt-1"> ({{item.count_review}} đánh giá )</small><h5>
+               
 
                 {% if item.productid.type == "Book" %}
-                    <p class="mb-4">Danh mục: Sách </p>
+                    <p class="mb-4"><b>Danh mục:</b> Sách </p>
                 {% endif %}
                 {% if item.productid.type == "Electronic" %}
-                    <p class="mb-4">Danh mục: Đồ điện tử </p>
+                    <p class="mb-4"><b>Danh mục:</b> Đồ điện tử </p>
                 {% endif %}
                 {% if item.productid.type == "Clothes" %}
-                    <p class="mb-4">Danh mục: Quần áo </p>
+                    <p class="mb-4"><b>Danh mục:</b> Quần áo </p>
                 {% endif %}
-                <p class="mb-4">Mô tả: {{item.description}}</p>
+                <p class="mb-4"><b>Mô tả: </b> {{item.description}}</p>
               
 
                 <div class="d-flex align-items-center mb-4 pt-2">
@@ -214,7 +207,7 @@
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade" id="tab-pane-2">
-                        <h4 class="mb-3">Additional Information</h4>
+                        <h4 class="mb-3">Thông tin chi tiết</h4>
                         {% comment %} <div class="row"> {% endcomment %}
                             <div>
                                 {% if product.productid.type == "Clothes" %}
@@ -365,35 +358,27 @@
                                 </div>
                                 {% endfor %}
                             </div>
-                            <div class="col-md-6">
-                                <h4 class="mb-4">Leave a review</h4>
-                                <small>Your email address will not be published. Required fields are marked *</small>
-                                <div class="d-flex my-3">
-                                    <p class="mb-0 mr-2">Your Rating * :</p>
-                                    <div class="text-primary">
-                                       
-                                        {% comment %} <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i> {% endcomment %}
-                                    </div>
-                                </div>
+                            <div class="col-md-6", style = "background-color:#EDF1FF; padding:20px 20px 20px 50px;border-radius: 15px">
+                                <h4 class="mb-4">Đánh giá sản phẩm</h4>
+                             
                                   <form class="row g-3" action="{% url 'ecomapp:productdetail' item.slug %}" method="POST">
                                     {% csrf_token %}
-                                    <div class="col-12" style = "display: table; clear: both;">
-                                        <div style = "float: left; left: 30px">
-                                            <label> {{ form.content.label }}:</label>
+                                    <div class="d-flex my-3">
+                                    <p class="mb-0 mr-2">Đánh giá :</p>
+                                    
+                                            {{ form.rating}}
+                                    </div>
+                                    <div class="form-group"  style = 'padding-right:50px;'>
+                                        
+                                            <label> Nội dung</label>
+                                         
                                             {{ form.content }}
-                                        </div>
-                                        <div style = "float: left; left: 30px">
-                                            <label> {{ form.rating.label }}:</label>
-                                            {{ form.rating }}
-                                        </div>
+                                        
+                                       
                                     </div>
                                     
                                     <div class="col-12">
-                                    <button type="submit" class="btn btn-primary">Send</button>
+                                    <button type="submit" class="btn btn-primary">Gửi</button>
                                     </div>
                                 </form>
                                 {% comment %} <form>

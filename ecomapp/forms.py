@@ -37,7 +37,7 @@ class CheckoutForm(forms.ModelForm):
         super(CheckoutForm, self).__init__(*args, **kwargs)
         self.fields['customershippingaddress'].queryset = CustomerShippingaddress.objects.filter(customerid =customer)
 class FeedBackForm(forms.ModelForm):
-    content = forms.CharField(label = "Nội Dung", widget=forms.Textarea(attrs={'rows':2, 'cols':70}))
+    content = forms.CharField(label = "Nội Dung", widget=forms.Textarea(attrs={'rows':2, 'cols':70,'class': "form-control",}))
     rating = forms.TypedChoiceField(choices=[(x, x) for x in range(1, 6)], coerce=int, help_text = 'Units: ')
     class Meta:
         model = Feedback

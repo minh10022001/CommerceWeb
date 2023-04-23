@@ -272,7 +272,26 @@ class Item(models.Model):
     class Meta:
         
         db_table = 'item'
-    
+    @property
+    def count_review(self):
+        all_feedback =  Feedback.objects.filter(itemid = self.id)
+        if all_feedback ==None:
+            return 0
+        else: 
+            return len(all_feedback)
+
+    @property
+    def avg_rating(self):
+        all_feedback =  Feedback.objects.filter(itemid = self.id)
+        if all_feedback ==None:
+            return 0
+        elif len(all_feedback)==0:
+            return 0
+        else: 
+            sum =0 
+            for feedback in all_feedback:
+                sum += feedback.rate
+            return round(sum/len(all_feedback),2)
     def __str__(self) -> str:
         return self.productid.name
 
