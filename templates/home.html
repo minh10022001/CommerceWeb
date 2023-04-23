@@ -8,12 +8,12 @@
 <div id="header-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active" style="height: 410px;">
-                            <img class="img-fluid" src="img/carousel-1.jpg" alt="Image">
+                            <img class="img-fluid" src="static/book2.jpg" alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Fashionable Dress</h3>
-                                    <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">BANANA</h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Nhà sách</h3>
+                                    <a href="" class="btn btn-light py-2 px-3">Mua ngay</a>
                                 </div>
                             </div>
                         </div>
@@ -21,13 +21,24 @@
                             <img class="img-fluid" src="static/electronic.jfif" alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Reasonable Price</h3>
-                                    <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">BANANA</h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Đồ điện tử</h3>
+                                    <a href="{% url 'ecomapp:allelectronic' %}" class="btn btn-light py-2 px-3">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" style="height: 410px;">
+                            <img class="img-fluid" src="static/clothes1.png" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">BANANA</h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Quần áo</h3>
+                                    <a href="{% url 'ecomapp:allelectronic' %}" class="btn btn-light py-2 px-3">Mua ngay</a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                     <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
                         <div class="btn btn-dark" style="width: 45px; height: 45px;">
                             <span class="carousel-control-prev-icon mb-n2"></span>
@@ -51,7 +62,7 @@
                                 <img src="{{p.image.url}}" alt="" class="img-fluid w-100" style="height: 250px; object-fit: contain;">
                             </div>
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                <h6 class="text-truncate mb-3"><a href="{% url 'ecomapp:productdetail' p.slug %}">{{p.productid.name}}</a></h6>
+                                <h6 class="text-truncate mb-3" style = ""><a href="{% url 'ecomapp:productdetail' p.slug %}" style = "color:#2E2178;">{{p.productid.name}}</a></h6>
                                 <div class=" d-flex justify-content-center">
                                     <h6>Giá: {{p.price}} VND</h6>
                                 </div>
@@ -70,7 +81,9 @@
                     </div>
             {% endif %}
         {% endfor %}
-        <nav aria-label="..." >
+       
+    </div >
+  <nav aria-label="..." >
         <ul class="pagination">
              {% if product_list.has_previous %}
             <li class="page-item">
@@ -102,8 +115,6 @@
             
         </ul>
     </nav>
-    </div >
- 
      
    
    
