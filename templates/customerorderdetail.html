@@ -4,20 +4,31 @@
 {% block title %}Chi tiết đơn hàng {% endblock %}
 
 {% block content %}
+<div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 50px">
+            <h6 class="font-weight-semi-bold text-uppercase mb-3">BANANA</h6>
+            
+        </div>
+    </div>
 <div class="container">
     <div class="row">
         <div class="col-md-8 mx-auto">
             <h3>Chi tiết đơn hàng</h3>
             <hr>
             <p><span class="font-weight-bold"> ID: </span> #ORDER_{{ord_obj.id}}</p>
+             {% if ord.status == 'Order Received' %}
+                  <p><span class="font-weight-bold">Trạng thái: </span> Chờ xác nhận</p>
+            {% else %}
+                  <p><span class="font-weight-bold">Trạng thái: </span> {{ord_obj.status}}</p>
+            {% endif %}
             <p><span class="font-weight-bold">Trạng thái: </span> {{ord_obj.status}}</p>
             <p><span class="font-weight-bold">Ngày đặt hàng: </span>
                 {{ord_obj.time}}({{ord_obj.time|timesince}} ago)</p>
-            <p><span class="font-weight-bold">Thông tin khách hàng: </span> By {{ord_obj.customerid.userid.fullnameid.fullname}},
+            <p><span class="font-weight-bold">Thông tin khách hàng: </span>  {{ord_obj.customerid.userid.fullnameid.fullname}},
                 {{ord_obj.customerid.userid.contactinfoid.phonenumber}}</p>
-            <p><span class="font-weight-bold">Địa chỉ giao hàng: </span> By {{ord_obj.shippingaddressid.address}}
+            <p><span class="font-weight-bold">Địa chỉ giao hàng: </span>  {{ord_obj.shippingaddressid.address}}
                 ({{ord_obj.shippingaddressid.phonenumberreceive}})</p>
-            <h4>Ordered Items</h4>
+            <h4>Mặt hàng đã đặt</h4>
             <table class="table">
                 <thead>
                     <tr>
@@ -25,7 +36,7 @@
                         <th>Mặt hàng</th>
                         <th>Giá tiền</th>
                         <th>Số lượng</th>
-                        <th>Thành tiền</th>
+                        <th style = "width: 150px;">Thành tiền</th>
                     </tr>
                 </thead>
                 <tbody>

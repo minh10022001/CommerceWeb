@@ -375,13 +375,13 @@ class Order(models.Model):
     @property
     def cost_shipping(self):
         costship = 0
-        if self.cost_all_items >= 500:
+        if self.cost_all_items >= 500000:
             costship  = 0
         else:
             if self.shippingmethod =='Fast':
-                costship  = 10
+                costship  = 20000
             elif self.shippingmethod =='Normal':
-                costship =  5
+                costship =  10000
         return costship
     @property
     def total(self):

@@ -15,7 +15,7 @@
     </div>
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <h3>Danh sách sản phẩm trong giỏ hàng</h3>
             <a href="{% url 'ecomapp:mycart' %}">Cập nhật sản phẩm</a>
             <table class="table">
@@ -25,7 +25,7 @@
                         <th>Sản phẩm</th>
                         <th>Giá</th>
                         <th>Số lượng</th>
-                        <th>Tổng</th>
+                        <th style = 'width: 150px;'>Tổng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,17 +40,17 @@
                     {% endfor %}
                     <tr>
                         <th colspan="4" class="text-right">Tổng tiền mặt hàng</th>
-                        <th>{{cart.total}} Đ</th>
+                        <th >{{cart.total}} VNĐ</th>
                     </tr>
                     <tr>
                         <th colspan="4" class="text-right">Phí vận chuyển</th>
                         
-                        <th> <span id = "result" >0</span> Đ</th>
+                        <th> <span id = "result" >0</span> VNĐ</th>
                     </tr>
                     <tr>
                         <th colspan="4" class="text-right">Tổng tiền</th>
                         
-                        <th> <span id = "total"> {{cart.total}}</span> Đ</th>
+                        <th> <span id = "total"> {{cart.total}}</span> VNĐ</th>
                         {% comment %} <th><h5> <script>
                             var cost_item = {{cart.total}}
                             var cost_shipping = 0;
@@ -86,7 +86,7 @@
             </table>
             
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h3>Thanh toán</h3>
             <form action="" method="POST">
                  {% csrf_token %} 
@@ -115,7 +115,7 @@
                 function listbox()
                 {   
                     var cost_item = {{cart.total}}
-                    if (cost_item > 500){
+                    if (cost_item > 500000){
                         document.getElementById('result').innerHTML = 0  ;
                         document.getElementById('result').style.color = "Gray";
                         document.getElementById('total').innerHTML = cost_item ;
@@ -135,16 +135,16 @@
                             }
                         }
                         if(spanresult.value =="1"){
-                            document.getElementById('result').innerHTML = 5  ;
+                            document.getElementById('result').innerHTML =  10000 ;
                             document.getElementById('result').style.color = "Gray";
-                            document.getElementById('total').innerHTML = cost_item + 5  ;
+                            document.getElementById('total').innerHTML = cost_item + 10000  ;
                             document.getElementById('total').style.color = "Gray";
                         
                         }
                         else{
-                            document.getElementById('result').innerHTML = 10  ;
+                            document.getElementById('result').innerHTML = 20000  ;
                             document.getElementById('result').style.color = "Gray";
-                            document.getElementById('total').innerHTML = cost_item + 10  ;
+                            document.getElementById('total').innerHTML = cost_item + 20000  ;
                             document.getElementById('total').style.color = "Gray";
                         }
                         if(document.getElementById("result").value == "")

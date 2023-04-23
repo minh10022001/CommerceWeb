@@ -307,10 +307,12 @@
                     <div class="tab-pane fade" id="tab-pane-3">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="mb-4">1 review for "Colorful Stylish Shirt"</h4>
+                                <h6 class="mb-4">Đánh giá về sản phẩm "{{item.productid.name}}"</h6>
                                 {% for feedback in feedbacks %}
                                 <div class="media mb-4">
-                                    <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                {% load static %}
+
+                                    <img src="{% static 'user.png' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                                     <div class="media-body">
                                      
                                         <h6>{{feedback.customerid.userid.fullnameid.fullname}}</h6>

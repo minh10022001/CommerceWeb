@@ -56,7 +56,11 @@
                         <td><a href="{% url 'ecomapp:customerorderdetail' ord.pk %}"> #ORDER_{{ord.id}}</a></td>
                         <td>{{ord.total}}</td>
                         <td>{{ord.time}}</td>
-                        <td>{{ord.status}}</td>
+                        {% if ord.status == 'Order Received' %}
+                            <td>Chờ xác nhận</td>
+                        {% else %}
+                            <td>{{ord.status}}</td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>

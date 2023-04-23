@@ -28,7 +28,7 @@
                         <td>{{cp.itemid.price}}</td>
                         <td>{{cp.num}}</td>
                         <td>{{cp.sumPrice}}</td>
-                        <td>
+                        <td ">
                             <a href="{% url 'ecomapp:managecart' cp.id %}?action=inc" class="btn btn-primary"> + </a>
                             <a href="{% url 'ecomapp:managecart' cp.id %}?action=dcr" class="btn btn-warning"> - </a>
                             <a href="{% url 'ecomapp:managecart' cp.id %}?action=rmv" class="btn btn-danger"> x </a>

@@ -23,6 +23,7 @@
                     <thead class="bg-secondary text-dark">
                         <tr>
                             <th>Stt</th>
+                            <th>Ảnh</th>
                             <th>Sản phẩm</th>
                             <th>Giá</th>
                             <th>Số lượng</th>
@@ -34,11 +35,12 @@
                         {% for cp in cartline %}
                             <tr>
                                 <td class="align-middle">{{forloop.counter}}</td>
+                                <td class="align-middle"><img src={{cp.itemid.image.url}} alt="" style="width: 50px;"></td>
                                 <td class="align-middle">{{cp.itemid.productid.name}}</td>
-                                <td>{{cp.itemid.price}}</td>
-                                <td>{{cp.num}}</td>
-                                <td>{{cp.sumPrice}}</td>
-                                <td>
+                                <td class="align-middle">{{cp.itemid.price}}</td>
+                                <td class="align-middle">{{cp.num}}</td>
+                                <td class="align-middle">{{cp.sumPrice}}</td>
+                                <td class="align-middle" style = "width:150px;">
                                     <a href="{% url 'ecomapp:managecart' cp.id %}?action=inc" class="btn btn-primary"> + </a>
                                     <a href="{% url 'ecomapp:managecart' cp.id %}?action=dcr" class="btn btn-warning"> - </a>
                                     <a href="{% url 'ecomapp:managecart' cp.id %}?action=rmv" class="btn btn-danger"> x </a>
@@ -50,18 +52,17 @@
                 </table>
             </div>
             <div class="col-lg-4">
-                <form class="mb-5" action="">
-                </form>
+              
                 <div class="card border-secondary mb-5">
                     <div class="card-header bg-secondary border-0">
-                        <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                        <h4 class="font-weight-semi-bold m-0">Thanh toán</h4>
                     </div>
                     <div class="card-body">
 
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
                         <div class="d-flex justify-content-between mt-2">
-                            <h5 class="font-weight-bold">Total</h5>
+                            <h5 class="font-weight-bold">Tạm tính</h5>
                             <h5 class="font-weight-bold">{{cart.total}}</h5>
                         </div>
                         {% if cart.cartline_set.all %}
@@ -77,4 +78,5 @@
             </div>
         </div>
     </div>
+
 {% endblock %}

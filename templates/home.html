@@ -13,7 +13,7 @@
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3">BANANA</h4>
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">Nhà sách</h3>
-                                    <a href="" class="btn btn-light py-2 px-3">Mua ngay</a>
+                                    <a href="{% url 'ecomapp:allbook' %}"" class="btn btn-light py-2 px-3">Mua ngay</a>
                                 </div>
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3">BANANA</h4>
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">Quần áo</h3>
-                                    <a href="{% url 'ecomapp:allelectronic' %}" class="btn btn-light py-2 px-3">Mua ngay</a>
+                                    <a href="{% url 'ecomapp:allclothes' %}" class="btn btn-light py-2 px-3">Mua ngay</a>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                     </a>
                 </div>
  </div>
-<div class="container-fluid" style = "background-color:white; padding: auto;" >
+<div class="container-fluid" style = "background-color:white; padding-bottom: 20px;" >
 <div class="container-fluid pt-5" >
     <div class="row px-xl-5 pb-3">
         {% for p in product_list %}

@@ -1,37 +1,96 @@
 {% extends 'base.html' %}
 
-{% block title %}Quần áo{% endblock %}
+{% block title %}Danh mục sách{% endblock %}
 
 {% block content %}
-<div class="container">
-
-    <!-- <h1 class="text-center">Chào mừng đến với sàn thương mại điện tử của chúng tôi. </h1> -->
-    <!-- <hr> -->
-    <div class="row mt-3">
+<div class="container-fluid" style =  "background-color:#f5f5f5;">
+<div class="container "style =  "background-color:#f5f5f5;">
+<div id="header-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" style="height: 410px;">
+                            {% load static %}  
+                            <img class="img-fluid" src="{% static 'book2.jpg' %}" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">BANANA</h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Nhà sách</h3>
+                                    <a href="{% url 'ecomapp:allbook' %}" class="btn btn-light py-2 px-3">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" style="height: 410px;">
+                            {% load static %}  
+                            <img class="img-fluid" src="{% static 'electronic.jfif' %}" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">BANANA</h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Đồ điện tử</h3>
+                                    <a href="{% url 'ecomapp:allelectronic' %}" class="btn btn-light py-2 px-3">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" style="height: 410px;">
+                            {% load static %}  
+                            <img class="img-fluid" src="{% static 'clothes1.png' %}" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">BANANA</h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Quần áo</h3>
+                                    <a href="{% url 'ecomapp:allclothes' %}" class="btn btn-light py-2 px-3">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-prev-icon mb-n2"></span>
+                        </div>
+                    </a>
+                    <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-next-icon mb-n2"></span>
+                        </div>
+                    </a>
+                </div>
+ </div>
+<div class="container-fluid" style = "background-color:white; padding: auto;" >
+<div class="container-fluid pt-5" >
+    <div class="row px-xl-5 pb-3">
         {% for p in product_list %}
             {% if p.isUpload %}
-            <div class="col-md-3 card">
-                <div class="m-4">
-                    <h4><a href="{% url 'ecomapp:productdetail' p.slug %}">{{p.productid.name}}</a></h4>
-                    <img src="{{p.image.url}}" alt="" class="img-fluid" style="height: 200px; object-fit: contain;">
-                    <p class="mt-3">Giá: {{p.price}}</p>
-                    <a href="{% url 'ecomapp:addtocart' p.id %}" class="btn btn-primary">Thêm vào giỏ</a>
+                    <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                        <div class="card product-item border-0 mb-4">
+                            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                <img src="{{p.image.url}}" alt="" class="img-fluid w-100" style="height: 250px; object-fit: contain;">
+                            </div>
+                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                <h6 class="text-truncate mb-3" style = ""><a href="{% url 'ecomapp:productdetail' p.slug %}" style = "color:#2E2178;">{{p.productid.name}}</a></h6>
+                                <div class=" d-flex justify-content-center">
+                                    <h6>Giá: {{p.price}} VND</h6>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between bg-light border">
+                                {% comment %} <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a> {% endcomment %}
+                                <a href="{% url 'ecomapp:addtocart' p.id %}" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
+                                {% if p in wishListItem %}
+                                <a href="{% url 'ecomapp:updateWishList' p.id %}?action=rmv" class="material-icons col-md-4 "> favorite </a> 
+                                {% else %}
+                                <a href="{% url 'ecomapp:updateWishList' p.id %}?action=add" class="material-icons col-md-4 "> favorite_border</a> 
+                                {% endif %}
+                            </div>
+                        </div>
                     
-                    {% if p in wishListItem %}
-                    <a href="{% url 'ecomapp:updateWishList' p.id %}?action=rmv" class="material-icons col-md-4 "> favorite</a><span>2</span>
-                    {% else %}
-                    <a href="{% url 'ecomapp:updateWishList' p.id %}?action=add" class="material-icons col-md-4 "> favorite_border </a>
-                    {% endif %}
-                </div>
-            </div>
+                    </div>
             {% endif %}
         {% endfor %}
-    </div>
-    <nav aria-label="...">
+       
+    </div >
+  <nav aria-label="..." >
         <ul class="pagination">
-            {% if product_list.has_previous %}
+             {% if product_list.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ product_list.previous_page_number }}">Sau</a>
+                <a class="page-link" href="?page={{ product_list.previous_page_number }}">Trước</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -55,9 +114,15 @@
             <li class="page-item disabled">
                 <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Sau</a>
             </li>
-            {% endif %}
+            {% endif %} 
+            
         </ul>
     </nav>
-
+     
+   
+   
 </div>
+</div> 
+
+
 {% endblock %}
