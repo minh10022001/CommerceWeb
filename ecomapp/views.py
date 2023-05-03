@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from cgitb import reset
 import email
 from pickle import GET
@@ -11,7 +10,8 @@ from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
 from .utils import password_reset_token
 from django.core.mail import send_mail
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest, HttpResponse, StreamingHttpResponse
+
 from django.conf import settings
 from django.db.models import Q
 from .models import *
@@ -20,6 +20,14 @@ import requests
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
+
+import datetime as dt
+import random
+import matplotlib.pyplot as plt
+from docxtpl import DocxTemplate, InlineImage
+from wsgiref.util import FileWrapper
+import mimetypes
+import os
 
 class EcomMixin(object):
     def dispatch(self, request, *args, **kwargs):
@@ -31,6 +39,71 @@ class EcomMixin(object):
                 cart_obj.save()
         return super().dispatch(request, *args, **kwargs)
 
+class test(EcomMixin, TemplateView):
+    template_name = "test.html"
+    def generate_template():
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        filename = "media/docx_template/BaoCaoDoanhThu.docx"
+        filepath = os.path.join(base_dir, filename)
+        # create a document object
+        doc = DocxTemplate(filepath)
+
+        # create data for reports
+        bangDoanhThuChiTiet = []
+        for k in range(10):
+            costPu = random.randint(1, 15)
+            nUnits = random.randint(100, 500)
+            bangDoanhThuChiTiet.append({"sNo": k+1, "ten": "Item "+str(k+1),
+                                "gia": costPu, "soluong": nUnits, "doanhthu": costPu*nUnits})
+        topItems = [x["ten"] for x in sorted(bangDoanhThuChiTiet, key=lambda x: x["doanhthu"], reverse=True)][0:3]
+
+        month = "01"
+        time_start = "2022-01-01"
+        time_end = "2022-01-31"
+        # create context to pass data to template
+        context = {
+            "time_start": time_start,
+            "time_end": time_end,
+            "tong_doanh_thu": 1000,
+            "loi_nhuan": 200,
+            "ti_le_loi_nhuan": "20%",
+            "khách_hang_moi": 100,
+            "doanh_thu_tb_khach": 2, 
+            "bangDoanhThuChiTiet": bangDoanhThuChiTiet
+        }
+
+        # inject image into the context
+        fig, ax = plt.subplots()
+        ax.bar([x["ten"] for x in bangDoanhThuChiTiet], [x["doanhthu"] for x in bangDoanhThuChiTiet])
+        fig.tight_layout()
+        image_path = os.path.join(base_dir, "reports/images/doanhThuImg.png")
+        fig.savefig(image_path)
+        context['doanhThuImg'] = InlineImage(doc, image_path)
+
+        # render context into the document object
+        doc.render(context)
+
+        # save the document object as a word file
+        reportWordPath = 'reports/documents/report_month_{0}.docx'.format(month)
+        output_path = os.path.join(base_dir, reportWordPath)
+        doc.save(output_path)
+        return output_path
+    
+    def download_file(req):
+        filepath = test.generate_template()
+        if os.path.exists(filepath):
+            with open(filepath, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(filepath)
+                return response
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = Users.objects.raw("select * from users")
+        for u in user:
+            print(u.fullnameid)
+        context['abc'] = user[0].fullnameid
+        return context
+    
 class LoginRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = request.user).exists() and Users.objects.filter(accountid__user = request.user, is_active = True).exists():
@@ -43,6 +116,7 @@ class HomeView(EcomMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['abc']=User.objects.all()
         all_products = Item.objects.all().order_by("-id")
         paginator = Paginator(all_products, 8)
         page_number = self.request.GET.get('page')

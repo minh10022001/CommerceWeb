@@ -1,6 +1,5 @@
 from email.policy import default
 from pickle import FALSE, TRUE
-from turtle import position
 from urllib import request
 from django import forms
 from django.forms import fields
