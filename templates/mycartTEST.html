@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block title %} Giỏ hàng{% endblock %}
 
 {% block content %}
@@ -37,9 +37,9 @@
                                 <td class="align-middle">{{forloop.counter}}</td>
                                 <td class="align-middle"><img src={{cp.itemid.image.url}} alt="" style="width: 50px;"></td>
                                 <td class="align-middle">{{cp.itemid.productid.name}}</td>
-                                <td class="align-middle">{{cp.itemid.price}}</td>
+                                <td class="align-middle">{{cp.itemid.price|intcomma}} VND</td>
                                 <td class="align-middle">{{cp.num}}</td>
-                                <td class="align-middle">{{cp.sumPrice}}</td>
+                                <td class="align-middle">{{cp.sumPrice|intcomma}} VND</td>
                                 <td class="align-middle" style = "width:150px;">
                                     <a href="{% url 'ecomapp:managecart' cp.id %}?action=inc" class="btn btn-primary"> + </a>
                                     <a href="{% url 'ecomapp:managecart' cp.id %}?action=dcr" class="btn btn-warning"> - </a>

@@ -1,7 +1,7 @@
 {% extends 'adminpages/adminbase.html' %}
 
 {% block title %}All Orders {% endblock %}
-
+{% load humanize %}
 {% block content %}
     {% if request.user.account.users.staffs.position == "Manager" or  request.user.account.users.staffs.position == "Sale Staff" %}
     <div class="container" style="padding-top: 3rem">
@@ -26,7 +26,7 @@
                             <td><a href="{% url 'ecomapp:adminorderdetail' order.id %}">#ORDER_{{order.id}}</a></td>
                             <td>{{order.customerid.userid.fullnameid.fullname}}</td>
                             <td>{{order.time}}</td>
-                            <td>{{order.total}}</td>
+                            <td>{{order.total|intcomma}}</td>
                             <td>{{order.status}}</td>
                 
                         </tr>
