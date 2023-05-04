@@ -34,9 +34,9 @@
                             <td><a target="_blank"
                                     href="{% url 'ecomapp:productdetail' ori.itemid.slug %}">{{ori.itemid.productid.name}}({{ori.itemid.id}})</a>
                             </td>
-                            <td>{{ori.itemid.price}}</td>
+                            <td>{{ori.itemid.price|intcomma}}</td>
                             <td>{{ori.count}}</td>
-                            <td>{{ori.subTotal}}</td>
+                            <td>{{ori.subTotal|intcomma}}</td>
                         </tr>
                         {% endfor %}
                         <tr>
