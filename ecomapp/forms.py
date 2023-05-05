@@ -20,7 +20,7 @@ METHOD_SHIPPING =(
 
 )
 class CheckoutForm(forms.ModelForm):
-    customershippingaddress = forms.ModelChoiceField(queryset= CustomerShippingaddress.objects.all())
+    customershippingaddress = forms.ModelChoiceField(queryset= CustomerShippingaddress.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     paymentMethod = forms.CharField(label = "Payment Method", widget=forms.Select(choices=METHOD))
     shippingmethod = forms.CharField(label = "Shipping Method", widget=forms.Select(choices=METHOD_SHIPPING))
     class Meta:
