@@ -63,7 +63,7 @@
                     <div class="card-footer border-secondary bg-transparent">
                         <div class="d-flex justify-content-between mt-2">
                             <h5 class="font-weight-bold">Tạm tính</h5>
-                            <h5 class="font-weight-bold">{{cart.total}}</h5>
+                            <h5 class="font-weight-bold">{{cart.total|intcomma}} VND</h5>
                         </div>
                         {% if cart.cartline_set.all %}
                             <a class="btn btn-block btn-primary my-3 py-3" href="{% url 'ecomapp:checkout' %}"> Thanh toán </a>
