@@ -23,8 +23,10 @@
                     <h4><a href="{% url 'ecomapp:productdetail' result.slug %}"  style = "color:#2E2178;">{{result.productid.name}}</a></h4>
                     <p>Giá: {{result.price}} VNĐ</p>
                     <p>{{result.description|truncatewords:50}}</p>
-                    <a href="{% url 'ecomapp:addtocart' result.id %}" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i>Thêm vào giỏ hàng</a>
-                    
+                   
+                     <div class="d-flex align-items-center mb-4 pt-2">
+                      <a href="{% url 'ecomapp:addtocart' result.id %}" class="btn btn-danger px-3" style = "border-radius: 5px"><i class="fa fa-shopping-cart  mr-1" style="color:white"></i>Thêm vào giỏ hàng</a>
+                </div>
                 </div>
             </div>
             {% endfor %}

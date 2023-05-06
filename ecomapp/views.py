@@ -529,7 +529,7 @@ class AddToCartView( LoginRequiredMixin,EcomMixin, View):
                         cartproduct = Cartline.objects.create(
                             shoppingcartid=cart_obj, itemid=product_obj, num=1)
                         cart_obj.save()
-                    return redirect("ecomapp:mycart")
+                return redirect("ecomapp:mycart")
 
 
 class ManageCartView(EcomMixin, View):

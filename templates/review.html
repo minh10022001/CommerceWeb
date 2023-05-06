@@ -3,22 +3,31 @@
 {% block title %}Review{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="text-left">Đội Ngũ Chăm Sóc Khách Hàng.</h1>
-    <h5 class="text-left">Chúng tôi luôn sẵn sàng lắng nghe ý kiến đóng góp từ bạn. Chúng tôi sẽ phản hồi trong thời gian sớm nhất.</h1>
+<div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Chăm Sóc Khách Hàng</h1>
+            <div class="d-inline-flex">
+               
+                <p class="m-0">Chúng tôi luôn sẵn sàng lắng nghe ý kiến đóng góp từ bạn. Chúng tôi sẽ phản hồi trong thời gian sớm nhất.</p>
+            </div>
+        </div>
+    </div>
+<div class="container" >
+  
+    
     <hr style="height:30px">
-    <div>
+    <div style  ="padding-left: 200px">
         <form class="row g-3" action="{% url 'ecomapp:review' %}" method="POST">
             {% csrf_token %}
-            <label class="col-12"> {{ form.content.label }}:</label>
-            <div class="col-12">
+            <label class="col-12" style = "font-size: 30px; color: black;"> {{ form.content.label }}</label>
+            <div class="col-12" >
               {{ form.content }}
             </div>
             <div class="col-12">
               {% if request.user.account %}
-                <button type="submit" class="btn btn-primary">Send</button>
+                <button type="submit" class="btn btn-success" style = "border-radius: 10px">Gửi</button>
               {% else %}
-                <button type="submit" class="btn btn-primary" disabled>Send</button>
+                <button type="submit" class="btn btn-success" style = "border-radius: 10px;"disabled>Gửi</button>
               {% endif %}
             </div>
         </form>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}{{item.productid.name}}{% endblock %}
-
+{% load humanize %}
 {% block content %}
 {% comment %} <div class="container-fluid bg-secondary mb-5">
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 50px">
@@ -173,9 +173,10 @@
                 </div>
            
             <div class="col-lg-7 pb-5" >
-                <h3 class="font-weight-semi-bold">{{item.productid.name}}</h3>
+                <h2 class="font-weight-semi-bold">{{item.productid.name}}</h2>
                 <br>
-                <h3 class="font-weight-semi-bold mb-4">Giá: {{item.price}}  VNĐ</h3>
+                <br>
+                <h3 class="font-weight-semi-bold mb-4">Giá: {{item.price|intcomma}}  VND</h3>
                 <h5 class="my-3"> <span class="avg-rating">{{item.avg_rating}}</span>/5 <i class="fa fa-star text-warning"></i><small class="pt-1"> ({{item.count_review}} đánh giá )</small><h5>
                
 
@@ -190,9 +191,9 @@
                 {% endif %}
                 <p class="mb-4"><b>Mô tả: </b> {{item.description}}</p>
               
-
+                <br>
                 <div class="d-flex align-items-center mb-4 pt-2">
-                      <a href="{% url 'ecomapp:addtocart' item.id %}" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i>Thêm vào giỏ hàng</a>
+                      <a href="{% url 'ecomapp:addtocart' item.id %}" class="btn btn-danger px-3" style = "border-radius: 5px"><i class="fa fa-shopping-cart  mr-1" style="color:white"></i>Thêm vào giỏ hàng</a>
                 </div>
               
             </div>
