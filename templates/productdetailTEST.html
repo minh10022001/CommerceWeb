@@ -173,7 +173,7 @@
                 </div>
            
             <div class="col-lg-7 pb-5" >
-                <h2 class="font-weight-semi-bold">{{item.productid.name}}</h2>
+                <h3 class="font-weight-semi-bold">{{item.productid.name}}</h3>
                 <br>
                 <br>
                 <h3 class="font-weight-semi-bold mb-4">Giá: {{item.price|intcomma}}  VND</h3>
@@ -189,7 +189,7 @@
                 {% if item.productid.type == "Clothes" %}
                     <p class="mb-4"><b>Danh mục:</b> Quần áo </p>
                 {% endif %}
-                <p class="mb-4"><b>Mô tả: </b> {{item.description}}</p>
+                <p class="mb-4"><b>Mô tả: </b> <small>{{item.description}}</small></p>
               
                 <br>
                 <div class="d-flex align-items-center mb-4 pt-2">
