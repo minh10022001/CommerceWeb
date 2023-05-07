@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-
-{% block title %}Danh mục sách{% endblock %}
+{% load humanize %}
+{% block title %}Trang chủ{% endblock %}
 
 {% block content %}
 <div class="container-fluid" style =  "background-color:#f5f5f5;">
@@ -8,7 +8,7 @@
 <div id="header-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active" style="height: 410px;">
-                            {% load static %}  
+                             {% load static %}  
                             <img class="img-fluid" src="{% static 'book2.jpg' %}" alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="carousel-item" style="height: 410px;">
-                            {% load static %}  
+                           {% load static %}  
                             <img class="img-fluid" src="{% static 'electronic.jfif' %}" alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
@@ -54,7 +54,7 @@
                     </a>
                 </div>
  </div>
-<div class="container-fluid" style = "background-color:white; padding: auto;" >
+<div class="container-fluid" style = "background-color:white; padding-bottom: 20px;" >
 <div class="container-fluid pt-5" >
     <div class="row px-xl-5 pb-3">
         {% for p in product_list %}
@@ -66,17 +66,18 @@
                             </div>
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                 <h6 class="text-truncate mb-3" style = ""><a href="{% url 'ecomapp:productdetail' p.slug %}" style = "color:#2E2178;">{{p.productid.name}}</a></h6>
+                                  <h6 class="my-3"> <span class="avg-rating">{{p.avg_rating}}</span>/5 <i class="fa fa-star text-warning"></i><small class="pt-1"> ({{p.count_review}} đánh giá )</small></h6>
                                 <div class=" d-flex justify-content-center">
-                                    <h6>Giá: {{p.price}} VND</h6>
+                                    <h6>Giá: <b>{{p.price|intcomma}} VND </b></h6>
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-between bg-light border">
                                 {% comment %} <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a> {% endcomment %}
-                                <a href="{% url 'ecomapp:addtocart' p.id %}" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
+                                <a href="{% url 'ecomapp:addtocart' p.id %}" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-info mr-1"></i>Thêm vào giỏ</a>
                                 {% if p in wishListItem %}
-                                <a href="{% url 'ecomapp:updateWishList' p.id %}?action=rmv" class="material-icons col-md-4 "> favorite </a> 
+                                <a href="{% url 'ecomapp:updateWishList' p.id %}?action=rmv" class="material-icons col-md-4 " > favorite </a> 
                                 {% else %}
-                                <a href="{% url 'ecomapp:updateWishList' p.id %}?action=add" class="material-icons col-md-4 "> favorite_border</a> 
+                                <a href="{% url 'ecomapp:updateWishList' p.id %}?action=add" class="material-icons col-md-4 " > favorite_border</a> 
                                 {% endif %}
                             </div>
                         </div>
@@ -87,7 +88,7 @@
        
     </div >
   <nav aria-label="..." >
-        <ul class="pagination">
+        <ul class="pagination" style ="color: black;">
              {% if product_list.has_previous %}
             <li class="page-item">
                 <a class="page-link" href="?page={{ product_list.previous_page_number }}">Trước</a>

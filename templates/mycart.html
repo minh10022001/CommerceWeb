@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block title %} Giỏ hànsg{% endblock %}
 
 {% block content %}
@@ -37,7 +37,7 @@
                     {% endfor %}
                     <tr>
                         <th colspan="4" class="text-right">Tổng tiền</th>
-                        <th>{{cart.total}} Đ</th>
+                        <th>{{cart.total}} đ </th>
                         {% if cart.cartline_set.all %}
                         <th><a href="{% url 'ecomapp:emptycart' %}">Xoá hết sản phẩm trong giỏ</a></th>
                         {% endif %}

@@ -16,12 +16,12 @@
             <h3>Chi tiết đơn hàng</h3>
             <hr>
             <p><span class="font-weight-bold"> ID: </span> #ORDER_{{ord_obj.id}}</p>
-             {% if ord.status == 'Order Received' %}
+             {% if ord_obj.status == 'Order Received' %}
                   <p><span class="font-weight-bold">Trạng thái: </span> Chờ xác nhận</p>
             {% else %}
                   <p><span class="font-weight-bold">Trạng thái: </span> {{ord_obj.status}}</p>
             {% endif %}
-            <p><span class="font-weight-bold">Trạng thái: </span> {{ord_obj.status}}</p>
+          
             <p><span class="font-weight-bold">Ngày đặt hàng: </span>
                 {{ord_obj.time}}({{ord_obj.time|timesince}} ago)</p>
             <p><span class="font-weight-bold">Thông tin khách hàng: </span>  {{ord_obj.customerid.userid.fullnameid.fullname}},

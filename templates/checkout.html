@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}Checkout {% endblock %}
-
+{% load humanize %}
 {% block content %}
 <div class="container-fluid bg-secondary mb-5">
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
@@ -39,24 +39,24 @@
                                 <td>{{forloop.counter}}</td>
                                 <td><img src={{cp.itemid.image.url}} alt="" style="width: 50px;"></td>
                                 <td>{{cp.itemid.productid.name}}</td>
-                                <td>{{cp.itemid.price}}</td>
+                                <td>{{cp.itemid.price|intcomma}}</td>
                                 <td>{{cp.num}}</td>
-                                <td>{{cp.sumPrice}}</td>
+                                <td>{{cp.sumPrice|intcomma}}</td>
                             </tr>
                         {% endfor %}
                            <tr>
                         <th colspan="5" class="text-right">Tổng tiền mặt hàng</th>
-                        <th class="text-left">{{cart.total}} VNĐ</th>
+                        <th class="text-left">{{cart.total|intcomma}} VND</th>
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right">Phí vận chuyển</th>
                         
-                        <th class="text-left"> <span id = "result" >0</span> VNĐ</th>
+                        <th class="text-left"> <span id = "result" >0</span> VND</th>
                     </tr>
                     <tr>
                         <th colspan="5" class="text-right">Tổng tiền</th>
                         
-                        <th class="text-left"> <span id = "total"> {{cart.total}}</span> VNĐ</th>
+                        <th class="text-left"> <span id = "total"> {{cart.total|intcomma}}</span> VND</th>
                         
                     </tr>
                     </tbody>

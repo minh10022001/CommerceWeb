@@ -653,7 +653,7 @@ class AddToCartView( LoginRequiredMixin,EcomMixin, View):
                         cartproduct = Cartline.objects.create(
                             shoppingcartid=cart_obj, itemid=product_obj, num=1)
                         cart_obj.save()
-                    return redirect("ecomapp:mycart")
+                return redirect("ecomapp:mycart")
 
 
 class ManageCartView(EcomMixin, View):
@@ -1681,9 +1681,26 @@ class AdminItemListView(AdminRequiredMixin, TemplateView):
         if kw is not None:
             queryset = Item.objects.filter(
                 Q(productid__name__icontains=kw) | Q(description__icontains=kw))
+         
+           
         else:
             queryset = Item.objects.all().order_by("-id")
+        list_import_item = []
+        a = []
+        for i in queryset:
+            list1 = Importingrecord.objects.filter(productid= i.productid)
+            if len(list1)==1:
+                list_import_item.append(Importingrecord.objects.get(productid= i.productid))
+            else :
+                max_id = list1[0].id
+                for j in list1:
+                    max_id =  max(max_id, j.id)
+                list_import_item.append(Importingrecord.objects.get(id =max_id))
+
+           
         context["allproducts"] = queryset
+        context["importitem"] = list_import_item
+    
         return context
 
 class AdminImprotingrecordListView(AdminRequiredMixin, ListView):

@@ -1,4 +1,5 @@
 {% extends 'adminpages/adminbase.html' %}
+{% load humanize %}
 {% block title %}All Item{% endblock %}
 
 
@@ -19,19 +20,25 @@
                             <th scope="col">STT</th>
                             <th scope="col">Product Title</th>
                             <th scope="col">Image</th>
-                            <th scope="col">Price</th>
+                            <th scope="col">Price import</th>
+                            <th scope="col">Price sale</th>
                             <th scope="col">Inventory</th>
                             <th scope="col">Description</th>
                             <th scope="col">Upload?</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for p in allproducts %}
+                        {% for p in allproducts%}
                         <tr>
                             <td scope="row">{{forloop.counter}}</td>
                             <td><a href="{% url 'ecomapp:adminitemdetail' p.slug %}">{{p.productid.name}}</a></td>
                             <td><img src="{{p.image.url}}" style="height: 60px;" alt=""></td>
-                            <td>{{p.price}}</td>
+                            {% for i in importitem%}
+                                {% if p.productid == i.productid%}
+                                    <td>{{i.price|intcomma}}</td>
+                                {% endif%}
+                            {% endfor %}
+                            <td>{{p.price|intcomma}}</td>
                             <td>{{p.productid.num}}</td>
                             <td>{{p.description}}</td>
                             <td>{{p.isUpload}}</td>

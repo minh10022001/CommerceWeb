@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -100,7 +101,7 @@
             </div>
             <div class="col-lg-3 col-6 text-right">
                 <a href="{% url 'ecomapp:wishlist' %}" class="btn border">
-                    <i class="fas fa-heart text-primary"></i>
+                    <i class="fas fa-heart text-danger" ></i>
                     {% if request.user.account == None%}
                         <span class="badge">0</span>
                     {% else %}
@@ -109,7 +110,7 @@
                 </a>
                
                 <a href="{% url 'ecomapp:mycart' %}" class="btn border" style = "background-color:white;">
-                    <i class="fas fa-shopping-cart text-primary" ></i>
+                    <i class="fas fa-shopping-cart text-info" ></i>
                     {% if request.user.account == None%}
                         <span class="badge">0</span>
                     {% else %}
@@ -161,7 +162,7 @@
                         <div class="navbar-nav ml-auto py-0">
                         <form class="form-inline my-2 my-lg-0" action="{% url 'ecomapp:review' %}">
                             <span class="input-group-text bg-transparent text-primary">
-                                <button type="submit" style="background-color: #cce6ff">Gửi Review</button>
+                                <button type="submit" style="background-color: #ACE296; border-radius: 5px;">Gửi Review</button>
                             </span>
                         </form>
                         </div>
