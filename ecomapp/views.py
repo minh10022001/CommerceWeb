@@ -16,7 +16,6 @@ from django.conf import settings
 from django.db.models import Q
 from .models import *
 from .forms import *
-import requests
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
@@ -25,9 +24,9 @@ import datetime as dt
 import random
 import matplotlib.pyplot as plt
 from docxtpl import DocxTemplate, InlineImage
-from wsgiref.util import FileWrapper
-import mimetypes
 import os
+from django.db import connection
+
 
 class EcomMixin(object):
     def dispatch(self, request, *args, **kwargs):
@@ -39,36 +38,87 @@ class EcomMixin(object):
                 cart_obj.save()
         return super().dispatch(request, *args, **kwargs)
 
-class test(EcomMixin, TemplateView):
+class Reports(EcomMixin, TemplateView):
     template_name = "test.html"
-    def generate_template():
+    def run_custome_sql(self, query):
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            row = cursor.fetchall()
+        return row
+
+    def generate_template(self):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         filename = "media/docx_template/BaoCaoDoanhThu.docx"
         filepath = os.path.join(base_dir, filename)
         # create a document object
         doc = DocxTemplate(filepath)
 
+
+
+        month = "04"
+        year = "2023"
+        # create context to pass data to template
+        query_tong_doanh_thu = f"select sum((i.price)*oi.count) as revenue\
+                                from [order] o \
+                                join [orderitem] oi on o.id = oi.id\
+                                join [item] i on oi.ItemID = i.id\
+                                where strftime('%m', o.Time) = \"{month}\""
+        query_loi_nhuan = f"select  sum((i.price - im.price)*oi.count) as profit \
+                            from [order] o  \
+                            join [orderitem] oi on o.id = oi.id \
+                            join [item] i on oi.ItemID = i.id \
+                            join [product] p on i.ProductID = p.id \
+                            join [importingrecord] im on im.productid = p.id\
+                            where strftime('%m', o.Time) = \"{month}\""
+        query_ti_le_loi_nhuan = f"select  (CAST((i.price - im.price) as REAL)/i.Price)*100 as profit \
+                            from [order] o \
+                            join [orderitem] oi on o.id = oi.id \
+                            join [item] i on oi.ItemID = i.id \
+                            join [product] p on i.ProductID = p.id \
+                            join [importingrecord] im on im.productid = p.id \
+                            where strftime('%m', o.Time) = \"{month}\" \
+                            group by strftime('%m', o.Time)"
+        query_khach_hang_moi = f"select count(*) as new_customer \
+                            from [users] u  \
+                            join account a on a.user_id = u.id \
+                            where strftime('%m', a.Date_created) = \"{month}\""
+        query_doanh_thu_tb_khach = f"select  cast(sum(i.price*oi.count) as real)/(count(distinct o.CustomerID)) as profit \
+                                from [order] o \
+                                join [orderitem] oi on o.id = oi.id \
+                                join [item] i on oi.ItemID = i.id \
+                                where strftime('%m', o.Time) = \"{month}\""
+        query_doanh_thu_chi_tiet = f"select  p.name, i.price, sum(oi.count) as quantity, sum(i.price *oi.count) as revenue \
+                                from [order] o \
+                                join [orderitem] oi on o.id = oi.id \
+                                join [item] i on oi.ItemID = i.id \
+                                join [product] p on i.ProductID = p.id \
+                                join [importingrecord] im on im.productid = p.id \
+                                where strftime('%m', o.Time) = \"{month}\" \
+                                group by itemid \
+                                order by revenue desc \
+                                limit 10"
+
+
+        tong_doanh_thu = "{:,}".format(self.run_custome_sql(query_tong_doanh_thu)[0][0])
+        loi_nhuan = "{:,}".format(self.run_custome_sql(query_loi_nhuan)[0][0])
+        ti_le_loi_nhuan = str(round(self.run_custome_sql(query_ti_le_loi_nhuan)[0][0],2))+"%"
+        khach_hang_moi = "{:,}".format(self.run_custome_sql(query_khach_hang_moi)[0][0])
+        doanh_thu_tb_khach = "{:,}".format(self.run_custome_sql(query_doanh_thu_tb_khach)[0][0])
+        listDoanhThu = self.run_custome_sql(query_doanh_thu_chi_tiet)
         # create data for reports
         bangDoanhThuChiTiet = []
-        for k in range(10):
-            costPu = random.randint(1, 15)
-            nUnits = random.randint(100, 500)
-            bangDoanhThuChiTiet.append({"sNo": k+1, "ten": "Item "+str(k+1),
-                                "gia": costPu, "soluong": nUnits, "doanhthu": costPu*nUnits})
-        topItems = [x["ten"] for x in sorted(bangDoanhThuChiTiet, key=lambda x: x["doanhthu"], reverse=True)][0:3]
-
-        month = "01"
-        time_start = "2022-01-01"
-        time_end = "2022-01-31"
-        # create context to pass data to template
+        for k in range(len(listDoanhThu)):
+            bangDoanhThuChiTiet.append({"sNo": k+1, "ten": listDoanhThu[k][0],
+                                "gia": "{:,}".format(listDoanhThu[k][1]), "soluong": "{:,}".format(listDoanhThu[k][2]),
+                                  "doanhthu": "{:,}".format(listDoanhThu[k][3])})
         context = {
-            "time_start": time_start,
-            "time_end": time_end,
-            "tong_doanh_thu": 1000,
-            "loi_nhuan": 200,
-            "ti_le_loi_nhuan": "20%",
-            "khách_hang_moi": 100,
-            "doanh_thu_tb_khach": 2, 
+            "month": month,
+            "year": year,
+            "tong_doanh_thu": tong_doanh_thu,
+            "loi_nhuan": loi_nhuan,
+            "ti_le_loi_nhuan": ti_le_loi_nhuan,
+            "khách_hang_moi": khach_hang_moi,
+            "doanh_thu_tb_khach": doanh_thu_tb_khach, 
             "bangDoanhThuChiTiet": bangDoanhThuChiTiet
         }
 
@@ -90,8 +140,9 @@ class test(EcomMixin, TemplateView):
         return output_path
     
     def download_file(req):
-        filepath = test.generate_template()
-        if os.path.exists(filepath):
+        report = Reports()
+        filepath = report.generate_template()
+        if os.path.exists(filepath ):
             with open(filepath, 'rb') as fh:
                 response = HttpResponse(fh.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
                 response['Content-Disposition'] = 'inline; filename=' + os.path.basename(filepath)
@@ -116,7 +167,6 @@ class HomeView(EcomMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['abc']=User.objects.all()
         all_products = Item.objects.all().order_by("-id")
         paginator = Paginator(all_products, 8)
         page_number = self.request.GET.get('page')
