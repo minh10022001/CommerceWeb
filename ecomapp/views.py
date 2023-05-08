@@ -144,15 +144,10 @@ class Reports(EcomMixin, TemplateView):
         doc.save(output_path)
         return output_path
     
-    def download_file(self,filepath):
-        # month =kwargs['month']
-        # print('----------------', month)
-        # year =kwargs['year']
-        # # month = self.request.GET.get("keyword1")
-        # # year = self.request.GET.get("keyword2")
-        # report = Reports()
-        # filepath = report.generate_template(month, year)
-        print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    def download_file(self, **kwargs):
+        a =kwargs['monthyear']
+        report = Reports()
+        filepath = report.generate_template(a.split('-')[0],a.split('-')[0])
         if os.path.exists(filepath ):
             with open(filepath , 'rb') as fh:
                 response = HttpResponse(fh.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
@@ -160,34 +155,19 @@ class Reports(EcomMixin, TemplateView):
                 return response
     
     def get_context_data(self, **kwargs):
-        # form  = MonthYearForm
-        # context = super().get_context_data(**kwargs)
-        # user = Users.objects.raw("select * from users")
-        # for u in user:
-        #     print(u.fullnameid)
-        # context['abc'] = user[0].fullnameid
-        # context['form']=form
-        # report = Reports()
-        # filepath = report.generate_template()
         context = super().get_context_data(**kwargs)
         month = self.request.GET.get("keyword1")
         year = self.request.GET.get("keyword2")
-        download = self.request.GET.get("keyword3")
-       
-        print(month, year, download)
+        monthyear = None
         if month is not None and year is not None:
             report = Reports()
             file_path = report.generate_template(month, year)
-            report.download_file(file_path)
-            # if download =='a':
-            #     
-            # else:
-            #     print('111111111111111111111111111')
+            monthyear = str(month)+"-"+str(year)
+
+        context['monthyear'] = monthyear  
         context['month'] =  month
         context['year'] = year
         user = Users.objects.raw("select * from users")
-        # for u in user:11
-        #     print(u.fullnameid)
         context['abc'] = user[0].fullnameid
         return context
     

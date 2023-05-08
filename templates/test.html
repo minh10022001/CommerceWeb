@@ -12,15 +12,14 @@
                     <input name="keyword2" class="form-control mr-sm-2" type="search" placeholder="Year"
                 aria-label="Year"value ={{year}} required>
                 <br>
-                <label>Download</label>
-                {% comment %} <input type="checkbox" name = 'download' value ='checked'> {% endcomment %}
-                 <input name="keyword3" class="form-control mr-sm-2" type="search" placeholder="Year"
-                aria-label="Year" required>
+               
                 </form> 
 <img class="img-fluid" src="{% static 'doanhThuImg.png' %}" alt="Image">
 
 <!-- create button using bootstrap -->
-
-
-
-{% endblock %}ss
+{% if monthyear is None%}
+    <p>Download</p>
+{% else %}
+    <h6 class="text-truncate mb-3" style = ""><a href="{% url 'ecomapp:download' monthyear %}" style = "color:#2E2178;">hihi</a></h6>
+{% endif %}
+{% endblock %}
