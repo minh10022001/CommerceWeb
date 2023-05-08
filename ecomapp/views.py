@@ -3,6 +3,7 @@ import email
 from pickle import GET
 # from turtle import position
 from unicodedata import name
+from unittest import mock
 from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
@@ -39,6 +40,7 @@ class EcomMixin(object):
         return super().dispatch(request, *args, **kwargs)
 
 class Reports(EcomMixin, TemplateView):
+  
     template_name = "test.html"
     def run_custome_sql(self, query):
         with connection.cursor() as cursor:
@@ -46,7 +48,7 @@ class Reports(EcomMixin, TemplateView):
             row = cursor.fetchall()
         return row
 
-    def generate_template(self):
+    def generate_template(self, month, year):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         filename = "media/docx_template/BaoCaoDoanhThu.docx"
         filepath = os.path.join(base_dir, filename)
@@ -54,9 +56,12 @@ class Reports(EcomMixin, TemplateView):
         doc = DocxTemplate(filepath)
 
 
-
-        month = "04"
-        year = "2023"
+        month = str(month)
+        year = str(year)
+        print("adssasasasa-----------", type(month))
+        # month = "06"
+        # print("adssasasasa-----------", type(month))
+        # year = "2023"
         # create context to pass data to template
         query_tong_doanh_thu = f"select sum((i.price)*oi.count) as revenue\
                                 from [order] o \
@@ -126,7 +131,7 @@ class Reports(EcomMixin, TemplateView):
         fig, ax = plt.subplots()
         ax.bar([x["ten"] for x in bangDoanhThuChiTiet], [x["doanhthu"] for x in bangDoanhThuChiTiet])
         fig.tight_layout()
-        image_path = os.path.join(base_dir, "reports/images/doanhThuImg.png")
+        image_path = os.path.join(base_dir, "static/doanhThuImg.png")
         fig.savefig(image_path)
         context['doanhThuImg'] = InlineImage(doc, image_path)
 
@@ -139,19 +144,50 @@ class Reports(EcomMixin, TemplateView):
         doc.save(output_path)
         return output_path
     
-    def download_file(req):
-        report = Reports()
-        filepath = report.generate_template()
+    def download_file(self,filepath):
+        # month =kwargs['month']
+        # print('----------------', month)
+        # year =kwargs['year']
+        # # month = self.request.GET.get("keyword1")
+        # # year = self.request.GET.get("keyword2")
+        # report = Reports()
+        # filepath = report.generate_template(month, year)
+        print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         if os.path.exists(filepath ):
-            with open(filepath, 'rb') as fh:
+            with open(filepath , 'rb') as fh:
                 response = HttpResponse(fh.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(filepath)
+                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(filepath )
                 return response
+    
     def get_context_data(self, **kwargs):
+        # form  = MonthYearForm
+        # context = super().get_context_data(**kwargs)
+        # user = Users.objects.raw("select * from users")
+        # for u in user:
+        #     print(u.fullnameid)
+        # context['abc'] = user[0].fullnameid
+        # context['form']=form
+        # report = Reports()
+        # filepath = report.generate_template()
         context = super().get_context_data(**kwargs)
+        month = self.request.GET.get("keyword1")
+        year = self.request.GET.get("keyword2")
+        download = self.request.GET.get("keyword3")
+       
+        print(month, year, download)
+        if month is not None and year is not None:
+            report = Reports()
+            file_path = report.generate_template(month, year)
+            report.download_file(file_path)
+            # if download =='a':
+            #     
+            # else:
+            #     print('111111111111111111111111111')
+        context['month'] =  month
+        context['year'] = year
         user = Users.objects.raw("select * from users")
-        for u in user:
-            print(u.fullnameid)
+        # for u in user:11
+        #     print(u.fullnameid)
         context['abc'] = user[0].fullnameid
         return context
     

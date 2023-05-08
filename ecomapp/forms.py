@@ -18,6 +18,9 @@ METHOD_SHIPPING =(
     ("2", "Fast"),
 
 )
+class MonthYearForm(forms.Form):
+    month =forms.IntegerField(label = "Month",widget=forms.NumberInput())
+    year =forms.IntegerField(label = "Year",widget=forms.NumberInput())
 class CheckoutForm(forms.ModelForm):
     customershippingaddress = forms.ModelChoiceField(queryset= CustomerShippingaddress.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     paymentMethod = forms.CharField(label = "Payment Method", widget=forms.Select(choices=METHOD))

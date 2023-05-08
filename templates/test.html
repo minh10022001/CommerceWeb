@@ -4,7 +4,23 @@
 
 {% block content %}
 <div>{{abc}}</div>
-<!-- create button using bootstrap -->
-<a href = "download_report_revenue"><button>Download Report Revenue File</button></a>
+ {% load static %} 
+ <form class="form-inline" action="{% url 'ecomapp:reports' %}" method="GET">
+                    <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Go</button>
+                    <input name="keyword1" class="form-control mr-sm-2" type="search" placeholder="Month"
+                        aria-label="Month" value ={{month}}  required>
+                    <input name="keyword2" class="form-control mr-sm-2" type="search" placeholder="Year"
+                aria-label="Year"value ={{year}} required>
+                <br>
+                <label>Download</label>
+                {% comment %} <input type="checkbox" name = 'download' value ='checked'> {% endcomment %}
+                 <input name="keyword3" class="form-control mr-sm-2" type="search" placeholder="Year"
+                aria-label="Year" required>
+                </form> 
+<img class="img-fluid" src="{% static 'doanhThuImg.png' %}" alt="Image">
 
-{% endblock %}
+<!-- create button using bootstrap -->
+
+
+
+{% endblock %}ss
