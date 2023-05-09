@@ -1,0 +1,39 @@
+{% extends "adminpages/adminbase.html" %}
+
+{% block title %}Report revenue{% endblock %}
+
+{% block content %}
+<div class="container "style =  "text-align: center;padding: 30px;">
+        <h2> Repot revenue</h2>
+        {% if error == False%}
+        {% load static %} 
+        <div style =  "margin: 30px">
+        <form class="form-inline" action="{% url 'ecomapp:reports' %}" method="GET">
+                <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Show</button>
+                <input name="keyword1" class="form-control mr-sm-2" type="search" placeholder="Month"
+                aria-label="Month" value ={{month}}  required>
+                <input name="keyword2" class="form-control mr-sm-2" type="search" placeholder="Year"
+                aria-label="Year"value ={{year}} required>
+        </form> 
+        </div>
+        <div>
+            <img class="img-fluid" src="{% static 'doanhThuImg.png' %}" alt="Image">
+        </div>
+       
+    <a href="{% url 'ecomapp:download' monthyear %}" class="btn btn-info" role="button">Dowload report</a>
+
+        {% else %}
+            <form class="form-inline" action="{% url 'ecomapp:reports' %}" method="GET">
+                            <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Show</button>
+                            <input name="keyword1" class="form-control mr-sm-2" type="search" placeholder="Month"
+                                aria-label="Month"   required>
+                            <input name="keyword2" class="form-control mr-sm-2" type="search" placeholder="Year"
+                        aria-label="Year" required>
+                        <br>
+            </form>
+            <div style = "margin: 40px; color: blue">
+            <p> Please enter appropriate value </p>
+            </div>
+        {% endif %}
+        {% endblock %}
+</div>
