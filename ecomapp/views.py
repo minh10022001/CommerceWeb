@@ -24,6 +24,7 @@ from django.contrib.auth.models import User
 import datetime as dt
 import random
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 from docxtpl import DocxTemplate, InlineImage
 import os
 from django.db import connection
@@ -1781,10 +1782,12 @@ class Reports(AdminRequiredMixin, TemplateView):
         doc = DocxTemplate(filepath)
 
 
+
         month = str(month)
         year = str(year)
-        if len(month) == 1:
+        if len(month)==1:
             month = "0"+month
+        
         # create context to pass data to template
         query_tong_doanh_thu = f"select sum((i.price)*oi.count) as revenue\
                                 from [order] o \
@@ -1825,14 +1828,31 @@ class Reports(AdminRequiredMixin, TemplateView):
                                 group by itemid \
                                 order by revenue desc \
                                 limit 10"
-
-
+        query_doanh_thu_theo_thang = f"select strftime('%m', o.Time) as month, \
+                                sum((i.price)*oi.count) as revenue \
+                                from [order] o  \
+                                join [orderitem] oi on o.id = oi.id \
+                                join [item] i on oi.ItemID = i.id \
+                                where strftime('%m', o.Time) <= \"{month}\" \
+                                group by strftime('%m', o.Time)"
+        query_doanh_thu_theo_category = f"select c.name as category_name, \
+                                sum((i.price)*oi.count) as revenue \
+                                from [order] o  \
+                                join [orderitem] oi on o.id = oi.id \
+                                join [item] i on oi.ItemID = i.id \
+                                join [product] p on p.ID = i.ProductID \
+                                join [product_category] pc on p.ID = pc.ProductID \
+                                join [category] c on c.ID = pc.CategoryID  \
+                                where strftime('%m', o.Time) = \"{month}\" \
+                                group by c.name"
         tong_doanh_thu = "{:,}".format(self.run_custome_sql(query_tong_doanh_thu)[0][0])
         loi_nhuan = "{:,}".format(self.run_custome_sql(query_loi_nhuan)[0][0])
         ti_le_loi_nhuan = str(round(self.run_custome_sql(query_ti_le_loi_nhuan)[0][0],2))+"%"
         khach_hang_moi = "{:,}".format(self.run_custome_sql(query_khach_hang_moi)[0][0])
         doanh_thu_tb_khach = "{:,}".format(self.run_custome_sql(query_doanh_thu_tb_khach)[0][0])
         listDoanhThu = self.run_custome_sql(query_doanh_thu_chi_tiet)
+        listDoanhThuTheoThang = self.run_custome_sql(query_doanh_thu_theo_thang)
+        listDoanhThuTheoCategory = self.run_custome_sql(query_doanh_thu_theo_category)
         # create data for reports
         bangDoanhThuChiTiet = []
         for k in range(len(listDoanhThu)):
@@ -1849,11 +1869,41 @@ class Reports(AdminRequiredMixin, TemplateView):
             "doanh_thu_tb_khach": doanh_thu_tb_khach, 
             "bangDoanhThuChiTiet": bangDoanhThuChiTiet
         }
+        
+        doanhThuTheoThang = []
+        for k in range(len(listDoanhThuTheoThang)):
+            doanhThuTheoThang.append({"month": listDoanhThuTheoThang[k][0], "revenue": "{:,}".format(listDoanhThuTheoThang[k][1])})
 
-        # inject image into the context
+        doanhThuTheoCategory = []
+        for k in range(len(listDoanhThuTheoCategory)):
+            doanhThuTheoCategory.append({"category_name": listDoanhThuTheoCategory[k][0], "revenue": "{:,}".format(listDoanhThuTheoCategory[k][1])})
+        
+        # Graph doanh thu theo category
         fig, ax = plt.subplots()
-        ax.bar([x["ten"] for x in bangDoanhThuChiTiet], [x["doanhthu"] for x in bangDoanhThuChiTiet])
-        fig.tight_layout()
+        # Plot the data on the axes
+        ax.pie([x[1] for x in listDoanhThuTheoCategory], labels = [x[0] for x in listDoanhThuTheoCategory], autopct='%1.1f%%')
+
+        # Add labels and title
+        plt.legend(title='Danh muc', bbox_to_anchor=(1, 1))
+        ax.set_title('Tỉ lệ doanh thu theo danh mục sản phẩm')
+        image_path = os.path.join(base_dir, "static/doanhThuCategoryImg.png")
+        fig.savefig(image_path)
+        context['doanhThuCategoryImg'] = InlineImage(doc, image_path)        
+
+
+
+        # Graph doanh thu theo thang
+        fig, ax = plt.subplots()
+        # Plot the data on the axes
+        ax.plot([x[0] for x in listDoanhThuTheoThang], [x[1] for x in listDoanhThuTheoThang])
+
+        # Add labels and title
+        ax.set_xlabel('Tháng')
+        ax.set_ylabel('Doanh thu (VND)')
+        ax.set_title('Thống kê doanh thu theo tháng')
+        # Format the y-axis labels
+        fmt = ticker.StrMethodFormatter('{x:,.0f}')
+        ax.yaxis.set_major_formatter(fmt)
         image_path = os.path.join(base_dir, "static/doanhThuImg.png")
         fig.savefig(image_path)
         context['doanhThuImg'] = InlineImage(doc, image_path)
