@@ -119,7 +119,7 @@ class EcomMixin(object):
         }
 
         # inject image into the context
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(10, 10))
         ax.bar([x["ten"] for x in bangDoanhThuChiTiet], [x["doanhthu"] for x in bangDoanhThuChiTiet])
         fig.tight_layout()
         image_path = os.path.join(base_dir, "reports/images/doanhThuImg.png")
@@ -2002,7 +2002,7 @@ class Reports(AdminRequiredMixin, TemplateView):
 
 
         # Graph doanh thu theo thang
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(7, 7))
         # Plot the data on the axes
         ax.plot([x[0] for x in listDoanhThuTheoThang], [x[1] for x in listDoanhThuTheoThang])
 
