@@ -3,6 +3,7 @@ import email
 from pickle import GET
 # from turtle import position
 from unicodedata import name
+from unittest import mock
 from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
@@ -24,6 +25,7 @@ import datetime as dt
 import random
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import matplotlib.ticker as ticker
 from docxtpl import DocxTemplate, InlineImage
 import os
 from django.db import connection
@@ -39,13 +41,6 @@ class EcomMixin(object):
                 cart_obj.save()
         return super().dispatch(request, *args, **kwargs)
 
-class Reports(EcomMixin, TemplateView):
-    template_name = "test.html"
-    def run_custome_sql(self, query):
-        with connection.cursor() as cursor:
-            cursor.execute(query)
-            row = cursor.fetchall()
-        return row
 
     def generate_template(self):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -98,31 +93,14 @@ class Reports(EcomMixin, TemplateView):
                                 group by itemid \
                                 order by revenue desc \
                                 limit 10"
-        query_doanh_thu_theo_thang = f"select strftime('%m', o.Time) as month, \
-                                sum((i.price)*oi.count) as revenue \
-                                from [order] o  \
-                                join [orderitem] oi on o.id = oi.id \
-                                join [item] i on oi.ItemID = i.id \
-                                where strftime('%m', o.Time) <= \"{month}\" \
-                                group by strftime('%m', o.Time)"
-        query_doanh_thu_theo_category = f"select c.name as category_name, \
-                                sum((i.price)*oi.count) as revenue \
-                                from [order] o  \
-                                join [orderitem] oi on o.id = oi.id \
-                                join [item] i on oi.ItemID = i.id \
-                                join [product] p on p.ID = i.ProductID \
-                                join [product_category] pc on p.ID = pc.ProductID \
-                                join [category] c on c.ID = pc.CategoryID  \
-                                where strftime('%m', o.Time) = \"{month}\" \
-                                group by c.name"
+
+
         tong_doanh_thu = "{:,}".format(self.run_custome_sql(query_tong_doanh_thu)[0][0])
         loi_nhuan = "{:,}".format(self.run_custome_sql(query_loi_nhuan)[0][0])
         ti_le_loi_nhuan = str(round(self.run_custome_sql(query_ti_le_loi_nhuan)[0][0],2))+"%"
         khach_hang_moi = "{:,}".format(self.run_custome_sql(query_khach_hang_moi)[0][0])
         doanh_thu_tb_khach = "{:,}".format(self.run_custome_sql(query_doanh_thu_tb_khach)[0][0])
         listDoanhThu = self.run_custome_sql(query_doanh_thu_chi_tiet)
-        listDoanhThuTheoThang = self.run_custome_sql(query_doanh_thu_theo_thang)
-        listDoanhThuTheoCategory = self.run_custome_sql(query_doanh_thu_theo_category)
         # create data for reports
         bangDoanhThuChiTiet = []
         for k in range(len(listDoanhThu)):
@@ -139,41 +117,11 @@ class Reports(EcomMixin, TemplateView):
             "doanh_thu_tb_khach": doanh_thu_tb_khach, 
             "bangDoanhThuChiTiet": bangDoanhThuChiTiet
         }
-        
-        doanhThuTheoThang = []
-        for k in range(len(listDoanhThuTheoThang)):
-            doanhThuTheoThang.append({"month": listDoanhThuTheoThang[k][0], "revenue": "{:,}".format(listDoanhThuTheoThang[k][1])})
 
-        doanhThuTheoCategory = []
-        for k in range(len(listDoanhThuTheoCategory)):
-            doanhThuTheoCategory.append({"category_name": listDoanhThuTheoCategory[k][0], "revenue": "{:,}".format(listDoanhThuTheoCategory[k][1])})
-        
-        # Graph doanh thu theo category
+        # inject image into the context
         fig, ax = plt.subplots()
-        # Plot the data on the axes
-        ax.pie([x[1] for x in listDoanhThuTheoCategory], labels = [x[0] for x in listDoanhThuTheoCategory], autopct='%1.1f%%')
-
-        # Add labels and title
-        plt.legend(title='Danh muc', bbox_to_anchor=(1, 1))
-        ax.set_title('Tỉ lệ doanh thu theo danh mục sản phẩm')
-        image_path = os.path.join(base_dir, "reports/images/doanhThuCategoryImg.png")
-        fig.savefig(image_path)
-        context['doanhThuCategoryImg'] = InlineImage(doc, image_path)        
-
-
-
-        # Graph doanh thu theo thang
-        fig, ax = plt.subplots()
-        # Plot the data on the axes
-        ax.plot([x[0] for x in listDoanhThuTheoThang], [x[1] for x in listDoanhThuTheoThang])
-
-        # Add labels and title
-        ax.set_xlabel('Tháng')
-        ax.set_ylabel('Doanh thu (VND)')
-        ax.set_title('Thống kê doanh thu theo tháng')
-        # Format the y-axis labels
-        fmt = ticker.StrMethodFormatter('{x:,.0f}')
-        ax.yaxis.set_major_formatter(fmt)
+        ax.bar([x["ten"] for x in bangDoanhThuChiTiet], [x["doanhthu"] for x in bangDoanhThuChiTiet])
+        fig.tight_layout()
         image_path = os.path.join(base_dir, "reports/images/doanhThuImg.png")
         fig.savefig(image_path)
         context['doanhThuImg'] = InlineImage(doc, image_path)
@@ -1924,4 +1872,188 @@ class Statistic(AdminRequiredMixin, TemplateView):
         # else:
         #     position = "Null"
         # context['position'] = self.get_abc()
+        return context
+
+class Reports(AdminRequiredMixin, TemplateView):
+  
+    template_name = "adminpages/test.html"
+    def run_custome_sql(self, query):
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            row = cursor.fetchall()
+        return row
+
+    def generate_template(self, month, year):
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        filename = "media/docx_template/BaoCaoDoanhThu.docx"
+        filepath = os.path.join(base_dir, filename)
+        # create a document object
+        doc = DocxTemplate(filepath)
+
+
+
+        month = str(month)
+        year = str(year)
+        if len(month)==1:
+            month = "0"+month
+        
+        # create context to pass data to template
+        query_tong_doanh_thu = f"select sum((i.price)*oi.count) as revenue\
+                                from [order] o \
+                                join [orderitem] oi on o.id = oi.id\
+                                join [item] i on oi.ItemID = i.id\
+                                where strftime('%m', o.Time) = \"{month}\""
+        query_loi_nhuan = f"select  sum((i.price - im.price)*oi.count) as profit \
+                            from [order] o  \
+                            join [orderitem] oi on o.id = oi.id \
+                            join [item] i on oi.ItemID = i.id \
+                            join [product] p on i.ProductID = p.id \
+                            join [importingrecord] im on im.productid = p.id\
+                            where strftime('%m', o.Time) = \"{month}\""
+        query_ti_le_loi_nhuan = f"select  (CAST((i.price - im.price) as REAL)/i.Price)*100 as profit \
+                            from [order] o \
+                            join [orderitem] oi on o.id = oi.id \
+                            join [item] i on oi.ItemID = i.id \
+                            join [product] p on i.ProductID = p.id \
+                            join [importingrecord] im on im.productid = p.id \
+                            where strftime('%m', o.Time) = \"{month}\" \
+                            group by strftime('%m', o.Time)"
+        query_khach_hang_moi = f"select count(*) as new_customer \
+                            from [users] u  \
+                            join account a on a.user_id = u.id \
+                            where strftime('%m', a.Date_created) = \"{month}\""
+        query_doanh_thu_tb_khach = f"select  cast(sum(i.price*oi.count) as real)/(count(distinct o.CustomerID)) as profit \
+                                from [order] o \
+                                join [orderitem] oi on o.id = oi.id \
+                                join [item] i on oi.ItemID = i.id \
+                                where strftime('%m', o.Time) = \"{month}\""
+        query_doanh_thu_chi_tiet = f"select  p.name, i.price, sum(oi.count) as quantity, sum(i.price *oi.count) as revenue \
+                                from [order] o \
+                                join [orderitem] oi on o.id = oi.id \
+                                join [item] i on oi.ItemID = i.id \
+                                join [product] p on i.ProductID = p.id \
+                                join [importingrecord] im on im.productid = p.id \
+                                where strftime('%m', o.Time) = \"{month}\" \
+                                group by itemid \
+                                order by revenue desc \
+                                limit 10"
+        query_doanh_thu_theo_thang = f"select strftime('%m', o.Time) as month, \
+                                sum((i.price)*oi.count) as revenue \
+                                from [order] o  \
+                                join [orderitem] oi on o.id = oi.id \
+                                join [item] i on oi.ItemID = i.id \
+                                where strftime('%m', o.Time) <= \"{month}\" \
+                                group by strftime('%m', o.Time)"
+        query_doanh_thu_theo_category = f"select c.name as category_name, \
+                                sum((i.price)*oi.count) as revenue \
+                                from [order] o  \
+                                join [orderitem] oi on o.id = oi.id \
+                                join [item] i on oi.ItemID = i.id \
+                                join [product] p on p.ID = i.ProductID \
+                                join [product_category] pc on p.ID = pc.ProductID \
+                                join [category] c on c.ID = pc.CategoryID  \
+                                where strftime('%m', o.Time) = \"{month}\" \
+                                group by c.name"
+        tong_doanh_thu = "{:,}".format(self.run_custome_sql(query_tong_doanh_thu)[0][0])
+        loi_nhuan = "{:,}".format(self.run_custome_sql(query_loi_nhuan)[0][0])
+        ti_le_loi_nhuan = str(round(self.run_custome_sql(query_ti_le_loi_nhuan)[0][0],2))+"%"
+        khach_hang_moi = "{:,}".format(self.run_custome_sql(query_khach_hang_moi)[0][0])
+        doanh_thu_tb_khach = "{:,}".format(self.run_custome_sql(query_doanh_thu_tb_khach)[0][0])
+        listDoanhThu = self.run_custome_sql(query_doanh_thu_chi_tiet)
+        listDoanhThuTheoThang = self.run_custome_sql(query_doanh_thu_theo_thang)
+        listDoanhThuTheoCategory = self.run_custome_sql(query_doanh_thu_theo_category)
+        # create data for reports
+        bangDoanhThuChiTiet = []
+        for k in range(len(listDoanhThu)):
+            bangDoanhThuChiTiet.append({"sNo": k+1, "ten": listDoanhThu[k][0],
+                                "gia": "{:,}".format(listDoanhThu[k][1]), "soluong": "{:,}".format(listDoanhThu[k][2]),
+                                  "doanhthu": "{:,}".format(listDoanhThu[k][3])})
+        context = {
+            "month": month,
+            "year": year,
+            "tong_doanh_thu": tong_doanh_thu,
+            "loi_nhuan": loi_nhuan,
+            "ti_le_loi_nhuan": ti_le_loi_nhuan,
+            "khách_hang_moi": khach_hang_moi,
+            "doanh_thu_tb_khach": doanh_thu_tb_khach, 
+            "bangDoanhThuChiTiet": bangDoanhThuChiTiet
+        }
+        
+        doanhThuTheoThang = []
+        for k in range(len(listDoanhThuTheoThang)):
+            doanhThuTheoThang.append({"month": listDoanhThuTheoThang[k][0], "revenue": "{:,}".format(listDoanhThuTheoThang[k][1])})
+
+        doanhThuTheoCategory = []
+        for k in range(len(listDoanhThuTheoCategory)):
+            doanhThuTheoCategory.append({"category_name": listDoanhThuTheoCategory[k][0], "revenue": "{:,}".format(listDoanhThuTheoCategory[k][1])})
+        
+        # Graph doanh thu theo category
+        fig, ax = plt.subplots()
+        # Plot the data on the axes
+        ax.pie([x[1] for x in listDoanhThuTheoCategory], labels = [x[0] for x in listDoanhThuTheoCategory], autopct='%1.1f%%')
+
+        # Add labels and title
+        plt.legend(title='Danh muc', bbox_to_anchor=(1, 1))
+        ax.set_title('Tỉ lệ doanh thu theo danh mục sản phẩm')
+        image_path = os.path.join(base_dir, "static/doanhThuCategoryImg.png")
+        fig.savefig(image_path)
+        context['doanhThuCategoryImg'] = InlineImage(doc, image_path)        
+
+
+
+        # Graph doanh thu theo thang
+        fig, ax = plt.subplots()
+        # Plot the data on the axes
+        ax.plot([x[0] for x in listDoanhThuTheoThang], [x[1] for x in listDoanhThuTheoThang])
+
+        # Add labels and title
+        ax.set_xlabel('Tháng')
+        ax.set_ylabel('Doanh thu (VND)')
+        ax.set_title('Thống kê doanh thu theo tháng')
+        # Format the y-axis labels
+        fmt = ticker.StrMethodFormatter('{x:,.0f}')
+        ax.yaxis.set_major_formatter(fmt)
+        image_path = os.path.join(base_dir, "static/doanhThuImg.png")
+        fig.savefig(image_path)
+        context['doanhThuImg'] = InlineImage(doc, image_path)
+
+        # render context into the document object
+        doc.render(context)
+
+        # save the document object as a word file
+        reportWordPath = 'reports/documents/report_month_{0}.docx'.format(month)
+        output_path = os.path.join(base_dir, reportWordPath)
+        doc.save(output_path)
+        return output_path
+    
+    def download_file(self, **kwargs):
+        a =kwargs['monthyear']
+        report = Reports()
+        filepath = report.generate_template(a.split('-')[0],a.split('-')[0])
+        if os.path.exists(filepath ):
+            with open(filepath , 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(filepath )
+                return response
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        month = self.request.GET.get("keyword1")
+        year = self.request.GET.get("keyword2")
+        monthyear = None
+        error =  False
+        if month is not None and year is not None:
+            report = Reports()
+            try:
+                file_path = report.generate_template(month, year)
+            except:
+                error =  True
+            monthyear = str(month)+"-"+str(year)
+        else: 
+            error = True
+        context['monthyear'] = monthyear  
+        context['month'] =  month
+        context['year'] = year
+     
+        context['error'] =  error
         return context
