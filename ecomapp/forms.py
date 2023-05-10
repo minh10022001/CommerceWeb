@@ -195,21 +195,81 @@ TYPE_STAFF =  (
     ("Business Staff", "Business Staff")
 )
 class StaffForm(forms.ModelForm):
-    username = forms.CharField(label = "Tài Khoản",widget=forms.TextInput())
-    password = forms.CharField(label = "Mật Khẩu",widget=forms.PasswordInput())
-    phonenumber = forms.CharField(label = "Số điện thoại",widget=forms.TextInput())
-    email = forms.CharField(label = "Email",widget=forms.EmailInput())
-    full_name = forms.CharField(label = "Họ tên",widget=forms.TextInput())
-    city = forms.CharField(label = "Thành phố/Tỉnh",widget=forms.TextInput())
-    district = forms.CharField(label = "Quận huyện",widget=forms.TextInput())
-    subdistrict = forms.CharField(label = "Phường xã",widget=forms.TextInput())
-    street = forms.CharField(label = "Phố/Làng",widget=forms.TextInput(), required=False)
-    description = forms.CharField(label = "Địa chỉ",widget=forms.TextInput(), required= False)
-    codeStaff = forms.CharField(label = "Mã nhân viên", widget=forms.TextInput())
-    position =forms.CharField(label = "Chức vụ", widget=forms.Select(choices=TYPE_STAFF))  # Field name made lowercase.
-    salary =forms.FloatField(label = "Lương", widget=forms.NumberInput())  # Field name made lowercase.
-    startdate =forms.DateField(label = "Ngày bắt đầu",widget=forms.DateInput())  # Field name made lowercase.
-    workingtime =forms.IntegerField(label = "Thời gian làm việc trong tuần",widget=forms.NumberInput())  # Field name made lowercase.
+    username = forms.CharField(label = "Tài Khoản",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    password = forms.CharField(label = "Mật Khẩu",widget=forms.PasswordInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    phonenumber = forms.CharField(label = "Số điện thoại",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    email = forms.CharField(label = "Email",widget=forms.EmailInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    full_name = forms.CharField(label = "Họ tên",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    city = forms.CharField(label = "Thành phố/Tỉnh",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    district = forms.CharField(label = "Quận huyện",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    subdistrict = forms.CharField(label = "Phường xã",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    street = forms.CharField(label = "Phố/Làng",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }), required=False)
+    description = forms.CharField(label = "Địa chỉ",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }), required= False)
+    codeStaff = forms.CharField(label = "Mã nhân viên", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    position =forms.CharField(label = "Chức vụ", widget=forms.Select(choices=TYPE_STAFF,attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))  # Field name made lowercase.
+    salary =forms.FloatField(label = "Lương", widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))  # Field name made lowercase.
+    startdate =forms.DateField(label = "Ngày bắt đầu",widget=forms.DateInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))  # Field name made lowercase.
+    workingtime =forms.IntegerField(label = "Thời gian làm việc trong tuần",widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))  # Field name made lowercase.
     
     class Meta:
         model = Staffs
@@ -223,20 +283,76 @@ class StaffForm(forms.ModelForm):
 
         return uname
 class EditStaffForm(forms.ModelForm):
-    username = forms.CharField(widget=forms.TextInput())
-    phonenumber = forms.CharField(widget=forms.TextInput())
-    email = forms.CharField(widget=forms.EmailInput())
-    full_name = forms.CharField(widget=forms.TextInput())
-    city = forms.CharField(widget=forms.TextInput())
-    district = forms.CharField(widget=forms.TextInput())
-    subdistrict = forms.CharField(widget=forms.TextInput())
-    street = forms.CharField(widget=forms.TextInput())
-    description = forms.CharField(widget=forms.TextInput())
-    codeStaff = forms.CharField(widget=forms.TextInput())
-    position =forms.CharField(label = "Staff Type", widget=forms.Select(choices=TYPE_STAFF), disabled= False)  # Field name made lowercase.
-    salary =forms.FloatField(widget=forms.NumberInput())  # Field name made lowercase.
-    startdate =forms.DateField(widget=forms.DateInput())  # Field name made lowercase.
-    workingtime =forms.IntegerField(widget=forms.NumberInput())  # Field name made lowercase.
+    username = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    phonenumber = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    email = forms.CharField(widget=forms.EmailInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    full_name = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    city = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    district = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    subdistrict = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    street = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    description = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    codeStaff = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    position =forms.CharField(label = "Staff Type", widget=forms.Select(choices=TYPE_STAFF,attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }), disabled= False)  # Field name made lowercase.
+    salary =forms.FloatField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))  # Field name made lowercase.
+    startdate =forms.DateField(widget=forms.DateInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))  # Field name made lowercase.
+    workingtime =forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))  # Field name made lowercase.
     is_active = forms.BooleanField(required=False)
     class Meta:
         model = Staffs
@@ -279,17 +395,46 @@ class ProductForm(forms.ModelForm):
         model = Item
         fields = ["producer", "manufacturingyear", "name", "type", "slug", "description", "images"]
 class BookProductForm(forms.ModelForm):
-    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20, required=False)
-    manufacturingyear = forms.IntegerField(widget=forms.NumberInput())
-    name = forms.CharField(label = "Product Name")
-    numpage = forms.IntegerField(widget=forms.NumberInput())
-    author = forms.CharField(label = "Author", widget=forms.TextInput())
-    genre = forms.CharField(label = "Genre", widget=forms.TextInput())
-    slug = forms.SlugField()
-    description = forms.CharField()
+    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20, required=False,widget=forms.Select(attrs={'class': 'form-control','style': 'max-width: auto; border-color: #000000;',}))
+    manufacturingyear = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    name = forms.CharField(label = "Product Name", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    numpage = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    author = forms.CharField(label = "Author", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    genre = forms.CharField(label = "Genre", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    slug = forms.SlugField( widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    description = forms.CharField( widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
     images = forms.FileField(required=False, widget=forms.FileInput(attrs={
         "class": "form-control",
-        "multiple": True
+        "multiple": True,
+        'style': 'max-width: auto; border-color: #000000;',
     }))
 
 
@@ -298,40 +443,119 @@ class BookProductForm(forms.ModelForm):
         fields = ["producer", "manufacturingyear", "name","numpage","author","genre" ,"slug", "description", "images"]
 
 class ClothesProductForm(forms.ModelForm):
-    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20)
-    manufacturingyear = forms.IntegerField(widget=forms.NumberInput())
-    name = forms.CharField(label = "Product Name")
-    clothtype = forms.CharField(label = "Clothes Type", widget=forms.TextInput())
-    color = forms.CharField(label = "Color ", widget=forms.TextInput())
-    gender = forms.CharField(label = "Gender", widget=forms.TextInput())
-    brand = forms.CharField(label = " Brand", widget=forms.TextInput())
-    material= forms.CharField(label = "Material", widget=forms.TextInput())
-    slug = forms.SlugField()
-    description = forms.CharField()
+    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20, widget=forms.Select(attrs={'class': 'form-control','style': 'max-width: auto; border-color: #000000;',}))
+    manufacturingyear = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    name = forms.CharField(label = "Product Name", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    clothtype = forms.CharField(label = "Clothes Type", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    color = forms.CharField(label = "Color ", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    gender = forms.CharField(label = "Gender", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    brand = forms.CharField(label = " Brand", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    material= forms.CharField(label = "Material", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    slug = forms.SlugField( widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    description = forms.CharField( widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
     images = forms.FileField(required=False, widget=forms.FileInput(attrs={
         "class": "form-control",
-        "multiple": True
+        "multiple": True,
+          'style': 'max-width: auto; border-color: #000000;',
     }))
 
 
     class Meta:
         model = Item
         fields = ["producer", "manufacturingyear", "name","clothtype","color","gender" ,"brand","material","slug", "description", "images"]
+
 class ElectronicProductForm(forms.ModelForm):
-    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20)
-    manufacturingyear = forms.IntegerField(widget=forms.NumberInput())
-    name = forms.CharField(label = "Product Name")
-    devicetype = forms.CharField(label = "Device Type", widget=forms.TextInput())
-    color = forms.CharField(label = "Color ", widget=forms.TextInput())
-    weight = forms.CharField(label = "Weight", widget=forms.TextInput())
-    brand = forms.CharField(label = " Brand", widget=forms.TextInput())
-    size= forms.CharField(label = "Size", widget=forms.TextInput())
-    power= forms.CharField(label = "Power", widget=forms.TextInput())
-    slug = forms.SlugField()
-    description = forms.CharField()
+    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20,widget=forms.Select(attrs={'class': 'form-control','style': 'max-width: auto; border-color: #000000;',}))
+    manufacturingyear = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    name = forms.CharField(label = "Product Name",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    devicetype = forms.CharField(label = "Device Type", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    color = forms.CharField(label = "Color ", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    weight = forms.CharField(label = "Weight", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    brand = forms.CharField(label = " Brand", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    size= forms.CharField(label = "Size", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    power= forms.CharField(label = "Power", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    slug = forms.SlugField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    description = forms.CharField(widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
     images = forms.FileField(required=False, widget=forms.FileInput(attrs={
         "class": "form-control",
-        "multiple": True
+        "multiple": True,
+        'style': 'max-width: auto; border-color: #000000;',
     }))
 
 
@@ -341,7 +565,7 @@ class ElectronicProductForm(forms.ModelForm):
 class EditProductForm(forms.ModelForm):
     # codeproduct = forms.CharField(label = "Product code")
     producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20)
-    name = forms.CharField(label = "Product Name")
+    name = forms.CharField(label = "Product Name", )
     type = forms.CharField(label = "Product Type", widget=forms.Select(choices=TYPE))
     manufacturingyear = forms.IntegerField(widget=forms.NumberInput())
     # manufacturingdate = forms.IntegerField(initial=datetime.date.today)
@@ -352,46 +576,126 @@ class EditProductForm(forms.ModelForm):
         fields = ["producer", "name", "type", "manufacturingyear"]
 
 class EditClothesProductForm(forms.ModelForm):
-    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20)
-    name = forms.CharField(label = "Product Name")
+    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20,widget=forms.Select(attrs={'class': 'form-control','style': 'max-width: auto; border-color: #000000;',}))
+    name = forms.CharField(label = "Product Name",widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
     # type = forms.CharField(label = "Product Type", widget=forms.Select(choices=TYPE))
     # type = forms.CharField(label = "Product Type",widget=forms.TextInput(), disabled= True, required= False )
-    manufacturingyear = forms.IntegerField(widget=forms.NumberInput())
-    clothtype = forms.CharField(label = "Clothes Type", widget=forms.TextInput())
-    color = forms.CharField(label = "Color ", widget=forms.TextInput())
-    gender = forms.CharField(label = "Gender", widget=forms.TextInput())
-    brand = forms.CharField(label = " Brand", widget=forms.TextInput())
-    material= forms.CharField(label = "Material", widget=forms.TextInput())
+    manufacturingyear = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    clothtype = forms.CharField(label = "Clothes Type", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    color = forms.CharField(label = "Color ", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    gender = forms.CharField(label = "Gender", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    brand = forms.CharField(label = " Brand", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    material= forms.CharField(label = "Material", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
 
     class Meta:
         model = Clothes
         fields = ["producer", "name", "manufacturingyear","clothtype","color","gender" ,"brand","material"]
 
 class EditElectronicProductForm(forms.ModelForm):
-    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20)
-    name = forms.CharField(label = "Product Name")
+    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20, widget=forms.Select(attrs={'class': 'form-control','style': 'max-width: auto; border-color: #000000;',}))
+    name = forms.CharField(label = "Product Name", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
     # type = forms.CharField(label = "Product Type",widget=forms.TextInput(), disabled= True , required= True)
     # type = forms.CharField(label = "Product Type", widget=forms.Select(choices=TYPE))
-    manufacturingyear = forms.IntegerField(widget=forms.NumberInput())
-    devicetype = forms.CharField(label = "Device Type", widget=forms.TextInput())
-    color = forms.CharField(label = "Color ", widget=forms.TextInput())
-    weight = forms.CharField(label = "Weight", widget=forms.TextInput())
-    brand = forms.CharField(label = " Brand", widget=forms.TextInput())
-    size= forms.CharField(label = "Size", widget=forms.TextInput())
-    power= forms.CharField(label = "Power", widget=forms.TextInput())
+    manufacturingyear = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    devicetype = forms.CharField(label = "Device Type", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    color = forms.CharField(label = "Color ", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    weight = forms.CharField(label = "Weight", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    brand = forms.CharField(label = " Brand", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    size= forms.CharField(label = "Size", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    power= forms.CharField(label = "Power", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
     class Meta:
         model = Electronic
         fields = ["producer", "name", "manufacturingyear","devicetype","color","weight" ,"brand","size","power"]
 
 class EditBookProductForm(forms.ModelForm):
-    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20)
-    name = forms.CharField(label = "Product Name")  
+    producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20, widget=forms.Select(attrs={'class': 'form-control','style': 'max-width: auto; border-color: #000000;',}))
+    name = forms.CharField(label = "Product Name", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))  
     # type = forms.CharField(label = "Product Type",widget=forms.TextInput(), disabled= True , required= True)  
     # type = forms.CharField(label = "Product Type", widget=forms.Select(choices=TYPE))
-    manufacturingyear = forms.IntegerField(widget=forms.NumberInput())
-    numpage = forms.IntegerField(widget=forms.NumberInput())
-    author = forms.CharField(label = "Author", widget=forms.TextInput())
-    genre = forms.CharField(label = "Genre", widget=forms.TextInput())
+    manufacturingyear = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    numpage = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    author = forms.CharField(label = "Author", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    genre = forms.CharField(label = "Genre", widget=forms.TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
     class Meta:
         model = Product
         fields = ["producer", "name", "manufacturingyear","numpage","author","genre"]
@@ -404,11 +708,19 @@ class EditItemForm(forms.ModelForm):
         fields= ["price", "description"]
 
 class ImportProductForm(forms.ModelForm):
-    supplier = forms.ModelChoiceField(queryset= Supplier.objects.all())
+    supplier = forms.ModelChoiceField(queryset= Supplier.objects.all(), widget=forms.Select(attrs={'class': 'form-control','style': 'max-width: auto; border-color: #000000;',}))
     # prodtype = forms.CharField(label = "Product Type", widget=forms.Select(choices=TYPE))
-    product = forms.ModelChoiceField(queryset= Product.objects.all())
-    number = forms.IntegerField()
-    price = forms.IntegerField()
+    product = forms.ModelChoiceField(queryset= Product.objects.all(),widget=forms.Select(attrs={'class': 'form-control','style': 'max-width: auto; border-color: #000000;',}))
+    number = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    price = forms.IntegerField(widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
     # description = forms.CharField()
     # images = forms.FileField(required=False, widget=forms.FileInput(attrs={
     # "class": "form-control",
