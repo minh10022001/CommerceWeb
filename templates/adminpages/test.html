@@ -10,9 +10,11 @@
         <div style =  "margin: 30px">
         <form class="form-inline" action="{% url 'ecomapp:reports' %}" method="GET">
                 <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Show</button>
-                <input name="keyword1" class="form-control mr-sm-2" type="search" placeholder="Month"
-                aria-label="Month" value ={{month}}  required>
-                <input name="keyword2" class="form-control mr-sm-2" type="search" placeholder="Year"
+                <input name="keyword1" class="form-control mr-sm-2" type="number" placeholder="Start Month"
+                aria-label="Start Month" value ={{startmonth}}  required>
+                  <input name="keyword2" class="form-control mr-sm-2" type="number" placeholder="End Month"
+                aria-label="End Month" value ={{endmonth}}  required>
+                <input name="keyword3" class="form-control mr-sm-2" type="number" placeholder="Year"
                 aria-label="Year"value ={{year}} required>
         </form> 
         </div>
@@ -26,9 +28,11 @@
         {% else %}
             <form class="form-inline" action="{% url 'ecomapp:reports' %}" method="GET">
                             <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Show</button>
-                            <input name="keyword1" class="form-control mr-sm-2" type="search" placeholder="Month"
-                                aria-label="Month"   required>
-                            <input name="keyword2" class="form-control mr-sm-2" type="search" placeholder="Year"
+                            <input name="keyword1" class="form-control mr-sm-2" type="number" placeholder="Start Month"
+                                aria-label="Start Month"   required>
+                            <input name="keyword2" class="form-control mr-sm-2" type="number" placeholder="End Month"
+                        aria-label="End Month" required>
+                          <input name="keyword3" class="form-control mr-sm-2" type="number" placeholder="Year"
                         aria-label="Year" required>
                         <br>
             </form>
