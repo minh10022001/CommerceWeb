@@ -1883,6 +1883,8 @@ class Reports(AdminRequiredMixin, TemplateView):
             row = cursor.fetchall()
         return row
 
+
+
     def generate_template(self, startmonth, endmonth, year):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         filename = "media/docx_template/BaoCaoDoanhThu.docx"
@@ -2016,7 +2018,9 @@ class Reports(AdminRequiredMixin, TemplateView):
         # Graph doanh thu theo thang
         fig, ax = plt.subplots(figsize=(10, 7))
         # Plot the data on the axes
-        ax.plot([x[0] for x in listDoanhThuTheoThang], [x[1] for x in listDoanhThuTheoThang])
+        x1 = [x[0] for x in listDoanhThuTheoThang]
+        y1 = [x[1] for x in listDoanhThuTheoThang]
+        ax.plot(x1, y1)
 
         # Add labels and title
         ax.set_xlabel('Tháng')
@@ -2026,6 +2030,12 @@ class Reports(AdminRequiredMixin, TemplateView):
         # Format the y-axis labels
         fmt = ticker.StrMethodFormatter('{x:,.0f}')
         ax.yaxis.set_major_formatter(fmt)
+        ax2 = ax.twinx()
+        # Plot the bar chart
+        ax2.bar(x1, y1, alpha=0.5, color='green', align='center')
+        # ax2.set_ylabel('Bar chart', color='green')
+        # ax2.tick_params('y', colors='green')
+
         image_path = os.path.join(base_dir, "static/doanhThuImg.png")
         fig.savefig(image_path)
         context['doanhThuImg'] = InlineImage(doc, image_path)
