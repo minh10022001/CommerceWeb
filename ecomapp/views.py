@@ -29,7 +29,7 @@ import matplotlib.ticker as ticker
 from docxtpl import DocxTemplate, InlineImage
 import os
 from django.db import connection
-
+from docx.shared import Mm
 
 class EcomMixin(object):
     def dispatch(self, request, *args, **kwargs):
@@ -2011,7 +2011,8 @@ class Reports(AdminRequiredMixin, TemplateView):
         ax.set_title('Tỉ lệ doanh thu theo danh mục sản phẩm')
         image_path = os.path.join(base_dir, "static/doanhThuCategoryImg.png")
         fig.savefig(image_path)
-        context['doanhThuCategoryImg'] = InlineImage(doc, image_path)        
+        context['doanhThuCategoryImg'] = InlineImage(doc, image_path)   
+             
 
 
 
@@ -2038,8 +2039,8 @@ class Reports(AdminRequiredMixin, TemplateView):
 
         image_path = os.path.join(base_dir, "static/doanhThuImg.png")
         fig.savefig(image_path)
-        context['doanhThuImg'] = InlineImage(doc, image_path)
-
+        # context['doanhThuImg'] = InlineImage(doc, image_path)
+        context['doanhThuImg'] = InlineImage(doc, image_path, width=Mm(150), height=Mm(100))
         # render context into the document object
         doc.render(context)
 
