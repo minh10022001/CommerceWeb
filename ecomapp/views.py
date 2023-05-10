@@ -2058,7 +2058,7 @@ class Reports(AdminRequiredMixin, TemplateView):
         error =  False
         print(startmonth, endmonth,year )
         if startmonth is not None and year is not None and endmonth is not None:
-            if startmonth <= endmonth:
+            if int(startmonth) <= int(endmonth) and int(endmonth) <= 12 and int(startmonth)>=1 :
                 report = Reports()
                 try:
                     file_path = report.generate_template(startmonth,endmonth, year)
@@ -2068,6 +2068,8 @@ class Reports(AdminRequiredMixin, TemplateView):
                     error = True
                 #     print(2)
                 monthyear = str(startmonth)+"-"+str(endmonth)+"-"+str(year)
+            else: 
+                error = True
             
         else: 
             error = True
