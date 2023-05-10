@@ -2060,12 +2060,12 @@ class Reports(AdminRequiredMixin, TemplateView):
         if startmonth is not None and year is not None and endmonth is not None:
             if startmonth <= endmonth:
                 report = Reports()
-                # try:
-                file_path = report.generate_template(startmonth,endmonth, year)
+                try:
+                    file_path = report.generate_template(startmonth,endmonth, year)
                     # print(1)
-                    # error = False
-                # except:
-                #     error = True
+                    error = False
+                except:
+                    error = True
                 #     print(2)
                 monthyear = str(startmonth)+"-"+str(endmonth)+"-"+str(year)
             
