@@ -2063,7 +2063,7 @@ class Reports(AdminRequiredMixin, TemplateView):
                 try:
                     file_path = report.generate_template(startmonth,endmonth, year)
                     # print(1)
-                    error = False
+                # error = False
                 except:
                     error = True
                 #     print(2)
