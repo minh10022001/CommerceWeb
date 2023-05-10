@@ -5,7 +5,7 @@
 {% block content %}
     {% if request.user.account.users.staffs.position == "Manager" or  request.user.account.users.staffs.position == "Business Staff" %}
     <div class="container">
-        <h3>Sản phẩm: {{product.productid.name}}</h3>
+        <h3 style="margin-top: 20px;">Sản phẩm: {{product.productid.name}}</h3>
         <hr>
         <div class="row">
             <div class="col-md-4">

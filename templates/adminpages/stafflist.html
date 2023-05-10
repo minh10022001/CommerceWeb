@@ -8,31 +8,36 @@
         <div class="row">
             <div class="col-md-12">
                 <h3>All Staff list</h3><hr>
+                <div class = "row">
+                    <div class = "col-6">
                 <form class="form-inline my-2 my-lg-0" action="{% url 'ecomapp:adminstafflist' %}" method="GET">
-                    <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Tìm kiếm</button>
                     <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search"
                         aria-label="Search" required>
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
                 </form>
-                <hr>
-                <a href="{% url 'ecomapp:adminstaffcreate' %}">Add New Staff </a>
-                <table class="table table-hover">
-                    <thead>
+                </div>
+                <div class = "col">
+                <a class="btn btn-outline-secondary"  href="{% url 'ecomapp:adminstaffcreate' %}" style = "margin-right: 5px; float: right;" role="button">Add New Staff </a>
+                </div>
+                </div>
+                <table class="table table-hover" style="margin-top: 15px;">
+                    <thead style="background-color: #D19C97">
                         <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Code Staff</th>
-                            <th scope="col">Position</th>
-                            <th scope="col">Fullname</th>
-                            <th scope="col">Active</th>
+                            <th class="align-middle" scope="col">STT</th>
+                            <th class="align-middle" scope="col">Code Staff</th>
+                            <th class="align-middle" scope="col">Position</th>
+                            <th class="align-middle" scope="col">Fullname</th>
+                            <th class="align-middle" scope="col">Active</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for p in allstaffs %}
                         <tr>
-                            <td scope="row">{{forloop.counter}}</td>
-                            <td><a href="{% url 'ecomapp:adminstaffdetail' p.userid.id %}">{{p.codeStaff}}</td>
-                            <td>{{p.position}}</td>
-                            <td>{{p.userid.fullnameid.fullname}}</td>
-                            <td>{{p.userid.is_active}}</td>
+                            <td class="align-middle" scope="row">{{forloop.counter}}</td>
+                            <td class="align-middle"><a href="{% url 'ecomapp:adminstaffdetail' p.userid.id %}">{{p.codeStaff}}</td>
+                            <td class="align-middle">{{p.position}}</td>
+                            <td class="align-middle">{{p.userid.fullnameid.fullname}}</td>
+                            <td class="align-middle" style="font-style: italic; font-weight: 400;">{{p.userid.is_active}}</td>
                             
                         </tr>
                         {% endfor %}

@@ -3,6 +3,53 @@
 {% block title %}Admin Home{% endblock %}
 
 {% block content %}
+
+<style>
+@import url("https://fonts.googleapis.com/css?family=Montserrat:900");
+body {
+  /* background: radial-gradient(ellipse at bottom, #ffffff 0%, #808080 100%); */
+  background: white;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 30vh;
+  letter-spacing: 1vw;
+  position: absolute;
+  top: 15vh;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  background: url("https://parade.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTk3MzM3ODU4NTU2NTY4Nzc1/marveldisney.jpg");
+  background-size: auto 200%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 8s linear infinite;
+}
+
+h1:nth-child(2) {
+  top: 50vh;
+}
+@keyframes shine {  
+  from {
+    background-position: center 0;
+  }
+  to {
+    background-position: center 200%;
+  }
+}
+</style>
+
 <br>
-<h1>Admin Honme</h1>
+<h1>HELLO
+    ADMIN
+</h1>
 {% endblock %}

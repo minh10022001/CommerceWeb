@@ -11,23 +11,23 @@
                     <table class="table table-hover">
                         <thead style="background-color: #D19C97">
                             <tr>
-                                <th scope="col">STT</th>
-                                <th scope="col">Review ID </th>
-                                <th scope="col" >Customer</th>
-                                <th scope="col">Create at</th>
-                                <th scope="col">Sentiment</th>
-                                <th scope="col">Reply?</th>
+                                <th class="align-middle" scope="col">STT</th>
+                                <th class="align-middle" scope="col">Review ID </th>
+                                <th class="align-middle" scope="col" >Customer</th>
+                                <th class="align-middle" scope="col">Create at</th>
+                                <th class="align-middle" scope="col">Sentiment</th>
+                                <th class="align-middle" scope="col">Reply?</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for review in allreviews %}
                             <tr>
-                                <td scope="row">{{forloop.counter}}</td>
-                                <td><a href="{% url 'ecomapp:adminreviewdetail' review.id %}">#REVIEW_{{review.id}}</a></td>
-                                <td>{{review.customerid.userid.fullnameid.fullname}}</td>
-                                <td>{{review.reviewtime}}</td>
-                                <td>{{review.sentiment}}</td>
-                                <td>{{review.isReply}}</td>
+                                <td class="align-middle" scope="row">{{forloop.counter}}</td>
+                                <td class="align-middle"><a href="{% url 'ecomapp:adminreviewdetail' review.id %}">#REVIEW_{{review.id}}</a></td>
+                                <td class="align-middle">{{review.customerid.userid.fullnameid.fullname}}</td>
+                                <td class="align-middle">{{review.reviewtime}}</td>
+                                <td class="align-middle">{{review.sentiment}}</td>
+                                <td class="align-middle" style="font-style: italic; font-weight: 400;">{{review.isReply}}</td>
                     
                             </tr>
                             {% endfor %}
