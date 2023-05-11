@@ -10,38 +10,38 @@
             <div class="col-md-12">
                 <h3>All Item list</h3><hr>
                 <form class="form-inline my-2 my-lg-0" action="{% url 'ecomapp:adminitemlist' %}" method="GET">
-                    <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Tìm kiếm</button>
                     <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search"
                         aria-label="Search" required>
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
                 </form>
-                <table class="table table-hover">
+                <table class="table table-hover" style="margin-top: 15px;">
                     <thead style="background-color: #D19C97">
                         <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Product Title</th>
-                            <th scope="col">Image</th>
-                            <th scope="col">Price import</th>
-                            <th scope="col">Price sale</th>
-                            <th scope="col">Inventory</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Upload?</th>
+                            <th class = "align-middle col-1" scope="col">STT</th>
+                            <th class = "align-middle col-2" scope="col">Product Title</th>
+                            <th class = "align-middle col-1" scope="col">Image</th>
+                            <th class = "align-middle col-2" scope="col">Price import</th>
+                            <th class = "align-middle col-1" scope="col">Price sale</th>
+                            <th class = "align-middle col-1" scope="col">Inventory</th>
+                            <th class = "align-middle col-3" scope="col">Description</th>
+                            <th class = "align-middle col-1" scope="col">Upload?</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for p in allproducts%}
                         <tr>
-                            <td scope="row">{{forloop.counter}}</td>
-                            <td><a href="{% url 'ecomapp:adminitemdetail' p.slug %}">{{p.productid.name}}</a></td>
-                            <td><img src="{{p.image.url}}" style="height: 60px;" alt=""></td>
+                            <td class="align-middle" scope="row">{{forloop.counter}}</td>
+                            <td class="align-middle"><a href="{% url 'ecomapp:adminitemdetail' p.slug %}">{{p.productid.name}}</a></td>
+                            <td class="align-middle"><img src="{{p.image.url}}" style="height: 60px;" alt=""></td>
                             {% for i in importitem%}
                                 {% if p.productid == i.productid%}
                                     <td>{{i.price|intcomma}}</td>
                                 {% endif%}
                             {% endfor %}
-                            <td>{{p.price|intcomma}}</td>
-                            <td>{{p.productid.num}}</td>
-                            <td>{{p.description}}</td>
-                            <td>{{p.isUpload}}</td>
+                            <td class="align-middle">{{p.price|intcomma}}</td>
+                            <td class="align-middle">{{p.productid.num}}</td>
+                            <td class="align-middle">{{p.description}}</td>
+                            <td class="align-middle" style="font-style: italic; font-weight: 400;">{{p.isUpload}}</td>
                             
                         </tr>
                         {% endfor %}

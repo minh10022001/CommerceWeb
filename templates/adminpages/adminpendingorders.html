@@ -8,24 +8,24 @@
         <div class="row">
             <div class="col-md-12">
                 <h3>Pending Orders</h3>
-                <table class="table table-hover">
+                <table class="table table-hover" style="margin-top: 15px;">
                     <thead style="background-color: #D19C97">
                         <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Order ID </th>
-                            <th scope="col">Customer</th>
-                            <th scope="col">Ordered On</th>
-                            <th scope="col">Amount</th>
+                            <th class="align-middle" scope="col">STT</th>
+                            <th class="align-middle" scope="col">Order ID </th>
+                            <th class="align-middle" scope="col">Customer</th>
+                            <th class="align-middle" scope="col">Ordered On</th>
+                            <th class="align-middle" scope="col">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for order in pendingorders %}
                         <tr>
-                            <td scope="row">{{forloop.counter}}</td>
-                            <td><a href="{% url 'ecomapp:adminorderdetail' order.id %}">#ORDER_{{order.id}}</a></td>
-                            <td>{{order.customerid.userid.fullnameid.fullname}}</td>
-                            <td>{{order.time}}</td>
-                            <td>{{order.total|intcomma}}</td>
+                            <td class="align-middle" scope="row">{{forloop.counter}}</td>
+                            <td class="align-middle"><a href="{% url 'ecomapp:adminorderdetail' order.id %}">#ORDER_{{order.id}}</a></td>
+                            <td class="align-middle">{{order.customerid.userid.fullnameid.fullname}}</td>
+                            <td class="align-middle">{{order.time}}</td>
+                            <td class="align-middle">{{order.total|intcomma}}</td>
 
                         </tr>
                         {% endfor %}

@@ -701,8 +701,12 @@ class EditBookProductForm(forms.ModelForm):
         fields = ["producer", "name", "manufacturingyear","numpage","author","genre"]
 
 class EditItemForm(forms.ModelForm):
-    price = forms.IntegerField(required=False)
-    description = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'cols':50}))
+    price = forms.IntegerField(required=False, widget=forms.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: auto; border-color: #000000;',
+
+                }))
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'cols':50,   'class': "form-control",}))
     class Meta:
         model = Item
         fields= ["price", "description"]

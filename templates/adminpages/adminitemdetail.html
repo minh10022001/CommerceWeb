@@ -5,7 +5,7 @@
 {% block content %}
     {% if request.user.account.users.staffs.position == "Manager" or  request.user.account.users.staffs.position == "Business Staff" %}
     <div class="container">
-        <h3>Sản phẩm: {{product.productid.name}}</h3>
+        <h3 style="margin-top: 20px;">Sản phẩm: {{product.productid.name}}</h3>
         <hr>
         <div class="row">
             <div class="col-md-4">
@@ -26,7 +26,9 @@
                 <h5>Danh mục: {{product.productid.category}}</h5>
                 <form action="{% url 'ecomapp:adminitemdetail' product.slug %}" method="POST">
                     {% csrf_token %}
-                    <h5>Giá: {{form.price}}</h5>
+                    <label>Giá</label>
+                    <h5> {{form.price}}</h5>
+                    
                     <label> {{ form.description.label }}: </label>
                     <br>
                     {{ form.description }}
