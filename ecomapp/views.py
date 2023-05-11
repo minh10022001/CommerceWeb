@@ -1681,21 +1681,21 @@ class AdminItemListView(AdminRequiredMixin, TemplateView):
            
         else:
             queryset = Item.objects.all().order_by("-id")
-        list_import_item = []
-        a = []
-        for i in queryset:
-            list1 = Importingrecord.objects.filter(productid= i.productid)
-            if len(list1)==1:
-                list_import_item.append(Importingrecord.objects.get(productid= i.productid))
-            else :
-                max_id = list1[0].id
-                for j in list1:
-                    max_id =  max(max_id, j.id)
-                list_import_item.append(Importingrecord.objects.get(id =max_id))
+        # list_import_item = []
+        # a = []
+        # for i in queryset:
+        #     list1 = Importingrecord.objects.filter(productid= i.productid)
+        #     if len(list1)==1:
+        #         list_import_item.append(Importingrecord.objects.get(productid= i.productid))
+        #     else :
+        #         max_id = list1[0].id
+        #         for j in list1:
+        #             max_id =  max(max_id, j.id)
+        #         list_import_item.append(Importingrecord.objects.get(id =max_id))
 
            
         context["allproducts"] = queryset
-        context["importitem"] = list_import_item
+        # context["importitem"] = list_import_item
     
         return context
 
