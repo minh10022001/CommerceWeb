@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import matplotlib.ticker as ticker
 from docxtpl import DocxTemplate, InlineImage
+from docx.shared import Mm
 import os
 from django.db import connection
 
@@ -2038,7 +2039,7 @@ class Reports(AdminRequiredMixin, TemplateView):
 
         image_path = os.path.join(base_dir, "static/doanhThuImg.png")
         fig.savefig(image_path)
-        context['doanhThuImg'] = InlineImage(doc, image_path)
+        context['doanhThuImg'] = InlineImage(doc, image_path, width=Mm(150), height=Mm(100))
 
         # render context into the document object
         doc.render(context)
