@@ -21,6 +21,7 @@ METHOD_SHIPPING =(
 class MonthYearForm(forms.Form):
     month =forms.IntegerField(label = "Month",widget=forms.NumberInput())
     year =forms.IntegerField(label = "Year",widget=forms.NumberInput())
+    
 class CheckoutForm(forms.ModelForm):
     customershippingaddress = forms.ModelChoiceField(queryset= CustomerShippingaddress.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     paymentMethod = forms.CharField(label = "Payment Method", widget=forms.Select(choices=METHOD))
@@ -29,15 +30,12 @@ class CheckoutForm(forms.ModelForm):
         model = Order
         fields = ["customershippingaddress",
                   "paymentMethod", "shippingmethod"]
-    # def __init__(self, user, *args, **kwargs):
-    #     super(CheckoutForm, self).__init__(*args, **kwargs)
-    #     customer = Customer.objects.get(userid__accountid__user = user)
-    #     self.fields['shippingaddressid'].queryset = CustomerShippingaddress.objects.filter(customerid =customer)
     def __init__(self,user, *args, **kwargs): 
         # user = kwargs.pop('user', None) # pop the 'user' from kwargs dictionary      
         customer = Customer.objects.get(userid__accountid__user = user)
         super(CheckoutForm, self).__init__(*args, **kwargs)
         self.fields['customershippingaddress'].queryset = CustomerShippingaddress.objects.filter(customerid =customer)
+
 class FeedBackForm(forms.ModelForm):
     content = forms.CharField(label = "Nội Dung", widget=forms.Textarea(attrs={'rows':2, 'cols':70,'class': "form-control",}))
     rating = forms.TypedChoiceField(choices=[(x, x) for x in range(1, 6)], coerce=int, help_text = 'Units: ')
@@ -394,6 +392,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ["producer", "manufacturingyear", "name", "type", "slug", "description", "images"]
+
 class BookProductForm(forms.ModelForm):
     producer = forms.ModelChoiceField(queryset= Producer.objects.all(), empty_label="-"*20, required=False,widget=forms.Select(attrs={'class': 'form-control','style': 'max-width: auto; border-color: #000000;',}))
     manufacturingyear = forms.IntegerField(widget=forms.NumberInput(attrs={
@@ -725,11 +724,7 @@ class ImportProductForm(forms.ModelForm):
                 'style': 'max-width: auto; border-color: #000000;',
 
                 }))
-    # description = forms.CharField()
-    # images = forms.FileField(required=False, widget=forms.FileInput(attrs={
-    # "class": "form-control",
-    # "multiple": True
-    # }))
+  
     class Meta:
         model = Importingrecord
         fields = ["supplier", "product", "number", "price"]
