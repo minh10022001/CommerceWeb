@@ -32,6 +32,9 @@ import os
 from django.db import connection
 from docx.shared import Mm
 
+#----------------CUSTOMER--------------------#
+
+#Lấy thông tin Cart hiện tại
 class EcomMixin(object):
     def dispatch(self, request, *args, **kwargs):
         cart_id = request.session.get("cart_id")
@@ -42,116 +45,7 @@ class EcomMixin(object):
                 cart_obj.save()
         return super().dispatch(request, *args, **kwargs)
 
-
-    # def generate_template(self):
-    #     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    #     filename = "media/docx_template/BaoCaoDoanhThu.docx"
-    #     filepath = os.path.join(base_dir, filename)
-    #     # create a document object
-    #     doc = DocxTemplate(filepath)
-
-
-
-    #     month = "04"
-    #     year = "2023"
-    #     # create context to pass data to template
-    #     query_tong_doanh_thu = f"select sum((i.price)*oi.count) as revenue\
-    #                             from [order] o \
-    #                             join [orderitem] oi on o.id = oi.id\
-    #                             join [item] i on oi.ItemID = i.id\
-    #                             where strftime('%m', o.Time) = \"{month}\""
-    #     query_loi_nhuan = f"select  sum((i.price - im.price)*oi.count) as profit \
-    #                         from [order] o  \
-    #                         join [orderitem] oi on o.id = oi.id \
-    #                         join [item] i on oi.ItemID = i.id \
-    #                         join [product] p on i.ProductID = p.id \
-    #                         join [importingrecord] im on im.productid = p.id\
-    #                         where strftime('%m', o.Time) = \"{month}\""
-    #     query_ti_le_loi_nhuan = f"select  (CAST((i.price - im.price) as REAL)/i.Price)*100 as profit \
-    #                         from [order] o \
-    #                         join [orderitem] oi on o.id = oi.id \
-    #                         join [item] i on oi.ItemID = i.id \
-    #                         join [product] p on i.ProductID = p.id \
-    #                         join [importingrecord] im on im.productid = p.id \
-    #                         where strftime('%m', o.Time) = \"{month}\" \
-    #                         group by strftime('%m', o.Time)"
-    #     query_khach_hang_moi = f"select count(*) as new_customer \
-    #                         from [users] u  \
-    #                         join account a on a.user_id = u.id \
-    #                         where strftime('%m', a.Date_created) = \"{month}\""
-    #     query_doanh_thu_tb_khach = f"select  cast(sum(i.price*oi.count) as real)/(count(distinct o.CustomerID)) as profit \
-    #                             from [order] o \
-    #                             join [orderitem] oi on o.id = oi.id \
-    #                             join [item] i on oi.ItemID = i.id \
-    #                             where strftime('%m', o.Time) = \"{month}\""
-    #     query_doanh_thu_chi_tiet = f"select  p.name, i.price, sum(oi.count) as quantity, sum(i.price *oi.count) as revenue \
-    #                             from [order] o \
-    #                             join [orderitem] oi on o.id = oi.id \
-    #                             join [item] i on oi.ItemID = i.id \
-    #                             join [product] p on i.ProductID = p.id \
-    #                             join [importingrecord] im on im.productid = p.id \
-    #                             where strftime('%m', o.Time) = \"{month}\" \
-    #                             group by itemid \
-    #                             order by revenue desc \
-    #                             limit 10"
-
-
-    #     tong_doanh_thu = "{:,}".format(self.run_custome_sql(query_tong_doanh_thu)[0][0])
-    #     loi_nhuan = "{:,}".format(self.run_custome_sql(query_loi_nhuan)[0][0])
-    #     ti_le_loi_nhuan = str(round(self.run_custome_sql(query_ti_le_loi_nhuan)[0][0],2))+"%"
-    #     khach_hang_moi = "{:,}".format(self.run_custome_sql(query_khach_hang_moi)[0][0])
-    #     doanh_thu_tb_khach = "{:,}".format(self.run_custome_sql(query_doanh_thu_tb_khach)[0][0])
-    #     listDoanhThu = self.run_custome_sql(query_doanh_thu_chi_tiet)
-    #     # create data for reports
-    #     bangDoanhThuChiTiet = []
-    #     for k in range(len(listDoanhThu)):
-    #         bangDoanhThuChiTiet.append({"sNo": k+1, "ten": listDoanhThu[k][0],
-    #                             "gia": "{:,}".format(listDoanhThu[k][1]), "soluong": "{:,}".format(listDoanhThu[k][2]),
-    #                               "doanhthu": "{:,}".format(listDoanhThu[k][3])})
-    #     context = {
-    #         "month": month,
-    #         "year": year,
-    #         "tong_doanh_thu": tong_doanh_thu,
-    #         "loi_nhuan": loi_nhuan,
-    #         "ti_le_loi_nhuan": ti_le_loi_nhuan,
-    #         "khách_hang_moi": khach_hang_moi,
-    #         "doanh_thu_tb_khach": doanh_thu_tb_khach, 
-    #         "bangDoanhThuChiTiet": bangDoanhThuChiTiet
-    #     }
-
-    #     # inject image into the context
-    #     fig, ax = plt.subplots(figsize=(10, 10))
-    #     ax.bar([x["ten"] for x in bangDoanhThuChiTiet], [x["doanhthu"] for x in bangDoanhThuChiTiet])
-    #     fig.tight_layout()
-    #     image_path = os.path.join(base_dir, "reports/images/doanhThuImg.png")
-    #     fig.savefig(image_path)
-    #     context['doanhThuImg'] = InlineImage(doc, image_path)
-
-    #     # render context into the document object
-    #     doc.render(context)
-
-    #     # save the document object as a word file
-    #     reportWordPath = 'reports/documents/report_month_{0}.docx'.format(month)
-    #     output_path = os.path.join(base_dir, reportWordPath)
-    #     doc.save(output_path)
-    #     return output_path
-    
-    # def download_file(req):
-    #     report = Reports()
-    #     filepath = report.generate_template()
-    #     if os.path.exists(filepath ):
-    #         with open(filepath, 'rb') as fh:
-    #             response = HttpResponse(fh.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    #             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(filepath)
-    #             return response
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     user = Users.objects.raw("select * from users")
-    #     for u in user:
-    #         print(u.fullnameid)
-    #     context['abc'] = user[0].fullnameid
-    #     return context
-    
+#Kiểm tra đăng nhập
 class LoginRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = request.user).exists() and Users.objects.filter(accountid__user = request.user, is_active = True).exists():
@@ -159,6 +53,8 @@ class LoginRequiredMixin(object):
         else:
             return redirect("/login")
         return super().dispatch(request, *args, **kwargs)
+
+# Trang chủ -> tất cả sản phẩm, thông tin mặt hàng yêu thích ( tym tại các sản phẩm)
 class HomeView(EcomMixin, TemplateView):
     template_name = "home.html"
 
@@ -181,6 +77,7 @@ class HomeView(EcomMixin, TemplateView):
                 context['wishListItem'] = []
         return context
 
+#Cập nhật danh sách yêu thích
 class UpdateToWishList(LoginRequiredMixin,EcomMixin, TemplateView):
     template_name = "home.html"
 
@@ -211,21 +108,20 @@ class UpdateToWishList(LoginRequiredMixin,EcomMixin, TemplateView):
         return context
 
 
-class AllProductsView(EcomMixin, TemplateView):
-    template_name = "allproducts.html"
+# class AllProductsView(EcomMixin, TemplateView):
+#     template_name = "allproducts.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['allcategories'] = Category.objects.all()
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['allcategories'] = Category.objects.all()
+#         return context
+
+#Danh sách sản phẩm Sách
 class BookProductsView(EcomMixin, TemplateView):
     template_name = "bookproducts.html"
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if Book.objects.count()>0:
-            # productbook = Product.objects.get(type ="Book")
-            # allbook = Item.objects.filter(productid = productbook  ).order_by("-id")
             productbook = Product.objects.filter(type ="Book").order_by("-id")
             allbook =[]
             for book in productbook:
@@ -249,6 +145,8 @@ class BookProductsView(EcomMixin, TemplateView):
                 context['wishListItem'] = []
         context['product_list'] =  product_list
         return context
+
+# Danh sách sản phẩm đồ điện tử
 class ElectronicProductsView(EcomMixin, TemplateView):
     template_name = "electronicproducts.html"
     def get_context_data(self, **kwargs):
@@ -277,14 +175,13 @@ class ElectronicProductsView(EcomMixin, TemplateView):
         context['product_list'] =  product_list
         return context
 
+# Danh sách sản phẩm Quần áo
 class ClothesProductsView(EcomMixin, TemplateView):
     template_name = "clothesproducts.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if Clothes.objects.count()>0:
-            # productclothes = Product.objects.get(type ="Clothes")
-            # allclothes = Item.objects.filter(productid =  productclothes ).order_by("-id")
             productclothes = Product.objects.filter(type ="Clothes").order_by("-id")
             allclothes =[]
             for clothes in productclothes:
@@ -293,8 +190,6 @@ class ClothesProductsView(EcomMixin, TemplateView):
         else: 
             allclothes = []
         paginator = Paginator(allclothes, 8)
-        # all_products = Item.objects.all().order_by("-id")
-        # paginator = Paginator(all_products, 8)
         page_number = self.request.GET.get('page')
         product_list = paginator.get_page(page_number)
         if self.request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = self.request.user).exists():
@@ -309,6 +204,8 @@ class ClothesProductsView(EcomMixin, TemplateView):
                 context['wishListItem'] = []
         context['product_list'] =  product_list
         return context
+
+#Chỉnh sửa thông tin cá nhân khách hàng
 class EditProfileView(View):
     template_name = "customerprofileedit.html"
     def get(self, request, *args, **kwargs):
@@ -368,6 +265,7 @@ class EditProfileView(View):
             context = {"customer" : Customer.objects.get(userid = user)}
         return render(request, "customerprofile.html", context)
 
+# Danh sách dịa chỉ nhận hàng của khách hàng
 class ShippingAddressListView(View):
     template_name = "shippingaddresslist.html"
     def get(self, request, *args, **kwargs):
@@ -377,6 +275,7 @@ class ShippingAddressListView(View):
         context = {"shippingaddresslist" : shippingaddresslist, "customer" : customer}
         return render(request, self.template_name, context)
 
+# Xóa địa chỉ nhận hàng
 class ShippingAddressDeleteView(View):
     template_name = "shippingaddresslist.html"
     def get(self, request, *args, **kwargs):
@@ -389,7 +288,7 @@ class ShippingAddressDeleteView(View):
         context = {"shippingaddresslist" : shippingaddresslist, "customer" : customer}
         return render(request, self.template_name, context)
         
-
+#Tạo địa chỉ nhận Hàng
 class ShippingAddressCreateView(EcomMixin, View):
     template_name = "shippingaddresscreate.html"
 
@@ -419,6 +318,7 @@ class ShippingAddressCreateView(EcomMixin, View):
 
         return render(request, "shippingaddresslist.html", context)
 
+#Chỉnh sửa địa chỉ nhận hàng
 class ShippingAddressEditView(EcomMixin, View):
     template_name = "shippingaddressedit.html"
 
@@ -462,6 +362,7 @@ class ShippingAddressEditView(EcomMixin, View):
 
         return render(request, "shippingaddresslist.html", context)
 
+# Xem chi tiết sản phẩm -> thêm vào giỏ hàng, bình luận
 class ProductDetailView(View):
 
     def get(self, request, *args, **kwargs):
@@ -505,105 +406,9 @@ class ProductDetailView(View):
             context = {'form': FeedBackForm(), "item": item, "feedbacks": feedbacks}
         return render(request, 'productdetailTEST.html', context)
 
-# class AddToCartView(EcomMixin, TemplateView):
-#     template_name = "addtocart.html"
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         # get product id from requested url
-#         product_id = self.kwargs['pro_id']
-#         # get product
-#         product_obj = Item.objects.get(id=product_id)
-#         if self.request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = self.request.user).exists():
-#             customer = Customer.objects.get(userid__accountid__user = self.request.user)
-#             # check if cart exists
-#             cart_id = self.request.session.get("cart_id", None)
-#             if cart_id:
-#                 cart_obj = Shoppingcart.objects.get(id=cart_id)
-#                 this_product_in_cart = Cartline.objects.filter(itemid = product_obj)
-
-#                 # item already exists in cart
-#                 if this_product_in_cart.exists():
-#                     cartproduct = this_product_in_cart.last()
-#                     cartproduct.num += 1
-#                     cartproduct.save()
-#                     cart_obj.save()
-#                 # new item is added in cart
-#                 else:
-#                     cartproduct = Cartline.objects.create(
-#                         shoppingcartid=cart_obj, itemid=product_obj, num=1)
-#                     cart_obj.save()
-
-#             else:
-#                 if Shoppingcart.objects.filter(customerid = customer).exists():
-#                     cart_obj = Shoppingcart.objects.get(customerid = customer)
-#                 else:
-#                     cart_obj = Shoppingcart.objects.create(customerid = customer)
-#                 self.request.session['cart_id'] = cart_obj.id
-#                 cartproduct = Cartline.objects.create(
-#                     shoppingcartid=cart_obj, itemid=product_obj, num=1)
-#                 cart_obj.save()
-#             context["error"] = False
-#         else:
-#             context["error"] = True
-#         return context
-
+# Thêm vào giỏ hàng
 class AddToCartView( LoginRequiredMixin,EcomMixin, View):
-    # template_name = "addtocart.html"
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     # get product id from requested url
-    #     product_id = self.kwargs['pro_id']
-    #     # get product
-    #     product_obj = Item.objects.get(id=product_id)
-    #     if self.request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = self.request.user).exists():
-    #         customer = Customer.objects.get(userid__accountid__user = self.request.user)
-    #         # check if cart exists
-    #         cart_id = self.request.session.get("cart_id", None)
-    #         if cart_id:
-    #             cart_obj = Shoppingcart.objects.get(id=cart_id)
-    #             this_product_in_cart = Cartline.objects.filter(itemid = product_obj)
-
-    #             # item already exists in cart
-    #             if this_product_in_cart.exists():
-    #                 cartproduct = this_product_in_cart.last()
-    #                 cartproduct.num += 1
-    #                 cartproduct.save()
-    #                 cart_obj.save()
-    #             # new item is added in cart
-    #             else:
-    #                 cartproduct = Cartline.objects.create(
-    #                     shoppingcartid=cart_obj, itemid=product_obj, num=1)
-    #                 cart_obj.save()
-
-    #         else:
-    #             if Shoppingcart.objects.filter(customerid = customer).exists():
-    #                 cart_obj = Shoppingcart.objects.get(customerid = customer)
-    #                 this_product_in_cart = Cartline.objects.filter(itemid = product_obj)
-
-    #                 # item already exists in cart
-    #                 if this_product_in_cart.exists():
-    #                     cartproduct = this_product_in_cart.last()
-    #                     cartproduct.num += 1
-    #                     cartproduct.save()
-    #                     cart_obj.save()
-    #                 # new item is added in cart
-    #                 else:
-    #                     cartproduct = Cartline.objects.create(
-    #                         shoppingcartid=cart_obj, itemid=product_obj, num=1)
-    #                     cart_obj.save()  
-    #             else:
-    #                 cart_obj = Shoppingcart.objects.create(customerid = customer)
-    #                 self.request.session['cart_id'] = cart_obj.id
-    #                 cartproduct = Cartline.objects.create(
-    #                     shoppingcartid=cart_obj, itemid=product_obj, num=1)
-    #                 cart_obj.save()
-    #         context["error"] = False
-    #     else:
-    #         context["error"] = True
-    #     # return redirect("ecomapp:mycart")
-    #     return context
         def get(self, request, *args, **kwargs):
             product_id = self.kwargs['pro_id']
         # get product
@@ -652,7 +457,7 @@ class AddToCartView( LoginRequiredMixin,EcomMixin, View):
                         cart_obj.save()
                 return redirect("ecomapp:mycart")
 
-
+# Chỉnh sửa giỏ hàng -> xóa sản phẩm trong giỏ, tăng giảm số lượng
 class ManageCartView(EcomMixin, View):
     def get(self, request, *args, **kwargs):
         cp_id = self.kwargs["cp_id"]
@@ -678,16 +483,7 @@ class ManageCartView(EcomMixin, View):
             pass
         return redirect("ecomapp:mycart")
 
-
-# class EmptyCartView(EcomMixin, View):
-#     def get(self, request, *args, **kwargs):
-#         cart_id = request.session.get("cart_id", None)
-#         if cart_id:
-#             cart = Shoppingcart.objects.get(id=cart_id)
-#             [cartline.delete() for cartline in Cartline.objects.filter(shoppingcartid = cart)]
-#             cart.save()
-#         return redirect("ecomapp:mycart")
-
+# Xóa toàn bộ sản phẩm trong giỏ
 class EmptyCartView(EcomMixin, View):
     def get(self, request, *args, **kwargs):
         cart_id = request.session.get("cart_id", None)
@@ -699,6 +495,7 @@ class EmptyCartView(EcomMixin, View):
         cart.save()
         return redirect("ecomapp:mycart")
 
+# Xem giỏ hàng
 class MyCartView(EcomMixin, LoginRequiredMixin,TemplateView):
     template_name = "mycartTEST.html"
 
@@ -719,85 +516,7 @@ class MyCartView(EcomMixin, LoginRequiredMixin,TemplateView):
             context['cart'] = cart
         return context
 
-
-# class CheckoutView(EcomMixin, CreateView ):
-#     template_name = "checkout.html"
-#     # def sample_view(request):
-#     #     current_user = request.user
-#     #     return current_user.id
-#     # print(sample_view(request))
-#     form_class = CheckoutForm
-
-#     success_url = reverse_lazy("ecomapp:home")
-#     # def get_form(self, request):
-#     #         # if form_class is None:
-#     #         #     form_class = self.get_form_class()
-#     #         #     return form_class(**self.get_form_kwargs(),current_user_profile=get_profile(self.request.user))
-#     #         return self.request.user
-#     # user = get_form()
-#     def get_form_kwargs(self):
-#         kwargs = super(CheckoutView, self).get_form_kwargs()
-#         # kwargs['user'] = self.request.user # pass the 'user' in kwargs
-#         kwargs.update({'user': self.request.user})
-#         return kwargs
-#     def dispatch(self, request, *args, **kwargs):
-#         if not (request.user.is_authenticated and request.user.account):
-#             return redirect("/login/?next=/checkout/")
-#         return super().dispatch(request, *args, **kwargs)
-#     def get_context_data(self, **kwargs):
-     
-#         context = super().get_context_data(**kwargs)
-#         cart_id = self.request.session.get("cart_id", None)
-#         # cart_obj = Shoppingcart.objects.get(id=cart_id) if cart_id else None
-#         customer = Customer.objects.get(userid__accountid__user = self.request.user)
-#         cart_obj = Shoppingcart.objects.get(id=cart_id) if cart_id else Shoppingcart.objects.get(customerid =customer)
-#         context['cart'] = cart_obj
-#         return context
-#     def form_valid(self,form):
-#         # template_name = "checkout.html"
-#         # # form_class = CheckoutForm()
-#         # success_url = reverse_lazy("ecomapp:home")
-#         # form  = CheckoutForm(request.user)
-#         cart_id = self.request.session.get("cart_id")
-#         if cart_id:
-#             customer = Customer.objects.get(userid__accountid__user = self.request.user)
-#             cart_obj = Shoppingcart.objects.get(id=cart_id)
-#             cartlines = cart_obj.cartline_set.all()
-#             if Orderhistory.objects.filter(customerid__userid__accountid__user = self.request.user).exists():
-#                 orderhistory = Orderhistory.objects.get(customerid__userid__accountid__user = self.request.user)
-#             else:
-#                 orderhistory = Orderhistory.objects.create(customerid = customer)
-            
-#             method = form.cleaned_data.get("paymentMethod")
-#             method_shipping = form.cleaned_data.get("shippingmethod")
-#             convert ={"1": "Cash",
-#                       "2": "Banking",
-#                       "3": "QRCode"}
-#             convert_shipping ={"1": "Normal",
-#                       "2": "Fast",
-#             }
-#             customershippingaddress  =form.cleaned_data.get("customershippingaddress")
-#             print("----------------------------------------",customershippingaddress)
-#             shippingaddressid  = customershippingaddress.shippingaddressid
-#             payment = Payment.objects.create(isComplete = False, method = convert[method])
-#             methodshipping = convert_shipping[method_shipping]
-#             form.instance.customerid = customer
-#             form.instance.paymentid = payment
-#             form.instance.shippingaddressid = shippingaddressid
-#             form.instance.status = "Order Received"
-#             form.instance.time = datetime.datetime.now()
-#             form.instance.shippingmethod = methodshipping
-#             order = form.save()
-#             historyline = Historyline.objects.create(orderhistoryid = orderhistory, orderid = order)
-#             historyline.save()
-#             for cartline in cartlines:
-#                 orderitem = Orderitem.objects.create(orderid = order, itemid = cartline.itemid, count = cartline.num)
-#                 orderitem.save()
-#                 cartline.delete()
-#         else:
-#             return redirect("ecomapp:home")
-#         return super().form_valid(form)
-
+# Đặt hàng -> chọn đia chỉ nhận, chọn hình thức vận chuyển, thanh toán
 class CheckoutView(EcomMixin, CreateView ):
     template_name = "checkout.html"
     form_class = CheckoutForm
@@ -811,24 +530,16 @@ class CheckoutView(EcomMixin, CreateView ):
         if not (request.user.is_authenticated and request.user.account):
             return redirect("/login/?next=/checkout/")
         return super().dispatch(request, *args, **kwargs)
-    def get_context_data(self, **kwargs):
-     
+    def get_context_data(self, **kwargs): 
         context = super().get_context_data(**kwargs)
         cart_id = self.request.session.get("cart_id", None)
-        # cart_obj = Shoppingcart.objects.get(id=cart_id) if cart_id else None
         customer = Customer.objects.get(userid__accountid__user = self.request.user)
         cart_obj = Shoppingcart.objects.get(id=cart_id) if cart_id else Shoppingcart.objects.get(customerid =customer)
         context['cart'] = cart_obj
         return context
     def form_valid(self,form):
-        # template_name = "checkout.html"
-        # # form_class = CheckoutForm()
-        # success_url = reverse_lazy("ecomapp:home")
-        # form  = CheckoutForm(request.user)
         cart_id = self.request.session.get("cart_id")
-        # if cart_id:
         customer = Customer.objects.get(userid__accountid__user = self.request.user)
-        # cart_obj = Shoppingcart.objects.get(id=cart_id)
         cart_obj = Shoppingcart.objects.get(id=cart_id) if cart_id else Shoppingcart.objects.get(customerid =customer)
         cartlines = cart_obj.cartline_set.all()
         if Orderhistory.objects.filter(customerid__userid__accountid__user = self.request.user).exists():
@@ -862,9 +573,9 @@ class CheckoutView(EcomMixin, CreateView ):
             orderitem = Orderitem.objects.create(orderid = order, itemid = cartline.itemid, count = cartline.num)
             orderitem.save()
             cartline.delete()
-        # else:
-        #     return redirect("ecomapp:home")
         return super().form_valid(form)
+
+# Đăng ký tài khoản
 class CustomerRegistrationView(CreateView):
     template_name = "customerregistration.html"
     form_class = CustomerRegistrationForm
@@ -907,17 +618,19 @@ class CustomerRegistrationView(CreateView):
         else:
             return self.success_url
 
-
+# Đăng xuất
 class CustomerLogoutView(View):
     def get(self, request):
         logout(request)
         return redirect("ecomapp:home")
 
+# Thông báo đánh giá hệ thông thành công
 class ReviewSuccessView(TemplateView):
     template_name = "reviewsuccess.html"
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
+# Gửi đánh giá hệ thông
 class SendReview(CreateView):
     template_name = "review.html"
     form_class = ReviewForm
@@ -938,6 +651,7 @@ class SendReview(CreateView):
         else:
             return self.success_url
 
+# Đăng nhập tài khoản
 class CustomerLoginView(FormView):
     template_name = "customerlogin.html"
     form_class = CustomerLoginForm
@@ -963,31 +677,17 @@ class CustomerLoginView(FormView):
             return self.success_url
 
 
-class AboutView(EcomMixin, TemplateView):
-    template_name = "about.html"
+# class AboutView(EcomMixin, TemplateView):
+#     template_name = "about.html"
 
 
-class ContactView(EcomMixin, TemplateView):
-    template_name = "contactus.html"
+# class ContactView(EcomMixin, TemplateView):
+#     template_name = "contactus.html"
 
 
+# Xem thông tin cá nhân , lịch sử đặt hàng
 class CustomerProfileView(TemplateView):
     template_name = "customerprofile.html"
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     kw = self.request.GET.get("keyword")
-    #     results = Item.objects.filter(
-    #         Q(productid__name__icontains=kw) | Q(description__icontains=kw))
-    #     context["results"] = results
-    #     return context
-         
-    #     kw = self.request.GET.get("keyword")
-    #     if kw is not None:
-    #         queryset = Product.objects.filter(
-    #             Q(id__icontains=kw) | Q(name__icontains=kw))
-    #     else:
-    #         queryset = Product.objects.all().order_by("-id")
-    #    context["allproducts"] = queryset
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and Customer.objects.filter(userid__accountid__user = request.user).exists():
             pass
@@ -1002,12 +702,12 @@ class CustomerProfileView(TemplateView):
         context['customer'] = customer
         if kw is not None:
             orders = Order.objects.filter (Q(id__icontains=kw))
-        # context["results"] = results
         else:
             orders = Order.objects.filter(customerid=customer).order_by("-id")
         context["orders"] = orders
         return context
 
+#Xem danh sách các sản phẩm yêu thích
 class WishListView(LoginRequiredMixin,EcomMixin,TemplateView):
     template_name = "wishlist.html"
     def get_context_data(self, **kwargs):
@@ -1021,7 +721,7 @@ class WishListView(LoginRequiredMixin,EcomMixin,TemplateView):
         else:
             return redirect("ecomapp:home")
          
-
+# Xem danh danh đã đánh giá hệ thống của tài khoản
 class ReviewListView(TemplateView):
     template_name = "reviewlist.html"
     def get_context_data(self, **kwargs):
@@ -1031,6 +731,7 @@ class ReviewListView(TemplateView):
         context['reviews'] = reviews
         return context
 
+# Xem chi tiết đơn hàng cho khách hàng
 class CustomerOrderDetailView(DetailView):
     template_name = "customerorderdetail.html"
     model = Order
@@ -1047,6 +748,7 @@ class CustomerOrderDetailView(DetailView):
         return super().dispatch(request, *args, **kwargs)
 
 
+# Tìm kiếm sản phẩm theo tên hoặc mô tả sản phẩm
 class SearchView(TemplateView):
     template_name = "search.html"
 
@@ -1058,74 +760,15 @@ class SearchView(TemplateView):
         context["results"] = results
         return context
 
+#------------------------- ADMIN ---------------------------
 
-# class PasswordForgotView(FormView):
-#     template_name = "forgotpassword.html"
-#     form_class = PasswordForgotForm
-#     success_url = "/forgot-password/?m=s"
-#     # contactinfo = Contactinfo.objects.get(email =  "minh0353845565@gmail.com")
-
-#     # users = Users.objects.get(contactinfoid =contactinfo)
-#     # # customer = Customer.objects.get(userid = users)
-#     # print(customer.id)
-#     def form_valid(self, form):
-#         # get email from user
-#         email = form.cleaned_data.get("email")
-#         print(email)
-#         # get current host ip/domain
-#         url = self.request.META['HTTP_HOST']
-#         # get customer and then user
-#         # print("--------------------")
-#         # customer = Customer.objects.get(userid_contactinfoid_email=email)
-#         contactinfo = Contactinfo.objects.get(email = email)
-#         users = Users.objects.get(contactinfoid =contactinfo)
-#         customer = Customer.objects.get(userid = users)
-#         print(customer.id)
-#         user = customer.userid
-#         # send mail to the user with email
-#         text_content = 'Please Click the link below to reset your password. '
-#         html_content = url + "/password-reset/" + email + \
-#             "/" + password_reset_token.make_token(user) + "/"
-#         send_mail(
-#             'Password Reset Link | Django Ecommerce',
-#             text_content + html_content,
-#             settings.EMAIL_HOST_USER,
-#             [email],
-#             fail_silently=False,
-#         )
-#         return super().form_valid(form)
-
-
-# class PasswordResetView(FormView):
-#     template_name = "passwordreset.html"
-#     form_class = PasswordResetForm
-#     success_url = "/login/"
-
-#     def dispatch(self, request, *args, **kwargs):
-#         email = self.kwargs.get("email")
-#         user = User.objects.get(email=email)
-#         token = self.kwargs.get("token")
-#         if user is not None and password_reset_token.check_token(user, token):
-#             pass
-#         else:
-#             return redirect(reverse("ecomapp:passworforgot") + "?m=e")
-
-#         return super().dispatch(request, *args, **kwargs)
-
-#     def form_valid(self, form):
-#         password = form.cleaned_data['new_password']
-#         email = self.kwargs.get("email")
-#         user = User.objects.get(email=email)
-#         user.set_password(password)
-#         user.save()
-#         return super().form_valid(form)
-
-# # admin pages
+# nhân viên đăng xuất
 class AdminLogoutView(View):
     def get(self, request):
         logout(request)
         return redirect("ecomapp:adminhome")
 
+# Nhân viên đăng nhập
 class AdminLoginView(FormView):
     template_name = "adminpages/adminlogin.html"
     form_class = CustomerLoginForm
@@ -1141,7 +784,7 @@ class AdminLoginView(FormView):
             return render(self.request, self.template_name, {"form": self.form_class, "error": "Invalid credentials"})
         return super().form_valid(form)
 
-
+# Kiểm tra tài khoản có là tk của nhân viên hay không?
 class AdminRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and Staffs.objects.filter(userid__accountid__user = request.user).exists() and Users.objects.filter(accountid__user = request.user, is_active = True).exists():
@@ -1151,50 +794,22 @@ class AdminRequiredMixin(object):
         return super().dispatch(request, *args, **kwargs)
 
 
-# class AdminHomeView(AdminRequiredMixin, TemplateView):
-#     # if Staffs.objects.filter(position = 'Manager'):
-#     #     template_name =  "adminpages/manager/managehome.html"
-       
-#     # else:
-#     template_name = "adminpages/adminhome.html"
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["pendingorders"] = Order.objects.filter(
-#             status="Order Received").order_by("-id")
-#         return context
+# Trang chủ nhân viên 
 class AdminHomeView(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/adminhome.html"
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["pendingorders"] = Order.objects.filter(
-    #         status="Order Received").order_by("-id")
-    #     # position = ""
-    #     # if Staffs.objects.get(userid__accountid__user = request.user).exists():
-    #     #     staff = Staffs.objects.get(userid__accountid__user = request.user)
-    #     #     position = staff.position
-    #     # else:
-    #     #     position = "Null"
-    #     # context['position'] = self.get_abc()
-    #     return context
+
+# Danh sách đơn hàng đang chờ xác nhận
 class AdminPendingOrder(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/adminpendingorders.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["pendingorders"] = Order.objects.filter(
             status="Order Received").order_by("-id")
-        # position = ""
-        # if Staffs.objects.get(userid__accountid__user = request.user).exists():
-        #     staff = Staffs.objects.get(userid__accountid__user = request.user)
-        #     position = staff.position
-        # else:
-        #     position = "Null"
-        # context['position'] = self.get_abc()
         return context
+
+# Danh sách nhân viên  (chỉ cho Manager)
 class AdminStaffListView(AdminRequiredMixin, TemplateView):
-    # if Staffs.objects.filter(position = "Manager"):
     template_name = "adminpages/stafflist.html"
-    # else:
-    #     template_name = "adminpages/404.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         kw = self.request.GET.get("keyword")
@@ -1202,15 +817,12 @@ class AdminStaffListView(AdminRequiredMixin, TemplateView):
             queryset = Staffs.objects.filter(
                 Q(codeStaff__icontains=kw) | Q(position__icontains=kw))
         else:
-            # queryset = Staffs.objects.all().order_by("-id")
             queryset = Staffs.objects.all()
         context["allstaffs"] = queryset
         return context
+
+# Thêm nhân viên mới (chỉ cho manager)
 class AdminStaffCreateView(AdminRequiredMixin, CreateView):
-    # if Staffs.objects.filter(position = "Manager"):
-    #     template_name = "adminpages/stafflist.html"
-    # else:
-    #     template_name = "adminpages/404.html"
     template_name = "adminpages/adminstaffcreate.html"
     form_class = StaffForm
     success_url = reverse_lazy("ecomapp:adminstafflist")
@@ -1254,15 +866,9 @@ class AdminStaffCreateView(AdminRequiredMixin, CreateView):
         elif position == "BusinessStaff":
             businessstaff = Businessstaff.objects.create(staffid = staff.userid)
         form.instance.staff =staff
-        # login(self.request, user.accountid.user)
         return super().form_valid(form)
 
-    # def get_success_url(self):
-    #     if "next" in self.request.GET:
-    #         next_url = self.request.GET.get("next")
-    #         return next_url
-    #     else:
-    #         return self.success_url
+# Xem thông tin và chỉnh sửa thông tin nhân viên( chỉ cho manager)
 class AdminStaffDetailView(View):
     template_name = "adminpages/adminstaffdetail.html"
 
@@ -1351,72 +957,9 @@ class AdminStaffDetailView(View):
             staff.userid.addressid.save()
             staff.userid.save()
             staff.save()
-           
-           
-
-            # form.instance.userid  = staff.userid
-        #     context = {"staff" : Staffs.objects.get(userid = staff.userid )}
-        # return render(request, self.template_name, context)
         return redirect("/admin-staff/list/")
 
-# class AdminProductDetailView(View):
-#     template_name = "adminpages/adminproductdetail.html"
-
-#     def get(self, request, *args, **kwargs):
-#         form = EditProductForm()
-#         pro_id = kwargs['pro_id']
-#         product = Product.objects.get(id=pro_id)
-#         if product.type ==  'Clothes':
-#             form = EditProductForm()
-#         elif product.type ==  'Electronic':
-#             form = EditProductForm()
-#         elif  product.type ==  'Electronic':
-#             form = EditProductForm()
-#         form.fields['producer'].initial  = product.producerid
-#         form.fields['name'].initial  = product.name
-#         form.fields['manufacturingyear'].initial  = product.manufacturingyear
-#         # form.fields['expirydate'].initial  = product.expirydate
-#         convert = {
-#                 "Clothes":"1",
-#                 "Electronic":"2",
-#                 "Book":"3"
-#             }
-#         form.fields['type'].initial  = convert[product.type]
-
-#         context = {'form': form, "product": product}
-#         return render(request, self.template_name, context)
-
-#     def post(self, request, *args, **kwargs):
-#         form = EditProductForm(data=request.POST)
-#         if form.is_valid():
-#             producer = form.cleaned_data['producer']
-#             name = form.cleaned_data['name']
-#             manufacturingyear = form.cleaned_data['manufacturingyear']
-#             # expirydate = form.cleaned_data['expirydate']
-#             type = form.cleaned_data['type']
-
-#             pro_id = kwargs['pro_id']
-#             product = Product.objects.get(id=pro_id)
-#             product.producer = producer
-#             product.name = name
-#             product.manufacturingyear = manufacturingyear
-#             # product.expirydate = expirydate
-#             convert = {
-#                 "1": "Clothes",
-#                 "2": "Electronic",
-#                 "3": "Book"
-#             }
-#             product.type = convert[type]
-#             product.save()
-
-#             form.fields['producer'].initial  = product.producerid
-#             form.fields['name'].initial  = product.name
-#             form.fields['manufacturingyear'].initial  = product.manufacturingyear
-#             # form.fields['expirydate'].initial  = product.expirydate
-#             form.fields['type'].initial  = product.type
-
-#             context = {'form': form, "product": product}
-#         return render(request, self.template_name, context)
+# Xem thông tin và chỉnh sủa thông tin sản phẩm (Book, electronic, clothes)
 class AdminProductDetailView(View):
     template_name = "adminpages/adminproductdetail.html"
 
@@ -1471,27 +1014,15 @@ class AdminProductDetailView(View):
             producer = form.cleaned_data['producer']
             name = form.cleaned_data['name']
             manufacturingyear = form.cleaned_data['manufacturingyear']
-            # type = form.cleaned_data['type']
-
-            # pro_id = kwargs['pro_id']
             product = Product.objects.get(id=pro_id)
             product.producer = producer
             product.name = name
             product.manufacturingyear = manufacturingyear
-           
-            # product.expirydate = expirydate
-            # convert = {
-            #     "1": "Clothes",
-            #     "2": "Electronic",
-            #     "3": "Book"
-            # }
-            # product.type = type
             product.save()
-
             form.fields['producer'].initial  = product.producerid
             form.fields['name'].initial  = product.name
             form.fields['manufacturingyear'].initial  = product.manufacturingyear
-            # form.fields['type'].initial  = product.type
+    
             if  type ==  'Clothes':
                 clothes =  Clothes.objects.get(productid = product)
                 
@@ -1556,6 +1087,7 @@ class AdminProductDetailView(View):
         return render(request, self.template_name, context)
 
 
+# Xem chi tiết mặt hàng -> có thể thạy đổi giá, mô tả , đăng tải or không đăng tải
 class AdminItemDetailView(View):
     template_name = "adminpages/adminitemdetail.html"
 
@@ -1587,6 +1119,7 @@ class AdminItemDetailView(View):
             context = {'form': form, "product": product}
         return render(request, self.template_name, context)
 
+# Xem chi tiết đơn hàng 
 class AdminOrderDetailView(AdminRequiredMixin, DetailView):
     template_name = "adminpages/adminorderdetail.html"
     model = Order
@@ -1597,16 +1130,19 @@ class AdminOrderDetailView(AdminRequiredMixin, DetailView):
         context["allstatus"] = ORDER_STATUS
         return context
 
+# Xem danh sách đơn hàng
 class AdminOrderListView(AdminRequiredMixin, ListView):
     template_name = "adminpages/adminorderlist.html"
     queryset = Order.objects.all().order_by("-id")
     context_object_name = "allorders"
 
+# Xem danh sách đánh giá hệ thống của khách hàng
 class AdminReviewListView(AdminRequiredMixin, ListView):
     template_name = "adminpages/adminreviewlist.html"
     queryset = Customerreview.objects.all().order_by("-id")
     context_object_name = "allreviews"
 
+#Xem chi tiết đánh giá của khách hàng
 class AdminReviewDetailView(AdminRequiredMixin, DetailView):
     template_name = "adminpages/adminreviewdetail.html"
     model = Customerreview
@@ -1617,6 +1153,7 @@ class AdminReviewDetailView(AdminRequiredMixin, DetailView):
         self.request.session["review_id"] = context['rv_obj'].id
         return context
 
+#Phản hồi đánh giá của khách hàng
 class AdminReplyReviewView(AdminRequiredMixin, CreateView):
     template_name = "adminpages/adminreplyreview.html"
     form_class = ReplyReviewForm
@@ -1643,6 +1180,7 @@ class AdminReplyReviewView(AdminRequiredMixin, CreateView):
         else:
             return self.success_url
 
+# Thay đổi trạng thái đơn hàng
 class AdminOrderStatusChangeView(AdminRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         order_id = self.kwargs["pk"]
@@ -1652,6 +1190,7 @@ class AdminOrderStatusChangeView(AdminRequiredMixin, View):
         order_obj.save()
         return redirect(reverse_lazy("ecomapp:adminorderdetail", kwargs={"pk": order_id}))
 
+# Xem danh sách các sản phẩm
 class AdminProductListView(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/adminproductlistTEST.html"
 
@@ -1668,7 +1207,8 @@ class AdminProductListView(AdminRequiredMixin, TemplateView):
         context["allproducts"] = queryset
         context["allcategory"] =  allcategory
         return context
-   
+
+# Xem danh sách mặt hàng 
 class AdminItemListView(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/adminitemlist.html"
 
@@ -1682,29 +1222,29 @@ class AdminItemListView(AdminRequiredMixin, TemplateView):
            
         else:
             queryset = Item.objects.all().order_by("-id")
-        list_import_item = []
-        a = []
-        for i in queryset:
-            list1 = Importingrecord.objects.filter(productid= i.productid)
-            if len(list1)==1:
-                list_import_item.append(Importingrecord.objects.get(productid= i.productid))
-            else :
-                max_id = list1[0].id
-                for j in list1:
-                    max_id =  max(max_id, j.id)
-                list_import_item.append(Importingrecord.objects.get(id =max_id))
-
-           
+        # list_import_item = []
+        # a = []
+        # for i in queryset:
+        #     list1 = Importingrecord.objects.filter(productid= i.productid)
+        #     if len(list1)==1:
+        #         list_import_item.append(Importingrecord.objects.get(productid= i.productid))
+        #     else :
+        #         max_id = list1[0].id
+        #         for j in list1:
+        #             max_id =  max(max_id, j.id)
+        #         list_import_item.append(Importingrecord.objects.get(id =max_id))
         context["allproducts"] = queryset
-        context["importitem"] = list_import_item
+        # context["importitem"] = list_import_item
     
         return context
 
+# Xem danh sách các lịch sử hóa đơn nhập hàng
 class AdminImprotingrecordListView(AdminRequiredMixin, ListView):
     template_name = "adminpages/adminimportingrecordlist.html"
     queryset = Importingrecord.objects.all().order_by("-id")
     context_object_name = "allrecords"
 
+# Xóa sản phẩm
 class AdminProductDeleteView(AdminRequiredMixin, View):
     template_name = "adminpages/adminproductlistTEST.html"
     
@@ -1719,57 +1259,22 @@ class AdminProductDeleteView(AdminRequiredMixin, View):
         # return render(request, self.template_name, context)
         return redirect(reverse_lazy("ecomapp:adminproductlist"))
 
-class AdminItemDeleteView(AdminRequiredMixin, View):
-    template_name = "adminpages/adminproductlist.html"
-    def get(self, request, *args, **kwargs):
-        queryset = Item.objects.all().order_by("-id")
-        pro_id = self.kwargs["pro_id"]
-        item = Item.objects.get(id = pro_id)
-        item.productid.delete()
-        context = {"allproducts":queryset}
-        return render(request, self.template_name, context)
+#
+# class AdminItemDeleteView(AdminRequiredMixin, View):
+#     template_name = "adminpages/adminproductlist.html"
+#     def get(self, request, *args, **kwargs):
+#         queryset = Item.objects.all().order_by("-id")
+#         pro_id = self.kwargs["pro_id"]
+#         item = Item.objects.get(id = pro_id)
+#         item.productid.delete()
+#         context = {"allproducts":queryset}
+#         return render(request, self.template_name, context)
 
 
-# class AdminProductCreateView(AdminRequiredMixin, CreateView):
-#     template_name = "adminpages/adminproductcreate.html"
-#     form_class = ProductForm
-#     success_url = reverse_lazy("ecomapp:adminproductlist")
-
-#     def form_valid(self, form):
-#         # codeproduct =  form.cleaned_data.get("codeproduct")
-#         producer = form.cleaned_data.get("producer")
-#         manufacturingyear = form.cleaned_data.get("manufacturingyear")
-#         # expirydate = form.cleaned_data.get("expirydate")
-#         name = form.cleaned_data.get("name")
-#         prod_type = form.cleaned_data.get("type")
-#         slug = form.cleaned_data.get("slug")
-#         description = form.cleaned_data.get("description")
-#         convert = {
-#             "1": "Clothes",
-#             "2": "Electronic",
-#             "3": "Book"
-#         }
-#         p = Product.objects.create(producerid = producer, manufacturingyear = manufacturingyear,
-#                                     type = convert[prod_type], name = name)
-#         images = self.request.FILES.getlist("images")
-#         # Item.objects.create(productid= p, slug = slug,   image = images[0], description = description)
-#         ProductCategory.objects.create(categoryid = Category.objects.get(name = convert[prod_type]), productid = p)
-       
-#         form.instance.productid = p
-#         form.instance.description = description
-#         form.instance.slug = slug
-#         form.instance.image = images[0]
-#         return super().form_valid(form)
+# Thêm sản phẩm
 class AdminProductCreateView(AdminRequiredMixin, View):
     template_name = "adminpages/adminproductcreate.html"
-    
-    # if 1>2:
-    #     form_class = ClothesProductForm
-    # else:
-    #     form_class = BookProductForm
-    # success_url = reverse_lazy("ecomapp:adminproductlist")
-  
-    # def form_valid(self, form,*args, **kwargs):
+
     def get(self, request, *args, **kwargs):
         cagetoryid = kwargs["cate_id"]
         form = BookProductForm()
@@ -1835,6 +1340,7 @@ class AdminProductCreateView(AdminRequiredMixin, View):
         # return super().form_valid(form)
         return redirect(reverse_lazy("ecomapp:adminproductlist"))
 
+#Nhập hàng (kho có sản phẩm)
 class AdminImportProductView(AdminRequiredMixin, CreateView):
     template_name = "adminpages/adminimportproduct.html"
     form_class = ImportProductForm
@@ -1860,21 +1366,22 @@ class AdminImportProductView(AdminRequiredMixin, CreateView):
         form.instance.price = price
         return super().form_valid(form)
     
-class Statistic(AdminRequiredMixin, TemplateView):
-    template_name = "adminpages/statistic.html"
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["pendingorders"] = Order.objects.filter(
-            status="Order Received").order_by("-id")
-        # position = ""
-        # if Staffs.objects.get(userid__accountid__user = request.user).exists():
-        #     staff = Staffs.objects.get(userid__accountid__user = request.user)
-        #     position = staff.position
-        # else:
-        #     position = "Null"
-        # context['position'] = self.get_abc()
-        return context
+# class Statistic(AdminRequiredMixin, TemplateView):
+#     template_name = "adminpages/statistic.html"
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["pendingorders"] = Order.objects.filter(
+#             status="Order Received").order_by("-id")
+#         # position = ""
+#         # if Staffs.objects.get(userid__accountid__user = request.user).exists():
+#         #     staff = Staffs.objects.get(userid__accountid__user = request.user)
+#         #     position = staff.position
+#         # else:
+#         #     position = "Null"
+#         # context['position'] = self.get_abc()
+#         return context
 
+# Báo cáo về doanh thu
 class Reports(AdminRequiredMixin, TemplateView):
   
     template_name = "adminpages/test.html"
@@ -1883,9 +1390,6 @@ class Reports(AdminRequiredMixin, TemplateView):
             cursor.execute(query)
             row = cursor.fetchall()
         return row
-
-
-
     def generate_template(self, startmonth, endmonth, year):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         filename = "media/docx_template/BaoCaoDoanhThu.docx"
@@ -2074,11 +1578,8 @@ class Reports(AdminRequiredMixin, TemplateView):
                 report = Reports()
                 try:
                     file_path = report.generate_template(startmonth,endmonth, year)
-                    # print(1)
-                # error = False
                 except:
                     error = True
-                #     print(2)
                 monthyear = str(startmonth)+"-"+str(endmonth)+"-"+str(year)
             else: 
                 error = True
@@ -2090,6 +1591,5 @@ class Reports(AdminRequiredMixin, TemplateView):
         context['startmonth'] =  startmonth
         context['endmonth'] =  endmonth
         context['year'] = year
-     
         context['error'] =  error
         return context

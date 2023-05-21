@@ -20,7 +20,7 @@
                             <th class = "align-middle col-1" scope="col">STT</th>
                             <th class = "align-middle col-2" scope="col">Product Title</th>
                             <th class = "align-middle col-1" scope="col">Image</th>
-                            <th class = "align-middle col-2" scope="col">Price import</th>
+                            {% comment %} <th class = "align-middle col-2" scope="col">Price import</th> {% endcomment %}
                             <th class = "align-middle col-1" scope="col">Price sale</th>
                             <th class = "align-middle col-1" scope="col">Inventory</th>
                             <th class = "align-middle col-3" scope="col">Description</th>
@@ -33,11 +33,11 @@
                             <td class="align-middle" scope="row">{{forloop.counter}}</td>
                             <td class="align-middle"><a href="{% url 'ecomapp:adminitemdetail' p.slug %}">{{p.productid.name}}</a></td>
                             <td class="align-middle"><img src="{{p.image.url}}" style="height: 60px;" alt=""></td>
-                            {% for i in importitem%}
+                            {% comment %} {% for i in importitem%}
                                 {% if p.productid == i.productid%}
                                     <td>{{i.price|intcomma}}</td>
                                 {% endif%}
-                            {% endfor %}
+                            {% endfor %} {% endcomment %}
                             <td class="align-middle">{{p.price|intcomma}}</td>
                             <td class="align-middle">{{p.productid.num}}</td>
                             <td class="align-middle">{{p.description}}</td>

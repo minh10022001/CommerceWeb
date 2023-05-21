@@ -9,10 +9,10 @@ urlpatterns = [
     path("download_report_revenue/<slug:monthyear>", Reports.download_file, name="download"),
      path("reports", Reports.as_view(),name="reports"),
     path("", HomeView.as_view(), name="home"),
-    path("about/", AboutView.as_view(), name="about"),
+#     path("about/", AboutView.as_view(), name="about"),
     path("review/", SendReview.as_view(), name="review"),
-    path("contact-us/", ContactView.as_view(), name="contact"),
-    path("all-products/", AllProductsView.as_view(), name="allproducts"),
+#     path("contact-us/", ContactView.as_view(), name="contact"),
+#     path("all-products/", AllProductsView.as_view(), name="allproducts"),
      path("all-book/", BookProductsView.as_view(), name="allbook"),
      path("all-electronic/", ElectronicProductsView.as_view(), name="allelectronic"),
      path("all-clothes/", ClothesProductsView.as_view(), name="allclothes"),
@@ -50,9 +50,6 @@ urlpatterns = [
     path("shipping-address/delete/<int:cus_id>/<int:addr_id>/", ShippingAddressDeleteView.as_view(), name="shippingaddressdelete"),
     
 
-#     path("forgot-password/", PasswordForgotView.as_view(), name="passworforgot"),
-#     path("password-reset/<email>/<token>/",
-#          PasswordResetView.as_view(), name="passwordreset"),
 #     # Admin Side pages
     path("admin-logout/", AdminLogoutView.as_view(), name="adminlogout"),
     path("admin-login/", AdminLoginView.as_view(), name="adminlogin"),
@@ -90,6 +87,6 @@ urlpatterns = [
 
     path("admin-product/import/", AdminImportProductView.as_view(),
          name="adminimportproduct"),
-    path("statistic", Statistic.as_view(),
-         name="statistic"),
+#     path("statistic", Statistic.as_view(),
+#          name="statistic"),
 ]
