@@ -1352,6 +1352,7 @@ class AdminImportProductView(AdminRequiredMixin, CreateView):
         price = form.cleaned_data.get("price")
         product.num += number
         item = Item.objects.get(productid = product)
+        item.price_import = price
         item.price = price*(1+0.1)
         item.save()
         product.save()
