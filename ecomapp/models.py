@@ -118,7 +118,7 @@ class Customer(models.Model):
 class Staffs(models.Model):
     codeStaff = models.CharField(db_column='codeStaff', max_length=255,unique=True) 
     position = models.CharField(db_column='Position', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    salary = models.BigIntegerField(db_column='Salary', blank=True, null=True)  # Field name made lowercase.
+    salary = models.IntegerField(db_column='Salary', blank=True, null=True)  # Field name made lowercase.
     startdate = models.DateField(db_column='StartDate', blank=True, null=True)  # Field name made lowercase.
     workingtime = models.IntegerField(db_column='WorkingTime', blank=True, null=True)  # Field name made lowercase.
     userid = models.OneToOneField('Users', models.CASCADE, db_column='UsersID', primary_key=True)  # Field name made lowercase.
@@ -263,7 +263,7 @@ class Electronic(models.Model):
 class Item(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     productid = models.ForeignKey('Product', models.CASCADE, db_column='ProductID')  # Field name made lowercase.
-    price = models.BigIntegerField(db_column='Price', blank=True, null=True)  # Field name made lowercase.
+    price = models.IntegerField(db_column='Price', blank=True, null=True)  # Field name made lowercase.
     description = models.CharField(db_column='Description', max_length=2000, blank=True, null=True)  # Field name made lowercase.
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to="products/images/")
