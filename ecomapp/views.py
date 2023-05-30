@@ -1,6 +1,8 @@
 from cgitb import reset
 import email
 from pickle import GET
+from tkinter import N
+from tracemalloc import start
 # from turtle import position
 from unicodedata import name
 from unittest import mock
@@ -30,6 +32,11 @@ from docxtpl import DocxTemplate, InlineImage
 import os
 from django.db import connection
 from docx.shared import Mm
+
+import openpyxl
+from openpyxl.styles import Alignment
+from openpyxl.styles import Alignment, Border, Side
+
 
 #----------------CUSTOMER--------------------#
 
@@ -1390,71 +1397,118 @@ class Reports(AdminRequiredMixin, TemplateView):
             cursor.execute(query)
             row = cursor.fetchall()
         return row
-    def generate_template(self, startmonth, endmonth, year):
+    def generate_template(self, startdate, enddate):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         filename = "media/docx_template/BaoCaoDoanhThu.docx"
         filepath = os.path.join(base_dir, filename)
         # create a document object
         doc = DocxTemplate(filepath)
 
-        smonth1 = startmonth
-        emonth1 = endmonth
-
-        startmonth = str(startmonth)
-        endmonth = str(endmonth)
-        year = str(year)
-
-        if len(startmonth)==1:
-            startmonth = "0"+startmonth
-        if len(endmonth)==1:
-            endmonth = "0"+endmonth
+        syear ,smonth= startdate.split('-')
+        eyear, emonth  = enddate.split('-')
         # create context to pass data to template
+        # query_tong_doanh_thu = f"select sum((i.price)*oi.count) as revenue\
+        #                         from [order] o \
+        #                         join [orderitem] oi on o.id = oi.id\
+        #                         join [item] i on oi.ItemID = i.id\
+        #                         where (strftime('%m', o.Time) >= \"{smonth}\" and strftime('%m', o.Time) <= \"{emonth}\" and strftime('%Y', o.Time) = \"{syear}\"and strftime('%Y', o.Time) = \"{eyear}\" ) or ( strftime('%Y', o.Time) >= \"{syear}\" and strftime('%Y', o.Time) <= \"{eyear}\")"
+        # query_loi_nhuan = f"select  sum((i.price - im.price)*oi.count) as profit \
+        #                     from [order] o  \
+        #                     join [orderitem] oi on o.id = oi.id \
+        #                     join [item] i on oi.ItemID = i.id \
+        #                     join [product] p on i.ProductID = p.id \
+        #                     join [importingrecord] im on im.productid = p.id\
+        #                      where (strftime('%m', o.Time) >= \"{smonth}\" and strftime('%m', o.Time) <= \"{emonth}\" and strftime('%Y', o.Time) = \"{syear}\"and strftime('%Y', o.Time) = \"{eyear}\" ) or ( strftime('%Y', o.Time) >= \"{syear}\" and strftime('%Y', o.Time) <= \"{eyear}\")"
+        # query_ti_le_loi_nhuan = f"select  (CAST((i.price - im.price) as REAL)/i.Price)*100 as profit \
+        #                     from [order] o \
+        #                     join [orderitem] oi on o.id = oi.id \
+        #                     join [item] i on oi.ItemID = i.id \
+        #                     join [product] p on i.ProductID = p.id \
+        #                     join [importingrecord] im on im.productid = p.id \
+        #                     where (strftime('%m', o.Time) >= \"{smonth}\" and strftime('%m', o.Time) <= \"{emonth}\" and strftime('%Y', o.Time) = \"{syear}\"and strftime('%Y', o.Time) = \"{eyear}\" ) or ( strftime('%Y', o.Time) >= \"{syear}\" and strftime('%Y', o.Time) <= \"{eyear}\") \
+        #                     group by strftime('%m', o.Time)"
+        # query_khach_hang_moi = f"select count(*) as new_customer \
+        #                     from [users] u  \
+        #                     join account a on a.user_id = u.id \
+        #                     where  strftime('%m', a.Date_created) >= \"{smonth}\" and strftime('%m', a.Date_created) <= \"{emonth}\" and strftime('%Y', a.Date_created) >= \"{syear}\" and strftime('%Y', a.Date_created) <= \"{eyear}\""                     
+        # query_doanh_thu_tb_khach = f"select  cast(sum(i.price*oi.count) as real)/(count(distinct o.CustomerID)) as profit \
+        #                         from [order] o \
+        #                         join [orderitem] oi on o.id = oi.id \
+        #                         join [item] i on oi.ItemID = i.id \
+        #                          where (strftime('%m', o.Time) >= \"{smonth}\" and strftime('%m', o.Time) <= \"{emonth}\" and strftime('%Y', o.Time) = \"{syear}\"and strftime('%Y', o.Time) = \"{eyear}\" ) or ( strftime('%Y', o.Time) >= \"{syear}\" and strftime('%Y', o.Time) <= \"{eyear}\")"
+        # query_doanh_thu_chi_tiet = f"select  p.name, i.price, sum(oi.count) as quantity, sum(i.price *oi.count) as revenue \
+        #                         from [order] o \
+        #                         join [orderitem] oi on o.id = oi.id \
+        #                         join [item] i on oi.ItemID = i.id \
+        #                         join [product] p on i.ProductID = p.id \
+        #                         join [importingrecord] im on im.productid = p.id \
+        #                          where (strftime('%m', o.Time) >= \"{smonth}\" and strftime('%m', o.Time) <= \"{emonth}\" and \"{syear}\" = \"{eyear}\"  ) or ( strftime('%Y', o.Time) >= \"{syear}\" and strftime('%Y', o.Time) <= \"{eyear}\") \
+        #                         group by itemid \
+        #                         order by revenue desc \
+        #                         limit 10"
+        # query_doanh_thu_theo_thang = f"select strftime('%m', o.Time) as month,strftime('%Y', o.Time) as year,\
+        #                         sum((i.price)*oi.count) as revenue \
+        #                         from [order] o  \
+        #                         join [orderitem] oi on o.id = oi.id \
+        #                         join [item] i on oi.ItemID = i.id \
+        #                         where (strftime('%m', o.Time) >= \"{smonth}\" and strftime('%m', o.Time) <= \"{emonth}\" and strftime('%Y', o.Time) = \"{syear}\"and strftime('%Y', o.Time) = \"{eyear}\" ) or ( strftime('%Y', o.Time) >= \"{syear}\" and strftime('%Y', o.Time) <= \"{eyear}\" and  \"{eyear}\" != \"{syear}\" ) \
+        #                         group by strftime('%m', o.Time), strftime('%Y', o.Time)"
+        # query_doanh_thu_theo_category = f"select c.name as category_name, \
+        #                         sum((i.price)*oi.count) as revenue \
+        #                         from [order] o  \
+        #                         join [orderitem] oi on o.id = oi.id \
+        #                         join [item] i on oi.ItemID = i.id \
+        #                         join [product] p on p.ID = i.ProductID \
+        #                         join [product_category] pc on p.ID = pc.ProductID \
+        #                         join [category] c on c.ID = pc.CategoryID  \
+        #                         where (strftime('%m', o.Time) >= \"{smonth}\" and strftime('%m', o.Time) <= \"{emonth}\" and strftime('%Y', o.Time) = \"{syear}\"and strftime('%Y', o.Time) = \"{eyear}\" ) or ( strftime('%Y', o.Time) >= \"{syear}\" and strftime('%Y', o.Time) <= \"{eyear}\") \
+        #                         group by c.name"
         query_tong_doanh_thu = f"select sum((i.price)*oi.count) as revenue\
                                 from [order] o \
                                 join [orderitem] oi on o.id = oi.id\
                                 join [item] i on oi.ItemID = i.id\
-                                where strftime('%m', o.Time) >= \"{startmonth}\" and strftime('%m', o.Time) <= \"{endmonth}\" and strftime('%Y', o.Time) = \"{year}\""
+                                where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\" "
         query_loi_nhuan = f"select  sum((i.price - im.price)*oi.count) as profit \
                             from [order] o  \
                             join [orderitem] oi on o.id = oi.id \
                             join [item] i on oi.ItemID = i.id \
                             join [product] p on i.ProductID = p.id \
                             join [importingrecord] im on im.productid = p.id\
-                            where strftime('%m', o.Time) >= \"{startmonth}\" and strftime('%m', o.Time) <= \"{endmonth}\" and strftime('%Y', o.Time) = \"{year}\""
+                            where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\""
         query_ti_le_loi_nhuan = f"select  (CAST((i.price - im.price) as REAL)/i.Price)*100 as profit \
                             from [order] o \
                             join [orderitem] oi on o.id = oi.id \
                             join [item] i on oi.ItemID = i.id \
                             join [product] p on i.ProductID = p.id \
                             join [importingrecord] im on im.productid = p.id \
-                            where strftime('%m', o.Time) >= \"{startmonth}\" and strftime('%m', o.Time) <= \"{endmonth}\" and strftime('%Y', o.Time) = \"{year}\" \
+                            where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\" \
                             group by strftime('%m', o.Time)"
         query_khach_hang_moi = f"select count(*) as new_customer \
                             from [users] u  \
                             join account a on a.user_id = u.id \
-                            where  strftime('%m', a.Date_created) >= \"{startmonth}\" and strftime('%m', a.Date_created) <= \"{endmonth}\" and strftime('%Y', a.Date_created) = \"{year}\""                     
+                            where  strftime('%Y-%m', a.Date_created) >= \"{startdate}\" and strftime('%Y-%m', a.Date_created) <= \"{enddate}\" "                     
         query_doanh_thu_tb_khach = f"select  cast(sum(i.price*oi.count) as real)/(count(distinct o.CustomerID)) as profit \
                                 from [order] o \
                                 join [orderitem] oi on o.id = oi.id \
                                 join [item] i on oi.ItemID = i.id \
-                                where strftime('%m', o.Time) >= \"{startmonth}\" and strftime('%m', o.Time) <= \"{endmonth}\" and strftime('%Y', o.Time) = \"{year}\""
+                                 where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\""
         query_doanh_thu_chi_tiet = f"select  p.name, i.price, sum(oi.count) as quantity, sum(i.price *oi.count) as revenue \
                                 from [order] o \
                                 join [orderitem] oi on o.id = oi.id \
                                 join [item] i on oi.ItemID = i.id \
                                 join [product] p on i.ProductID = p.id \
                                 join [importingrecord] im on im.productid = p.id \
-                                where strftime('%m', o.Time) >= \"{startmonth}\" and strftime('%m', o.Time) <= \"{endmonth}\" and strftime('%Y', o.Time) = \"{year}\" \
+                                where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\" \
                                 group by itemid \
                                 order by revenue desc \
                                 limit 10"
-        query_doanh_thu_theo_thang = f"select strftime('%m', o.Time) as month, \
+        query_doanh_thu_theo_thang = f"select strftime('%m', o.Time) as month,strftime('%Y', o.Time) as year,\
                                 sum((i.price)*oi.count) as revenue \
                                 from [order] o  \
                                 join [orderitem] oi on o.id = oi.id \
                                 join [item] i on oi.ItemID = i.id \
-                                where strftime('%m', o.Time) >= \"{startmonth}\" and strftime('%m', o.Time) <= \"{endmonth}\" and strftime('%Y', o.Time) = \"{year}\" \
-                                group by strftime('%m', o.Time)"
+                                where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\" \
+                                group by strftime('%m', o.Time), strftime('%Y', o.Time)"
         query_doanh_thu_theo_category = f"select c.name as category_name, \
                                 sum((i.price)*oi.count) as revenue \
                                 from [order] o  \
@@ -1463,7 +1517,7 @@ class Reports(AdminRequiredMixin, TemplateView):
                                 join [product] p on p.ID = i.ProductID \
                                 join [product_category] pc on p.ID = pc.ProductID \
                                 join [category] c on c.ID = pc.CategoryID  \
-                                where strftime('%m', o.Time) >= \"{startmonth}\" and strftime('%m', o.Time) <= \"{endmonth}\" and strftime('%Y', o.Time) = \"{year}\" \
+                                where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\" \
                                 group by c.name"
         tong_doanh_thu = "{:,}".format(self.run_custome_sql(query_tong_doanh_thu)[0][0])
         loi_nhuan = "{:,}".format(self.run_custome_sql(query_loi_nhuan)[0][0])
@@ -1480,10 +1534,11 @@ class Reports(AdminRequiredMixin, TemplateView):
                                 "gia": "{:,}".format(listDoanhThu[k][1]), "soluong": "{:,}".format(listDoanhThu[k][2]),
                                   "doanhthu": "{:,}".format(listDoanhThu[k][3])})
         time =  ""
-        if smonth1 != emonth1:
-            time =  " từ tháng " +startmonth +" đến "+ endmonth + " năm " +year
+        if startdate != enddate:
+            time =  " từ " +smonth + "/"+syear + " đến "+ emonth +"/"+eyear
         else:
-            time = " trong tháng " + startmonth +  " năm " +year
+            time = " trong " +emonth +"/"+eyear
+      
 
         context = {
             # "startmonth": startmonth,
@@ -1500,12 +1555,12 @@ class Reports(AdminRequiredMixin, TemplateView):
         
         doanhThuTheoThang = []
         for k in range(len(listDoanhThuTheoThang)):
-            doanhThuTheoThang.append({"month": listDoanhThuTheoThang[k][0], "revenue": "{:,}".format(listDoanhThuTheoThang[k][1])})
+            doanhThuTheoThang.append({"month": listDoanhThuTheoThang[k][0] +"-"+listDoanhThuTheoThang[k][1] ,"revenue": "{:,}".format(listDoanhThuTheoThang[k][2])})
 
         doanhThuTheoCategory = []
         for k in range(len(listDoanhThuTheoCategory)):
             doanhThuTheoCategory.append({"category_name": listDoanhThuTheoCategory[k][0], "revenue": "{:,}".format(listDoanhThuTheoCategory[k][1])})
-        
+        # print(doanhThuTheoThang)
         # Graph doanh thu theo category
         fig, ax = plt.subplots()
         # Plot the data on the axes
@@ -1524,8 +1579,8 @@ class Reports(AdminRequiredMixin, TemplateView):
         # Graph doanh thu theo thang
         fig, ax = plt.subplots(figsize=(10, 7))
         # Plot the data on the axes
-        x1 = [x[0] for x in listDoanhThuTheoThang]
-        y1 = [x[1] for x in listDoanhThuTheoThang]
+        x1 = [x[0]+"-"+x[1] for x in listDoanhThuTheoThang]
+        y1 = [x[2] for x in listDoanhThuTheoThang]
         ax.plot(x1, y1)
 
         # Add labels and title
@@ -1550,15 +1605,15 @@ class Reports(AdminRequiredMixin, TemplateView):
         doc.render(context)
 
         # save the document object as a word file
-        reportWordPath = 'reports/documents/report_month_{0}-{1}-{2}.docx'.format(startmonth,endmonth, year)
+        reportWordPath = 'reports/documents/report_month_{0}_{1}.docx'.format(startdate, enddate)
         output_path = os.path.join(base_dir, reportWordPath)
         doc.save(output_path)
         return output_path
     
     def download_file(self, **kwargs):
         a =kwargs['monthyear']
-        report = Reports()
-        filepath = report.generate_template(a.split('-')[0],a.split('-')[1], a.split('-')[2])
+        report = Reports()  
+        filepath = report.generate_template(a.split('_')[0],a.split('_')[1] )
         if os.path.exists(filepath ):
             with open(filepath , 'rb') as fh:
                 response = HttpResponse(fh.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
@@ -1567,29 +1622,48 @@ class Reports(AdminRequiredMixin, TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        startmonth = self.request.GET.get("keyword1")
-        endmonth = self.request.GET.get("keyword2")
-        year = self.request.GET.get("keyword3")
+        startdate = self.request.GET.get("startdate")
+        enddate= self.request.GET.get("enddate")
+       
+       
         monthyear = None
         error =  False
-        print(startmonth, endmonth,year )
-        if startmonth is not None and year is not None and endmonth is not None:
-            if int(startmonth) <= int(endmonth) and int(endmonth) <= 12 and int(startmonth)>=1 :
+       
+        # print(startdate, enddate)
+        # print(type(startdate))
+        if startdate is not None and enddate is not None:
+            # syear ,smonth= startdate.split('-')
+            # eyear, emonth  = enddate.split('-')
+            # print(smonth, syear)
+            # print(startdate < enddate )
+            if startdate<= enddate:
                 report = Reports()
-                try:
-                    file_path = report.generate_template(startmonth,endmonth, year)
-                except:
-                    error = True
-                monthyear = str(startmonth)+"-"+str(endmonth)+"-"+str(year)
-            else: 
+                # try:
+                file_path = report.generate_template(startdate, enddate)
+                monthyear = startdate + "_"+enddate
+                # except:
+                #     error = True
+            else:
                 error = True
+        else:
+             error = True
+        # if startmonth is not None and year is not None :
+        #     if int(startmonth) <= int(endmonth) and int(endmonth) <= 12 and int(startmonth)>=1 :
+        #         report = Reports()
+        #         try:
+        #             file_path = report.generate_template(startmonth,endmonth, year)
+        #         except:
+        #             error = True
+        #         monthyear = str(startmonth)+"-"+str(endmonth)+"-"+str(year)
+        #     else: 
+        #         error = True
             
-        else: 
-            error = True
-        print(error)
+        # else: 
+        #     error = True
+        # print(error)
         context['monthyear'] = monthyear  
-        context['startmonth'] =  startmonth
-        context['endmonth'] =  endmonth
-        context['year'] = year
+        context['startdate'] =  startdate
+        context['enddate'] =  enddate
+        # context['year'] = year
         context['error'] =  error
         return context
