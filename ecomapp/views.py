@@ -1508,7 +1508,8 @@ class Reports(AdminRequiredMixin, TemplateView):
                                 join [orderitem] oi on o.id = oi.id \
                                 join [item] i on oi.ItemID = i.id \
                                 where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\" \
-                                group by strftime('%m', o.Time), strftime('%Y', o.Time)"
+                                group by strftime('%m', o.Time), strftime('%Y', o.Time) \
+                                order by  strftime('%Y', o.Time) asc, strftime('%m', o.Time) asc"
         query_doanh_thu_theo_category = f"select c.name as category_name, \
                                 sum((i.price)*oi.count) as revenue \
                                 from [order] o  \
@@ -1577,12 +1578,13 @@ class Reports(AdminRequiredMixin, TemplateView):
 
 
         # Graph doanh thu theo thang
-        fig, ax = plt.subplots(figsize=(10, 7))
+        fig, ax = plt.subplots(figsize=(10, 8))
         # Plot the data on the axes
         x1 = [x[0]+"-"+x[1] for x in listDoanhThuTheoThang]
         y1 = [x[2] for x in listDoanhThuTheoThang]
         ax.plot(x1, y1)
-
+        plt.xticks(rotation = 90)
+        # ax.xticks(ticks=x1, labels=x1, rotation='vertical')
         # Add labels and title
         ax.set_xlabel('Tháng')
         ax.set_ylabel('(Doanh thu(VND)')
