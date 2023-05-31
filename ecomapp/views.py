@@ -1468,19 +1468,17 @@ class Reports(AdminRequiredMixin, TemplateView):
                                 join [orderitem] oi on o.id = oi.id\
                                 join [item] i on oi.ItemID = i.id\
                                 where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\" "
-        query_loi_nhuan = f"select  sum((i.price - im.price)*oi.count) as profit \
+        query_loi_nhuan = f"select  sum((i.price - i.price_import)*oi.count) as profit \
                             from [order] o  \
                             join [orderitem] oi on o.id = oi.id \
                             join [item] i on oi.ItemID = i.id \
                             join [product] p on i.ProductID = p.id \
-                            join [importingrecord] im on im.productid = p.id\
                             where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\""
-        query_ti_le_loi_nhuan = f"select  (CAST((i.price - im.price) as REAL)/i.Price)*100 as profit \
+        query_ti_le_loi_nhuan = f"select  (CAST((i.price - i.price_import) as REAL)/i.Price)*100 as profit \
                             from [order] o \
                             join [orderitem] oi on o.id = oi.id \
                             join [item] i on oi.ItemID = i.id \
                             join [product] p on i.ProductID = p.id \
-                            join [importingrecord] im on im.productid = p.id \
                             where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\" \
                             group by strftime('%m', o.Time)"
         query_khach_hang_moi = f"select count(*) as new_customer \
@@ -1497,7 +1495,6 @@ class Reports(AdminRequiredMixin, TemplateView):
                                 join [orderitem] oi on o.id = oi.id \
                                 join [item] i on oi.ItemID = i.id \
                                 join [product] p on i.ProductID = p.id \
-                                join [importingrecord] im on im.productid = p.id \
                                 where strftime('%Y-%m', o.Time) >= \"{startdate}\" and strftime('%Y-%m', o.Time) <= \"{enddate}\" \
                                 group by itemid \
                                 order by revenue desc \
@@ -1626,46 +1623,22 @@ class Reports(AdminRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         startdate = self.request.GET.get("startdate")
         enddate= self.request.GET.get("enddate")
-       
-       
         monthyear = None
         error =  False
-       
-        # print(startdate, enddate)
-        # print(type(startdate))
         if startdate is not None and enddate is not None:
-            # syear ,smonth= startdate.split('-')
-            # eyear, emonth  = enddate.split('-')
-            # print(smonth, syear)
-            # print(startdate < enddate )
             if startdate<= enddate:
                 report = Reports()
-                # try:
-                file_path = report.generate_template(startdate, enddate)
-                monthyear = startdate + "_"+enddate
-                # except:
-                #     error = True
+                try:
+                    file_path = report.generate_template(startdate, enddate)
+                    monthyear = startdate + "_"+enddate
+                except:
+                    error = True
             else:
                 error = True
         else:
              error = True
-        # if startmonth is not None and year is not None :
-        #     if int(startmonth) <= int(endmonth) and int(endmonth) <= 12 and int(startmonth)>=1 :
-        #         report = Reports()
-        #         try:
-        #             file_path = report.generate_template(startmonth,endmonth, year)
-        #         except:
-        #             error = True
-        #         monthyear = str(startmonth)+"-"+str(endmonth)+"-"+str(year)
-        #     else: 
-        #         error = True
-            
-        # else: 
-        #     error = True
-        # print(error)
         context['monthyear'] = monthyear  
         context['startdate'] =  startdate
         context['enddate'] =  enddate
-        # context['year'] = year
         context['error'] =  error
         return context
