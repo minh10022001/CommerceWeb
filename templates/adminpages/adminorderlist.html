@@ -4,10 +4,20 @@
 {% load humanize %}
 {% block content %}
     {% if request.user.account.users.staffs.position == "Manager" or  request.user.account.users.staffs.position == "Sale Staff" %}
+    
     <div class="container" style="padding-top: 3rem">
         <div class="row">
             <div class="col-md-12">
                 <h3>All Orders</h3><hr>
+                  <div class = "row">
+                       
+                    <form class="form-inline my-2 my-lg-0" action="{% url 'ecomapp:adminorderlist' %}" method="GET">
+                        <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search"
+                            aria-label="Search" required>
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </form>
+                </div>
+                <div class = "row" style="margin-top: 20px;">
                 <table class="table table-hover">
                     <thead style="background-color: #D19C97">
                         <tr>
@@ -33,6 +43,7 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </div>

@@ -263,6 +263,7 @@ class Electronic(models.Model):
 class Item(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     productid = models.ForeignKey('Product', models.CASCADE, db_column='ProductID')  # Field name made lowercase.
+    price_import = models.IntegerField(db_column='Price_import', blank=True, null=True)  # Field name made lowercase.
     price = models.IntegerField(db_column='Price', blank=True, null=True)  # Field name made lowercase.
     description = models.CharField(db_column='Description', max_length=2000, blank=True, null=True)  # Field name made lowercase.
     slug = models.SlugField(unique=True)
