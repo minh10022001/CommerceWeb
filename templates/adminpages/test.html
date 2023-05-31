@@ -27,8 +27,8 @@
             <img class="img-fluid" src="{% static 'doanhThuCategoryImg.png' %}" alt="Image">
         </div>
        
-        <a href="{% url 'ecomapp:download' monthyear %}" class="btn btn-info" role="button">Dowload report</a> 
-
+        <a href="{% url 'ecomapp:download' monthyear %}" class="btn btn-info" role="button">Download document</a> 
+         <a href="{% url 'ecomapp:download_excel' monthyear %}" class="btn btn-info" role="button">Download excel</a> 
         {% else %}
             <form class="form-inline" action="{% url 'ecomapp:reports' %}" method="GET">
                             <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Show</button>

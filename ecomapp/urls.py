@@ -6,8 +6,9 @@ app_name = "ecomapp"
 urlpatterns = [
 
     # Client side pages
-     path("download_report_revenue/<slug:monthyear>", Reports.download_file, name="download"),
-     path("reports", Reports.as_view(),name="reports"),
+    path("download_report_revenue_excel/<slug:monthyear>", Reports.download_file_excel, name="download_excel"),
+    path("download_report_revenue/<slug:monthyear>", Reports.download_file, name="download"),
+    path("reports", Reports.as_view(),name="reports"),
     path("", HomeView.as_view(), name="home"),
 #     path("about/", AboutView.as_view(), name="about"),
     path("review/", SendReview.as_view(), name="review"),

@@ -1137,10 +1137,35 @@ class AdminOrderDetailView(AdminRequiredMixin, DetailView):
         return context
 
 # Xem danh sách đơn hàng
-class AdminOrderListView(AdminRequiredMixin, ListView):
+class AdminOrderListView(AdminRequiredMixin,TemplateView):
     template_name = "adminpages/adminorderlist.html"
-    queryset = Order.objects.all().order_by("-id")
-    context_object_name = "allorders"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        kw = self.request.GET.get("keyword")
+        if kw is not None:
+            queryset = Order.objects.filter(
+                Q(id__icontains=kw))
+         
+           
+        else:
+            queryset = Order.objects.all().order_by("-id")
+        # list_import_item = []
+        # a = []
+        # for i in queryset:
+        #     list1 = Importingrecord.objects.filter(productid= i.productid)
+        #     if len(list1)==1:
+        #         list_import_item.append(Importingrecord.objects.get(productid= i.productid))
+        #     else :
+        #         max_id = list1[0].id
+        #         for j in list1:
+        #             max_id =  max(max_id, j.id)
+        #         list_import_item.append(Importingrecord.objects.get(id =max_id))
+        context["allorders"] = queryset
+        # context["importitem"] = list_import_item
+    
+        return context
+    # queryset = Order.objects.all().order_by("-id")
+    # context_object_name = "allorders"
 
 # Xem danh sách đánh giá hệ thống của khách hàng
 class AdminReviewListView(AdminRequiredMixin, ListView):
@@ -1558,7 +1583,7 @@ class Reports(AdminRequiredMixin, TemplateView):
         doanhThuTheoCategory = []
         for k in range(len(listDoanhThuTheoCategory)):
             doanhThuTheoCategory.append({"category_name": listDoanhThuTheoCategory[k][0], "revenue": "{:,}".format(listDoanhThuTheoCategory[k][1])})
-        # print(doanhThuTheoThang)
+       
         # Graph doanh thu theo category
         fig, ax = plt.subplots()
         # Plot the data on the axes
@@ -1567,9 +1592,9 @@ class Reports(AdminRequiredMixin, TemplateView):
         # Add labels and title
         plt.legend(title='Danh muc', bbox_to_anchor=(1, 1))
         ax.set_title('Tỉ lệ doanh thu theo danh mục sản phẩm')
-        image_path = os.path.join(base_dir, "static/doanhThuCategoryImg.png")
-        fig.savefig(image_path)
-        context['doanhThuCategoryImg'] = InlineImage(doc, image_path)   
+        image_path1 = os.path.join(base_dir, "static/doanhThuCategoryImg.png")
+        fig.savefig(image_path1)
+        context['doanhThuCategoryImg'] = InlineImage(doc, image_path1)   
              
 
 
@@ -1583,7 +1608,7 @@ class Reports(AdminRequiredMixin, TemplateView):
         plt.xticks(rotation = 90)
         # ax.xticks(ticks=x1, labels=x1, rotation='vertical')
         # Add labels and title
-        ax.set_xlabel('Tháng')
+        ax.set_xlabel('Thời gian')
         ax.set_ylabel('(Doanh thu(VND)')
      
         ax.set_title('Thống kê doanh thu theo tháng')
@@ -1596,10 +1621,10 @@ class Reports(AdminRequiredMixin, TemplateView):
         # ax2.set_ylabel('Bar chart', color='green')
         # ax2.tick_params('y', colors='green')
 
-        image_path = os.path.join(base_dir, "static/doanhThuImg.png")
-        fig.savefig(image_path)
+        image_path2 = os.path.join(base_dir, "static/doanhThuImg.png")
+        fig.savefig(image_path2)
         # context['doanhThuImg'] = InlineImage(doc, image_path)
-        context['doanhThuImg'] = InlineImage(doc, image_path, width=Mm(150), height=Mm(100))
+        context['doanhThuImg'] = InlineImage(doc, image_path2, width=Mm(150), height=Mm(100))
         # render context into the document object
         doc.render(context)
 
@@ -1607,18 +1632,99 @@ class Reports(AdminRequiredMixin, TemplateView):
         reportWordPath = 'reports/documents/report_month_{0}_{1}.docx'.format(startdate, enddate)
         output_path = os.path.join(base_dir, reportWordPath)
         doc.save(output_path)
-        return output_path
-    
+
+        #Excel
+
+        wb = openpyxl.load_workbook("media/docx_template/template.xlsx")
+        ws = wb["Báo cáo doanh thu"]
+
+        config_doanhThuImg = openpyxl.drawing.image.Image(image_path2)
+        config_doanhThuCategoryImg = openpyxl.drawing.image.Image(image_path1)
+        
+        config_time = time
+        config_tong_doanh_thu = tong_doanh_thu
+        config_loi_nhuan = loi_nhuan
+        config_ti_le_loi_nhuan = ti_le_loi_nhuan
+        config_khach_hang_moi = khach_hang_moi
+        config_doanh_thu_tb_khach = doanh_thu_tb_khach
+
+        i = 0
+        for r in range(1,ws.max_row+1):
+            for c in range(1,ws.max_column+1):
+                cell = ws.cell(row=r, column=c)
+                s = cell.value
+                if s != None and "{{time}}" in s: 
+                    ws.cell(r,c).value = s.replace("{{time}}",config_time) 
+                    i += 1
+                
+                if s != None and "{{tong_doanh_thu}}" in s: 
+                    ws.cell(r,c).value = s.replace("{{tong_doanh_thu}}",config_tong_doanh_thu) 
+                    i += 1
+
+                if s != None and "{{loi_nhuan}}" in s: 
+                    ws.cell(r,c).value = s.replace("{{loi_nhuan}}",config_loi_nhuan) 
+                    i += 1
+
+                if s != None and "{{ti_le_loi_nhuan}}" in s: 
+                    ws.cell(r,c).value = s.replace("{{ti_le_loi_nhuan}}",config_ti_le_loi_nhuan) 
+                    i += 1
+
+                if s != None and "{{khách_hang_moi}}" in s: 
+                    ws.cell(r,c).value = s.replace("{{khách_hang_moi}}",config_khach_hang_moi) 
+                    i += 1
+
+                if s != None and "{{doanh_thu_tb_khach}}" in s: 
+                    ws.cell(r,c).value = s.replace("{{doanh_thu_tb_khach}}",config_doanh_thu_tb_khach) 
+                    i += 1
+
+        for row_num, item in enumerate(bangDoanhThuChiTiet, start=18):
+            ws.cell(row=row_num, column=2, value=row_num - 17)         
+            ws.cell(row=row_num, column=3, value=item['ten'])          
+            ws.cell(row=row_num, column=4, value=item['gia'])         
+            ws.cell(row=row_num, column=5, value=item['soluong'])     
+            ws.cell(row=row_num, column=6, value=item['doanhthu'])    
+            
+        # Apply center alignment to the cells in columns 2 to 6
+        for row_num in range(18,18 + len(bangDoanhThuChiTiet)):
+            for col_num in range(2, 7):
+                cell = ws.cell(row=row_num, column=col_num)
+                cell.alignment = Alignment(horizontal='center', vertical='center')
+
+                # Create a solid border
+                border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'), bottom=Side(style='thin'))
+                cell.border = border  
+             
+        cell_doanhThuImg = ws.cell(row=18 + len(bangDoanhThuChiTiet) + 5, column=2)
+        config_doanhThuImg.anchor = cell_doanhThuImg.coordinate
+        ws.add_image(config_doanhThuImg)
+        cell_doanhThuCategoryImg = ws.cell(row=18 + len(bangDoanhThuChiTiet) +55, column=2)
+        config_doanhThuCategoryImg.anchor = cell_doanhThuCategoryImg.coordinate
+        ws.add_image(config_doanhThuCategoryImg)
+        reportExcelPath = 'reports/excel/report_month_{0}_{1}.xlsx'.format(startdate, enddate)
+        output_path1 = os.path.join(base_dir, reportExcelPath)
+        wb.save(output_path1)
+        return output_path, output_path1
+        
+
     def download_file(self, **kwargs):
         a =kwargs['monthyear']
         report = Reports()  
-        filepath = report.generate_template(a.split('_')[0],a.split('_')[1] )
+        filepath, filepath1 = report.generate_template(a.split('_')[0],a.split('_')[1] )
         if os.path.exists(filepath ):
             with open(filepath , 'rb') as fh:
                 response = HttpResponse(fh.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
                 response['Content-Disposition'] = 'inline; filename=' + os.path.basename(filepath )
                 return response
     
+    def download_file_excel(self, **kwargs):
+        a =kwargs['monthyear']
+        report = Reports()  
+        filepath, filepath1 = report.generate_template(a.split('_')[0],a.split('_')[1] )
+        if os.path.exists(filepath1 ):
+            with open(filepath1 , 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(filepath1 )
+                return response
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         startdate = self.request.GET.get("startdate")
@@ -1628,11 +1734,11 @@ class Reports(AdminRequiredMixin, TemplateView):
         if startdate is not None and enddate is not None:
             if startdate<= enddate:
                 report = Reports()
-                try:
-                    file_path = report.generate_template(startdate, enddate)
-                    monthyear = startdate + "_"+enddate
-                except:
-                    error = True
+                # try:
+                file_path = report.generate_template(startdate, enddate)
+                monthyear = startdate + "_"+enddate
+                # except:
+                #     error = True
             else:
                 error = True
         else:
