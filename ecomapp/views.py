@@ -31,7 +31,8 @@ from docx.shared import Mm
 import os
 from django.db import connection
 from docx.shared import Mm
-
+import jwt
+import time
 #----------------CUSTOMER--------------------#
 
 #Lấy thông tin Cart hiện tại
@@ -795,8 +796,26 @@ class AdminRequiredMixin(object):
 
 
 # Trang chủ nhân viên 
-class AdminHomeView(AdminRequiredMixin, TemplateView):
-    template_name = "adminpages/adminhome.html"
+class AdminHomeView(AdminRequiredMixin):
+    # template_name = "adminpages/adminhome.html"
+    def signed_public_dashboard(request):
+        METABASE_SITE_URL = "localhost:3000"
+        METABASE_SECRET_KEY = "d719a67460fff2bb4f028ef74f4a628209b6f0f04c5956976ee4b03ef6c8d504"
+        
+        payload = {
+        "resource": {"dashboard": 1},
+        "params": {
+            
+        },
+        "exp": round(time.time()) + (60 * 10) # 10 minute expiration
+        }
+        token = jwt.encode(payload, METABASE_SECRET_KEY, algorithm="HS256")
+        print(token)
+        iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&refresh=1"
+
+        return render(request,
+                    'adminpages/adminhome.html',
+                    {'iframeUrl': iframeUrl})  
 
 # Danh sách đơn hàng đang chờ xác nhận
 class AdminPendingOrder(AdminRequiredMixin, TemplateView):
