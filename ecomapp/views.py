@@ -1,7 +1,7 @@
 from cgitb import reset
 import email
 from pickle import GET
-from tkinter import N
+# from tkinter import N
 from tracemalloc import start
 # from turtle import position
 from unicodedata import name
@@ -806,11 +806,11 @@ class AdminRequiredMixin(object):
 class AdminHomeView(AdminRequiredMixin):
     # template_name = "adminpages/adminhome.html"
     def signed_public_dashboard(request):
-        METABASE_SITE_URL = "localhost:3000"
+        METABASE_SITE_URL = "http://localhost:3000"
         METABASE_SECRET_KEY = "d719a67460fff2bb4f028ef74f4a628209b6f0f04c5956976ee4b03ef6c8d504"
         
         payload = {
-        "resource": {"dashboard": 1},
+        "resource": {"dashboard": 4},
         "params": {
             
         },
@@ -818,7 +818,7 @@ class AdminHomeView(AdminRequiredMixin):
         }
         token = jwt.encode(payload, METABASE_SECRET_KEY, algorithm="HS256")
         print(token)
-        iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&refresh=1"
+        iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true&refresh=1"
 
         return render(request,
                     'adminpages/adminhome.html',
