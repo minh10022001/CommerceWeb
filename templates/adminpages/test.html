@@ -10,12 +10,16 @@
         <div style =  "margin: 30px">
         <form class="form-inline" action="{% url 'ecomapp:reports' %}" method="GET">
                 <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Show</button>
-                <input name="keyword1" class="form-control mr-sm-2" type="number" placeholder="Start Month"
+                {% comment %} <input name="keyword1" class="form-control mr-sm-2" type="number" placeholder="Start Month"
                 aria-label="Start Month" value ={{startmonth}}  required>
                   <input name="keyword2" class="form-control mr-sm-2" type="number" placeholder="End Month"
                 aria-label="End Month" value ={{endmonth}}  required>
                 <input name="keyword3" class="form-control mr-sm-2" type="number" placeholder="Year"
-                aria-label="Year"value ={{year}} required>
+                aria-label="Year"value ={{year}} required> {% endcomment %}
+                <input name="startdate" class="form-control mr-sm-2" type="month" placeholder="Start Date"
+                aria-label="Start Date" value ={{startdate}}  required>
+                <input name="enddate" class="form-control mr-sm-2" type="month" placeholder="End Date"
+                aria-label="End Date" value ={{enddate}}  required>
         </form> 
         </div>
         <div>
@@ -23,18 +27,22 @@
             <img class="img-fluid" src="{% static 'doanhThuCategoryImg.png' %}" alt="Image">
         </div>
        
-    <a href="{% url 'ecomapp:download' monthyear %}" class="btn btn-info" role="button">Dowload report</a>
-
+        <a href="{% url 'ecomapp:download' monthyear %}" class="btn btn-info" role="button">Download document</a> 
+         <a href="{% url 'ecomapp:download_excel' monthyear %}" class="btn btn-info" role="button">Download excel</a> 
         {% else %}
             <form class="form-inline" action="{% url 'ecomapp:reports' %}" method="GET">
                             <button class="btn my-2 my-sm-0" type="submit" style="background-color: #cce6ff">Show</button>
-                            <input name="keyword1" class="form-control mr-sm-2" type="number" placeholder="Start Month"
+                            {% comment %} <input name="keyword1" class="form-control mr-sm-2" type="number" placeholder="Start Month"
                                 aria-label="Start Month"   required>
                             <input name="keyword2" class="form-control mr-sm-2" type="number" placeholder="End Month"
                         aria-label="End Month" required>
                           <input name="keyword3" class="form-control mr-sm-2" type="number" placeholder="Year"
                         aria-label="Year" required>
-                        <br>
+                        <br> {% endcomment %}
+                        <input name="startdate" class="form-control mr-sm-2" type="month" placeholder="Start Date"
+                        aria-label="Start Date"   required>
+                        <input name="enddate" class="form-control mr-sm-2" type="month" placeholder="End Date"
+                        aria-label="End Date"  required>
             </form>
             <div style = "margin: 40px; color: blue">
             <p> Please enter appropriate value </p>
