@@ -1,0 +1,27 @@
+{% extends "adminpages/adminbase.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div style = " text-align: center;">
+    <h3>Dashboard</h3>
+    <script>
+        function show(shown, hidden) {
+        document.getElementById(shown).style.display='block';
+        document.getElementById(hidden).style.display='none';
+        return false;
+        }
+        </script>
+        <div id="Page1">
+           Page1
+            <a href="#" onclick="return show('Page2','Page1');">Show page 2</a>
+             <h1>PAGE 11</h1>
+         </div>
+    
+  <div id="Page2" style="display:none">
+   Page2
+    <a href="#" onclick="return show('Page1','Page2');">Show page 1</a>
+    <h1>PAGE 222</h1>
+  </div>
+</div>
+{% endblock %}

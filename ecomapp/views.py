@@ -804,6 +804,10 @@ class AdminRequiredMixin(object):
 class AdminHomeView(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/adminhome.html"
 
+# Dashboard
+class AdminDashboardView(AdminRequiredMixin, TemplateView):
+    template_name = "adminpages/dashboard.html"
+
 # Danh sách đơn hàng đang chờ xác nhận
 class AdminPendingOrder(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/adminpendingorders.html"
@@ -1416,7 +1420,7 @@ class AdminImportProductView(AdminRequiredMixin, CreateView):
 # Báo cáo về doanh thu
 class Reports(AdminRequiredMixin, TemplateView):
   
-    template_name = "adminpages/test.html"
+    template_name = "adminpages/reports.html"
     def run_custome_sql(self, query):
         with connection.cursor() as cursor:
             cursor.execute(query)
