@@ -58,7 +58,7 @@ urlpatterns = [
     path("admin-review/<int:pk>/", AdminReviewDetailView.as_view(),
          name="adminreviewdetail"),
     path("admin-home/", AdminHomeView.as_view(), name="adminhome"),
-    path("admin-dashboard/", AdminDashboardView.as_view(), name="admindashboard"),
+    path("admin-dashboard/", AdminDashboardView.signed_public_dashboard, name="admindashboard"),
     path("admin-reply/", AdminReplyReviewView.as_view(), name="adminreplyreview"),
     path("admin-order/<int:pk>/", AdminOrderDetailView.as_view(),
          name="adminorderdetail"),
