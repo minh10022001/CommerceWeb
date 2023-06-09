@@ -1,0 +1,43 @@
+{% extends "adminpages/adminbase.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div style = " text-align: center;">
+    {% comment %} <h3>Dashboard</h3> {% endcomment %}
+    <script>
+        function show(shown, hidden) {
+        document.getElementById(shown).style.display='block';
+        document.getElementById(hidden).style.display='none';
+        return false;
+        }
+        </script>
+        <div id="Page1" >
+           <h2>Overview Dashboard</h2>
+            <a href="#" onclick="return show('Page2','Page1');">Show page 2</a>
+            <div style = 'padding: 50px;'>
+            <iframe
+                src="{{iframeUrl2}}"
+                frameborder="0"
+                width=100%
+                height=1000vw
+                allowtransparency
+            ></iframe>
+            </div>
+         </div>
+    
+  <div id="Page2" style="display:none">
+   <h2>Detail Month Dashboard</h2>
+    <a href="#" onclick="return show('Page1','Page2');">Show page 2</a>
+                <div style = 'padding: 50px;'>
+                <iframe
+                src="{{iframeUrl1}}"
+                frameborder="0"
+                width=100%
+                height=1000vw
+                allowtransparency
+            ></iframe>
+            </div>
+  </div>
+</div>
+{% endblock %}

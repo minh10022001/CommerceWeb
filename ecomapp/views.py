@@ -33,8 +33,10 @@ from docx.shared import Mm
 import os
 from django.db import connection
 from docx.shared import Mm
+
 import jwt
 import time
+
 import openpyxl
 from openpyxl.styles import Alignment
 from openpyxl.styles import Alignment, Border, Side
@@ -824,6 +826,58 @@ class AdminHomeView(AdminRequiredMixin):
                     'adminpages/adminhome.html',
                     {'iframeUrl': iframeUrl})  
 
+# Dashboard
+class AdminDashboardView(AdminRequiredMixin, TemplateView):
+    # template_name = "adminpages/dashboard.html"
+    def signed_public_dashboard(request):
+        METABASE_SITE_URL = "http://localhost:3000"
+        METABASE_SECRET_KEY = "75971548d641fdd068589ba9c1488a25c42a5d2f1c1ce5af30d3abcfed1c6f4b"
+        
+        payload1 = {
+        "resource": {"dashboard": 1},
+        "params": {
+            
+        },
+        "exp": round(time.time()) + (60 * 10) # 10 minute expiration
+        }
+        token1 = jwt.encode(payload1, METABASE_SECRET_KEY, algorithm="HS256")
+        print(token1)
+        iframeUrl1 = METABASE_SITE_URL + "/embed/dashboard/" + token1 + "#bordered=true&titled=true&refresh=30"
+        
+
+        payload2 = {
+        "resource": {"dashboard": 33},
+        "params": {
+            
+        },
+        "exp": round(time.time()) + (60 * 10) # 10 minute expiration
+        }
+        token2 = jwt.encode(payload2, METABASE_SECRET_KEY, algorithm="HS256")
+        print(token2)
+        iframeUrl2 = METABASE_SITE_URL + "/embed/dashboard/" + token2 + "#bordered=true&titled=true&refresh=30"
+        return render(request,
+                    "adminpages/dashboard.html",
+                    {'iframeUrl1': iframeUrl1,'iframeUrl2': iframeUrl2}) 
+
+    # def signed_public_dashboard_2(request):
+    #     METABASE_SITE_URL = "http://localhost:3000"
+    #     METABASE_SECRET_KEY = "75971548d641fdd068589ba9c1488a25c42a5d2f1c1ce5af30d3abcfed1c6f4b"
+        
+    #     payload = {
+    #     "resource": {"dashboard": 33},
+    #     "params": {
+            
+    #     },
+    #     "exp": round(time.time()) + (60 * 10) # 10 minute expiration
+    #     }
+    #     token = jwt.encode(payload, METABASE_SECRET_KEY, algorithm="HS256")
+    #     print(token)
+    #     iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true&refresh=1"
+
+    #     return render(request,
+    #                 "adminpages/dashboard.html",
+    #                 {'iframeUrl1': iframeUrl})                
+
 # Danh sách đơn hàng đang chờ xác nhận
 class AdminPendingOrder(AdminRequiredMixin, TemplateView):
     template_name = "adminpages/adminpendingorders.html"
@@ -1436,7 +1490,7 @@ class AdminImportProductView(AdminRequiredMixin, CreateView):
 # Báo cáo về doanh thu
 class Reports(AdminRequiredMixin, TemplateView):
   
-    template_name = "adminpages/test.html"
+    template_name = "adminpages/reports.html"
     def run_custome_sql(self, query):
         with connection.cursor() as cursor:
             cursor.execute(query)
