@@ -806,32 +806,34 @@ class AdminRequiredMixin(object):
 
 # Trang chủ nhân viên 
 class AdminHomeView(AdminRequiredMixin):
-    # template_name = "adminpages/adminhome.html"
-    def signed_public_dashboard(request):
-        METABASE_SITE_URL = "http://localhost:3000"
-        METABASE_SECRET_KEY = "d719a67460fff2bb4f028ef74f4a628209b6f0f04c5956976ee4b03ef6c8d504"
+    template_name = "adminpages/adminhome.html"
+    # def signed_public_dashboard(request):
+    #     METABASE_SITE_URL = "http://localhost:3000"
+    #     METABASE_SECRET_KEY = "d719a67460fff2bb4f028ef74f4a628209b6f0f04c5956976ee4b03ef6c8d504"
         
-        payload = {
-        "resource": {"dashboard": 4},
-        "params": {
+    #     payload = {
+    #     "resource": {"dashboard": 4},
+    #     "params": {
             
-        },
-        "exp": round(time.time()) + (60 * 10) # 10 minute expiration
-        }
-        token = jwt.encode(payload, METABASE_SECRET_KEY, algorithm="HS256")
-        print(token)
-        iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true&refresh=1"
+    #     },
+    #     "exp": round(time.time()) + (60 * 10) # 10 minute expiration
+    #     }
+    #     token = jwt.encode(payload, METABASE_SECRET_KEY, algorithm="HS256")
+    #     print(token)
+    #     iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true&refresh=1"
 
-        return render(request,
-                    'adminpages/adminhome.html',
-                    {'iframeUrl': iframeUrl})  
+    #     return render(request,
+    #                 'adminpages/adminhome.html',
+    #                 {'iframeUrl': iframeUrl})  
 
 # Dashboard
 class AdminDashboardView(AdminRequiredMixin, TemplateView):
     # template_name = "adminpages/dashboard.html"
     def signed_public_dashboard(request):
         METABASE_SITE_URL = "http://localhost:3000"
-        METABASE_SECRET_KEY = "75971548d641fdd068589ba9c1488a25c42a5d2f1c1ce5af30d3abcfed1c6f4b"
+        # METABASE_SECRET_KEY = "75971548d641fdd068589ba9c1488a25c42a5d2f1c1ce5af30d3abcfed1c6f4b"
+        METABASE_SECRET_KEY = "d719a67460fff2bb4f028ef74f4a628209b6f0f04c5956976ee4b03ef6c8d504"
+
         
         payload1 = {
         "resource": {"dashboard": 1},
